@@ -8,7 +8,6 @@ with open("others.json", "r", encoding= "utf8") as jothers:
     other = json.load(jothers)
 
 class Events(Cog_Ext):
-
     @commands.Cog.listener()
     async def on_ready(self):
         print("Bot is ready.")
@@ -17,7 +16,6 @@ class Events(Cog_Ext):
     async def on_message(self, msg):
         if "窩不知道" in msg.content:
             await msg.channel.send(random.choice(other["IDK_url"]))
-        await self.bot.process_commands(msg)
 
 def setup(bot):
     bot.add_cog(Events(bot))
