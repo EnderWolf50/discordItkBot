@@ -8,13 +8,17 @@ Cannot_delete = False
 class Repeat(Cog_Ext):
     @commands.command()
     async def repeat(self, ctx):
-        if ctx.author == self.bot.get_user(523755296242270210):
+        if ctx.author == self.bot.get_user(523755296242270210) or ctx.author == self.bot.get_user(590430031281651722):
             global Repeat_Cmd_status
             Repeat_Cmd_status = not Repeat_Cmd_status
+            if Repeat_Cmd_status == True:
+                await ctx.send(">> 複讀功能**啟用** <:emoji_150:689498513838440471>")
+            else:
+                await ctx.send(">> 複讀功能**關閉** <:emoji_26:685774183971815516>")
 
     @commands.command()
     async def cnd(self, ctx):
-        if ctx.author == self.bot.get_user(523755296242270210):
+        if ctx.author == self.bot.get_user(523755296242270210) or ctx.author == self.bot.get_user(590430031281651722):
             global Cannot_delete
             Cannot_delete = not Cannot_delete
 
