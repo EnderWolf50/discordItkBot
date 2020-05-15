@@ -11,18 +11,21 @@ with open("settings.json", "r", encoding= "utf8") as jsettings:
 
 @bot.command()
 async def load(ctx, extension):
-    bot.load_extension(f"cmds.{extension}")
-    await ctx.send(f"**{extension}** has been loaded!")
+    if ctx.author == bot.get_user(523755296242270210):
+        bot.load_extension(f"cmds.{extension}")
+        await ctx.send(f"**{extension}** has been loaded!")
 
 @bot.command()
 async def unload(ctx, extension):
-    bot.unload_extension(f"cmds.{extension}")
-    await ctx.send(f"**{extension}** has been unloaded!")
+    if ctx.author == bot.get_user(523755296242270210):
+        bot.unload_extension(f"cmds.{extension}")
+        await ctx.send(f"**{extension}** has been unloaded!")
 
 @bot.command()
 async def reload(ctx, extension):
-    bot.reload_extension(f"cmds.{extension}")
-    await ctx.send(f"**{extension}** has been reloaded!")
+    if ctx.author == bot.get_user(523755296242270210):
+        bot.reload_extension(f"cmds.{extension}")
+        await ctx.send(f"**{extension}** has been reloaded!")
 
 for Filename in os.listdir("./cmds"):
     if Filename.endswith(".py"):
