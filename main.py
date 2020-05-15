@@ -9,6 +9,21 @@ bot = commands.Bot(command_prefix= ".")
 with open("others.json", 'r', encoding= "utf8") as jothers:
     other = json.load(jothers)
 
+@bot.command()
+async def load(ctx, extension):
+    bot.load_extension(f"cmds.{extension}")
+    await ctx.send(f"**{extension}** has been loaded!")
+
+@bot.command()
+async def unload(ctx, extension):
+    bot.unload_extension(f"cmds.{extension}")
+    await ctx.send(f"**{extension}** has been unloaded!")
+
+@bot.command()
+async def reload(ctx, extension):
+    bot.reload_extension(f"cmds.{extension}")
+    await ctx.send(f"**{extension}** has been reloaded!")
+
 @bot.event
 async def on_ready():
     print("Bot is ready.")
