@@ -4,7 +4,7 @@ import json
 import random
 import os
 
-bot = commands.Bot(command_prefix= ".")
+bot = commands.Bot(command_prefix= ".", case_insensitive= True)
 
 with open("settings.json", "r", encoding= "utf8") as jsettings:
     setting = json.load(jsettings)
