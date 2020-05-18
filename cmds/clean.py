@@ -11,5 +11,6 @@ class Clean(Cog_Ext):
 
             await ctx.channel.purge(limit= number + 1, check= predicate)
             await ctx.message.delete()
+            
 def setup(bot):
     bot.add_cog(Clean(bot))
