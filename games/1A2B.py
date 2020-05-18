@@ -13,7 +13,7 @@ Number_Guessed = ""
 
 class _1A2B(Cog_Ext):
     @commands.command()
-    async def AB_G(self, ctx):
+    async def AB_S(self, ctx):
         global AB_G
         global channel
         global Answer

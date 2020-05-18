@@ -14,8 +14,9 @@ class Events(Cog_Ext):
 
     @commands.Cog.listener()
     async def on_message(self, msg):
-        if "窩不知道" in msg.content:
-            await msg.channel.send(random.choice(other["IDK_url"]))
+        if "窩不知道" in msg.content or "idk" in msg.content.lower():
+            Picture = str(random.choices(other["IDK_url"], cum_weights = [35, 44, 99, 100])).strip("[]'")
+            await msg.channel.send(Picture)
 
 def setup(bot):
     bot.add_cog(Events(bot))
