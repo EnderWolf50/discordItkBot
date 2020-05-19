@@ -8,7 +8,7 @@ class Choose(Cog_Ext):
     async def choose(self, ctx, *,arg):
         list = arg.split(" ")
         await ctx.author.send(random.choice(list))
-        await ctx.message.delete()
+        await ctx.message.delete(delay= 3)
 
 def setup(bot):
     bot.add_cog(Choose(bot))

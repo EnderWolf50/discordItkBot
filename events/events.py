@@ -16,7 +16,10 @@ class Events(Cog_Ext):
     async def on_message(self, msg):
         if "窩不知道" in msg.content or "idk" in msg.content.lower():
             Picture = str(random.choices(other["IDK_url"], cum_weights = [35, 44, 99, 100])).strip("[]'")
-            await msg.channel.send(Picture)
+            if Picture == "https://imgur.com/x1qmYCT":
+                await msg.channel.send(Picture, delete_after= 18.68)
+            else:
+                await msg.channel.send(Picture, delete_after= 5)
 
 def setup(bot):
     bot.add_cog(Events(bot))
