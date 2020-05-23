@@ -1,14 +1,15 @@
 import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
+import datetime
 
 class Clean(Cog_Ext):
     @commands.command()
-    async def clean(self, ctx, number: int):
+    async def clean(self, ctx, number: int= None):
         def predicate(msg: discord.Message) -> bool:
             return msg == ctx.message or msg.author == self.bot.get_user(710498084194484235)
 
-        await ctx.channel.purge(limit= number + 1, check= predicate)
+        await ctx.channel.purge(before= datetime.datetime.now(), check= predicate)
         await ctx.message.delete()
             
     @commands.command()
