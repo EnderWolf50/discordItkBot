@@ -20,6 +20,10 @@ class Events(Cog_Ext):
                 await msg.channel.send(Picture, delete_after= 18.68)
             else:
                 await msg.channel.send(Picture, delete_after= 5)
+        elif msg.content == "ㄐㄐ":
+            await msg.add_reaction("\N{AUBERGINE}")
+        elif msg.content == "尻尻":
+            await msg.add_reaction("<a:emoji_103:713998749680009250>")
 
 def setup(bot):
     bot.add_cog(Events(bot))
