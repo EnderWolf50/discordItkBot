@@ -51,8 +51,7 @@ class Poll(Cog_Ext):
             for i in range(len(arg)):
                 PD = PD + "\n" + Emoji[i] + " " + arg[i]
             embed = discord.Embed(description= PD)
-            await ctx.send(f"{ctx.author.mention} 發起了投票：\n**「{title}」**")
-            embed_msg = await ctx.send(embed = embed)
+            embed_msg = await ctx.send(f"{ctx.author.mention} 發起了投票：\n**「{title}」**", embed= embed)
             for i in range(len(arg)):
                 await embed_msg.add_reaction(Emoji[i])
         

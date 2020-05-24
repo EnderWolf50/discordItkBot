@@ -3,6 +3,7 @@ from discord.ext import commands
 import random
 import json
 from core.classes import Cog_Ext
+import asyncio
 
 with open("others.json", "r", encoding= "utf8") as jothers:
     other = json.load(jothers)
@@ -22,6 +23,8 @@ class Events(Cog_Ext):
                 await msg.channel.send(Picture, delete_after= 5)
         elif msg.content == "ㄐㄐ":
             await msg.add_reaction("\N{AUBERGINE}")
+        elif msg.content == "雞雞":
+            await msg.add_reaction("<:emoji_101:713997954201157723>")
         elif msg.content == "尻尻":
             await msg.add_reaction("<a:emoji_103:713998749680009250>")
 
