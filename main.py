@@ -4,10 +4,11 @@ import json
 import random
 import os
 
-bot = commands.Bot(command_prefix= ".", case_insensitive= True)
+bot = commands.Bot(command_prefix=".", case_insensitive=True)
 
-with open("settings.json", "r", encoding= "utf8") as jsettings:
+with open("settings.json", "r", encoding="utf8") as jsettings:
     setting = json.load(jsettings)
+
 
 @bot.command()
 async def load(ctx, folder, extension):
@@ -15,11 +16,13 @@ async def load(ctx, folder, extension):
         bot.load_extension(f"{folder}.{extension}")
         await ctx.send(f"**{extension}** has been loaded!")
 
+
 @bot.command()
 async def unload(ctx, folder, extension):
     if ctx.author == bot.get_user(523755296242270210):
         bot.unload_extension(f"{folder}.{extension}")
         await ctx.send(f"**{extension}** has been unloaded!")
+
 
 @bot.command()
 async def reload(ctx, folder, extension):
