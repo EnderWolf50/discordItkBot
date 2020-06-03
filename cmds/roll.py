@@ -3,6 +3,8 @@ from discord.ext import commands
 from core.classes import Cog_Ext
 import random
 import json
+import datetime
+import json
 
 class Roll(Cog_Ext):
     @commands.command()
@@ -26,13 +28,9 @@ class Roll(Cog_Ext):
     #             other["Roll Message"] = arg
 
     #         with open("others.json", "w", encoding= "utf-8") as jothers:
-    #             json.dump(other, jothers)
+    #             json.dump(other, jothers, indent= 4)
 
     #         await ctx.send("訊息已設定為 __" + other["Roll Message"] + "__")
-
-    @commands.command()
-    async def bzz(self, ctx):
-        await ctx.send(ctx.author.mention + "：" + str(random.choice(["大凶", "小凶", "凶", "平", "吉", "小吉", "大吉", "吉掰", "大吉掰"])))
 
 def setup(bot):
     bot.add_cog(Roll(bot))
