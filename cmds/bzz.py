@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
 import random
+import json
+import datetime
 
 class Bzz(Cog_Ext): 
     @commands.command()
@@ -9,7 +11,7 @@ class Bzz(Cog_Ext):
         await ctx.send(ctx.author.mention + "：" + str(random.choice(["大凶", "小凶", "凶", "平", "吉", "小吉", "大吉", "吉掰", "大吉掰"])))
 
     @commands.command()
-    async def tdroll(self, ctx):
+    async def tdbzz(self, ctx):
         with open("record.json", "r", encoding= "utf-8") as jrecord:
             record = json.load(jrecord)
 

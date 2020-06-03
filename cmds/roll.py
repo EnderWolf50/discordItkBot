@@ -2,9 +2,6 @@ import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
 import random
-import json
-import datetime
-import json
 
 class Roll(Cog_Ext):
     @commands.command()
