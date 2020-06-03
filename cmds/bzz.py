@@ -15,23 +15,49 @@ class Bzz(Cog_Ext):
         with open("record.json", "r", encoding= "utf-8") as jrecord:
             record = json.load(jrecord)
 
+        with open("result.json", "r", encoding= "utf-8") as jresult:
+            result = json.load(jresult)
+
         if f"{ctx.author.id}" in record:
-            if record[f"{ctx.author.id}"] != datetime.datetime.now().strftime("%Y.%m.%d"):
-                record[f"{ctx.author.id}"] = datetime.datetime.now().strftime("%Y.%m.%d")
+            if record[f"{ctx.author.id}"] != (datetime.datetime.now() + datetime.timedelta(hours= 8)).strftime("%Y.%m.%d"):
+
+                record[f"{ctx.author.id}"] = (datetime.datetime.now() + datetime.timedelta(hours= 8)).strftime("%Y.%m.%d")
 
                 with open("record.json", "w", encoding= "utf-8") as jrecord:
                     json.dump(record, jrecord, indent= 4)
 
-                await ctx.send(ctx.author.mention + "：" + str(random.choice(["大凶", "小凶", "凶", "平", "吉", "小吉", "大吉", "吉掰", "大吉掰"])))
+                bzz_msg = str(random.choice(["大凶", "小凶", "凶", "平", "吉", "小吉", "大吉", "吉掰", "大吉掰"]))
+
+                result[f"{ctx.author.id}"] = bzz_msg
+                
+                with open("result.json", "w", encoding= "utf-8") as jresult:
+                    json.dump(result, jresult, indent= 4)
+
             else:
-                await ctx.send(ctx.author.mention + "：你今日已使用過此指令")
+                with open("result.json", "r", encoding= "utf-8") as jresult:
+                    bzz_msg = result[f"{ctx.author.id}"]
+            await ctx.send(ctx.author.mention + " 你的今日運勢為：" + bzz_msg, delete_after= 5)
+                
         else:
-            record[f"{ctx.author.id}"] = datetime.datetime.now().strftime("%Y.%m.%d")
+            if f"{ctx.author.id}" not in result:
 
-            with open("record.json", "w", encoding= "utf-8") as jrecord:
-                json.dump(record, jrecord, indent= 4)
+                record[f"{ctx.author.id}"] = (datetime.datetime.now() + datetime.timedelta(hours= 8)).strftime("%Y.%m.%d")
 
-            await ctx.send(ctx.author.mention + "：" + str(random.choice(["大凶", "小凶", "凶", "平", "吉", "小吉", "大吉", "吉掰", "大吉掰"])))
+                with open("record.json", "w", encoding= "utf-8") as jrecord:
+                    json.dump(record, jrecord, indent= 4)
+
+                bzz_msg = str(random.choice(["大凶", "小凶", "凶", "平", "吉", "小吉", "大吉", "吉掰", "大吉掰"]))
+
+                result[f"{ctx.author.id}"] = bzz_msg
+                
+                with open("result.json", "w", encoding= "utf-8") as jresult:
+                    json.dump(result, jresult, indent= 4)
+
+            else:
+                    with open("result.json", "r", encoding= "utf-8") as jresult:
+                        bzz_msg = result[f"{ctx.author.id}"]
+
+            await ctx.send(ctx.author.mention + " 你的今日運勢為：" + bzz_msg, delete_after= 5)
 
 def setup(bot):
     bot.add_cog(Bzz(bot))
