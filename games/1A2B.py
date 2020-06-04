@@ -2,11 +2,13 @@ import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
 import random
+import datetime
 
 AB_G = False
 wait = False
 Duplicate = False
 Playing = False
+Start_time = ""
 channel = ""
 Answer = ""
 Number = ""
@@ -18,9 +20,11 @@ class _1A2B(Cog_Ext):
         global AB_G
         global channel
         global Answer
+        global Start_time
         if AB_G == False:
             AB_G = True
             channel = ctx.channel
+            Start_time = datetime.datetime.now() + datetime.timedelta(seconds= -5)
             Answer = random.sample('1234567890', 4)
 
     @commands.command()
@@ -35,6 +39,9 @@ class _1A2B(Cog_Ext):
             wait = False
             Playing = False
             Number = "".join(Answer)
+            def predicate(msg: discord.Message) -> bool:
+                return msg.author == self.bot.get_user(710498084194484235) or (len(msg.content) == 4 and msg.content.isdigit())
+            await channel.purge(after= Start_time, check= predicate)
             await channel.send(ctx.author.mention + " 結束了遊戲！")
             await channel.send("正確答案為： " + f"**{Number}**！")
 
@@ -47,6 +54,7 @@ class _1A2B(Cog_Ext):
         global Answer
         global Duplicate
         global Playing
+        global Start_time
         if msg.channel == channel:
             if AB_G == True:
                 if wait == False:
@@ -93,6 +101,9 @@ class _1A2B(Cog_Ext):
                                 AB_G = False
                                 wait = False
                                 Playing = False
+                                def predicate(msg: discord.Message) -> bool:
+                                    return msg.author == self.bot.get_user(710498084194484235) or (len(msg.content) == 4 and msg.content.isdigit())
+                                await channel.purge(after= Start_time, check= predicate)
                                 await channel.send(msg.author.mention + f"（{msg.content}）" + f"：**{A}A{B}B**")
                                 await channel.send(f"恭喜 {msg.author.mention} 答對了！")
                             else:
