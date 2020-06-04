@@ -8,7 +8,8 @@ class Roll(Cog_Ext):
     async def roll(self, ctx, num: int, *,arg= "{}"):
         if num <= 0:
             await ctx.send("ㄐㄐ")
-            await ctx.send("雞雞")    
+            await ctx.send("雞雞")
+            await ctx.send("尻尻")    
         else:
             await ctx.send(arg.format(random.randrange(1, num + 1)))
         # else:
