@@ -6,6 +6,7 @@ import random
 AB_G = False
 wait = False
 Duplicate = False
+Playing = False
 channel = ""
 Answer = ""
 Number = ""
@@ -27,10 +28,15 @@ class _1A2B(Cog_Ext):
         global AB_G
         global Answer
         global Number
-        AB_G = False 
-        Number = "".join(Answer)
-        await channel.send(ctx.author.mention + " 結束了遊戲！")
-        await channel.send("正確答案為： " + f"**{Number}**！")
+        global Playing
+        global wait
+        if AB_G == True:
+            AB_G = False 
+            wait = False
+            Playing = False
+            Number = "".join(Answer)
+            await channel.send(ctx.author.mention + " 結束了遊戲！")
+            await channel.send("正確答案為： " + f"**{Number}**！")
 
     @commands.Cog.listener()
     async def on_message(self, msg):
@@ -40,11 +46,14 @@ class _1A2B(Cog_Ext):
         global Number_Guessed
         global Answer
         global Duplicate
+        global Playing
         if msg.channel == channel:
             if AB_G == True:
                 if wait == False:
                     wait = True
-                    await channel.send("請輸入四位不同數字：")
+                    if Playing == False:
+                        Playing = True
+                        await channel.send("請輸入四位不同數字：")
                 else:
                     if msg.content.isdigit() == True and len(msg.content) == 4:
                         Number_Guessed = list(msg.content)
@@ -83,6 +92,7 @@ class _1A2B(Cog_Ext):
                             if A == 4:
                                 AB_G = False
                                 wait = False
+                                Playing = False
                                 await channel.send(msg.author.mention + f"（{msg.content}）" + f"：**{A}A{B}B**")
                                 await channel.send(f"恭喜 {msg.author.mention} 答對了！")
                             else:

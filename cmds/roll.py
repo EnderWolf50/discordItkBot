@@ -11,7 +11,13 @@ class Roll(Cog_Ext):
             await ctx.send("雞雞")
             await ctx.send("尻尻")    
         else:
-            await ctx.send(arg.format(random.randrange(1, num + 1)))
+            if "{}" in arg:
+                await ctx.send(arg.format(random.randrange(1, num + 1)))
+            elif "%" in arg:
+                msg = arg.replace("%", "{}", 1)
+                await ctx.send(msg.format(random.randrange(1, num + 1)))
+            else:
+                await ctx.send(arg + " {}".format(random.randrange(1, num + 1)))
         # else:
         #     with open("others.json", "r", encoding= "utf-8") as jothers:
         #         other = json.load(jothers)
