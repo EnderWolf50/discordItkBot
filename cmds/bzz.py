@@ -18,6 +18,9 @@ class Bzz(Cog_Ext):
         with open("result.json", "r", encoding= "utf-8") as jresult:
             result = json.load(jresult)
 
+        with open("points.json", "r", encoding= "utf-8") as jpoints:
+            point = json.load(jpoints)
+
         if f"{ctx.author.id}" in record:
             if record[f"{ctx.author.id}"] != (datetime.datetime.now() + datetime.timedelta(hours= 8)).strftime("%Y.%m.%d"):
 
@@ -32,6 +35,18 @@ class Bzz(Cog_Ext):
                 
                 with open("result.json", "w", encoding= "utf-8") as jresult:
                     json.dump(result, jresult, indent= 4)
+
+                if f"{ctx.author.id}" in point:
+                    point[f"{ctx.author.id}"] += 5
+
+                    with open("points.json", "w", encoding= "utf-8") as jpoints:
+                        json.dump(point, jpoints, indent= 4)
+                
+                else:
+                    point[f"{ctx.author.id}"] = 5
+
+                    with open("points.json", "w", encoding= "utf-8") as jpoints:
+                        json.dump(point, jpoints, indent= 4)
 
             else:
                 with open("result.json", "r", encoding= "utf-8") as jresult:
