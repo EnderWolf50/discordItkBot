@@ -49,6 +49,7 @@ class _1A2B(Cog_Ext):
             End_Time = datetime.datetime.now()
             def predicate(msg: discord.Message) -> bool:
                 return msg.author == self.bot.get_user(710498084194484235) or (len(msg.content) == Amount and msg.content.isdigit())
+            await asyncio.sleep(0.5)
             await channel.send(ctx.author.mention + " 結束了遊戲！")
             await channel.send("正確答案為： " + f"**{Number}**！")
             await asyncio.sleep(5)
@@ -114,6 +115,7 @@ class _1A2B(Cog_Ext):
                                 End_Time = datetime.datetime.now()
                                 def predicate(msg: discord.Message) -> bool:
                                     return msg.author == self.bot.get_user(710498084194484235) or (len(msg.content) == Amount and msg.content.isdigit())
+                                await asyncio.sleep(0.5)
                                 await channel.send(msg.author.mention + f"（{msg.content}）" + f"：**{A}A{B}B**")
                                 await channel.send(f"恭喜 {msg.author.mention} 答對了！")
                                 await asyncio.sleep(5)
