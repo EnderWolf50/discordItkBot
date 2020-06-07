@@ -63,6 +63,5 @@ class DVCode(Cog_Ext):
                             Max = int(msg.content)
                             await channel.send(f"現在數字範圍為 **{Min} ~ {Max}**")
 
-
 def setup(bot):
     bot.add_cog(DVCode(bot))
