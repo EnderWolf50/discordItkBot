@@ -50,8 +50,10 @@ class Bzz(Cog_Ext):
             with open("result.json", "w", encoding= "utf-8") as jresult:
                 json.dump(result, jresult, indent= 4)
         
+        Date = (datetime.datetime.now() + datetime.timedelta(hours= 8)).strftime("%m / %d")
+
         await ctx.message.delete(delay= 3)
-        await ctx.send(ctx.author.mention + " 你的今日運勢為：" + bzz_msg, delete_after= 7)
+        await ctx.send(ctx.author.mention + f" 你今日（{Date}）的運勢為：" + bzz_msg, delete_after= 7)
 
 def setup(bot):
     bot.add_cog(Bzz(bot))
