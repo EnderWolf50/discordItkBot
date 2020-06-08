@@ -12,10 +12,11 @@ class Roll(Cog_Ext):
             await ctx.send("尻尻")    
         else:
             if "{}" in arg:
-                await ctx.send(arg.format(random.randrange(1, num + 1)))
+                msg = arg.replace("{}", f"{random.randrange(1, num + 1)}", 1)
+                await ctx.send(msg)
             elif "%" in arg:
-                msg = arg.replace("%", "{}", 1)
-                await ctx.send(msg.format(random.randrange(1, num + 1)))
+                msg = arg.replace("%", f"{random.randrange(1, num + 1)}", 1)
+                await ctx.send(msg)
             else:
                 await ctx.send(arg + " {}".format(random.randrange(1, num + 1)))
         # else:
