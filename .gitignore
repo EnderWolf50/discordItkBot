@@ -1,2 +1,6 @@
 
 settings.json
+pyproject.toml
+poetry.lock
+requirements.txt
+__pycache__
