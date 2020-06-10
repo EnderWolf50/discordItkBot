@@ -2,6 +2,8 @@ import discord, os
 from discord.ext import commands
 from core.rwFile import get_setting
 
+from keep_alive import keep_alive
+
 TOKEN = get_setting("TOKEN")
 
 bot = commands.Bot(command_prefix= ".", case_insensitive= True)
@@ -20,4 +22,5 @@ for Filename in os.listdir("./games"):
         bot.load_extension(f"games.{Filename[:-3]}")
 
 if __name__ == "__main__":
+    keep_alive()
     bot.run(TOKEN)

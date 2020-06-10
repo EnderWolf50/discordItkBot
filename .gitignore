@@ -3,4 +3,5 @@ settings.json
 pyproject.toml
 poetry.lock
 requirements.txt
-__pycache__
+keep_alive.py
+.replit
