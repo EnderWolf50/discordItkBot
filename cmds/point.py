@@ -1,19 +1,17 @@
 import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
-import json
-
+from core.rwFile import rFile, wFile
 class Point(Cog_Ext):
     @commands.command()
     async def Point(self, ctx):
-        with open("points.json", "r", encoding= "utf8") as jpoints:
-            point = json.load(jpoints)
+        
+        point = rFile("points")
 
         await ctx.message.delete(delay= 0.5)
         if f"{ctx.author.id}" not in point:
             point[f"{ctx.author.id}"] = 0
-            with open("points.json", "w", encoding= "utf8") as jpoints:
-                json.dump(point, jpoints, indent= 4)
+            wFile(point, "points")
 
             await ctx.send(ctx.author.mention + " 目前的點數為 0")
         

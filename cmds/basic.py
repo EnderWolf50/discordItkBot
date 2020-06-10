@@ -33,7 +33,13 @@ class Basic(Cog_Ext):
 
     @commands.command()
     async def help(self, ctx):
-        await ctx.send("test")
+        embed = discord.Embed(title= "Command Help", color= 0xfda34e)
+        embed.set_author(name= "Itk Bot", icon_url= "https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128")
+        embed.add_field(name= "bzz", value= "抽籤！", inline= True)
+        embed.add_field(name= "tdbzz", value= "當日運勢", inline= True)
+        embed.add_field(name= "choose (...)", value= "協助選擇障礙患者做出決定 ouo", inline= True)
+        embed.add_field(name= "poll|vote <標題> (選項...)", value= "發起投票", inline= True)
+        await ctx.send(embed= embed)
 
 def setup(bot):
     bot.add_cog(Basic(bot))

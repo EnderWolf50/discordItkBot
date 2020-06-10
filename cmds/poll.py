@@ -44,14 +44,14 @@ Emoji = [
         ]
 
 class Poll(Cog_Ext):
-    @commands.command()
-    async def poll(self, ctx, title= None,  *arg):
+    @commands.command(aliases= ["vote"])
+    async def poll(self, ctx, title= None, *arg):
         if len(arg) <= 20:
             PD = ""
             for i in range(len(arg)):
                 PD = PD + "\n" + Emoji[i] + " " + arg[i]
             embed = discord.Embed(description= PD, color= 0x21bbaa)
-            embed_msg = await ctx.send(f"<a:emoji_103:713998749680009250> **{title}**", embed= embed)
+            embed_msg = await ctx.send(title, embed= embed)
             for i in range(len(arg)):
                 await embed_msg.add_reaction(Emoji[i])
         
