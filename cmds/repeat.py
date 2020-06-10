@@ -1,6 +1,10 @@
 import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
+from core.rwFile import get_setting
+
+Owner = get_setting("Owner")
+Traveler = get_setting("Traveler")
 
 Repeat_cmd_status = False
 Cannot_delete = False
@@ -9,7 +13,7 @@ Edit_repeat = False
 class Repeat(Cog_Ext):
     @commands.command()
     async def repeat(self, ctx):
-        if ctx.author == self.bot.get_user(523755296242270210) or ctx.author == self.bot.get_user(590430031281651722):
+        if ctx.author == self.bot.get_user(Owner) or ctx.author == self.bot.get_user(Traveler):
             global Repeat_cmd_status
             Repeat_cmd_status = not Repeat_cmd_status
             if Repeat_cmd_status == True:
@@ -19,7 +23,7 @@ class Repeat(Cog_Ext):
 
     @commands.command()
     async def editr(self, ctx):
-        if ctx.author == self.bot.get_user(523755296242270210) or ctx.author == self.bot.get_user(590430031281651722):
+        if ctx.author == self.bot.get_user(Owner) or ctx.author == self.bot.get_user(Traveler):
             global Edit_repeat
             Edit_repeat = not Edit_repeat
             if Edit_repeat == True:
@@ -29,7 +33,7 @@ class Repeat(Cog_Ext):
 
     @commands.command()
     async def cnd(self, ctx):
-        if ctx.author == self.bot.get_user(523755296242270210) or ctx.author == self.bot.get_user(590430031281651722):
+        if ctx.author == self.bot.get_user(Owner) or ctx.author == self.bot.get_user(Traveler):
             global Cannot_delete
             Cannot_delete = not Cannot_delete
 
