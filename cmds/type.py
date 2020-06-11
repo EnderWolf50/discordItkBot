@@ -19,8 +19,6 @@ class Type(Cog_Ext):
         Member = await commands.MemberConverter().convert(ctx, ID)
         await ctx.send(Member)
         await ctx.send(Member.status)
-        #await ctx.send("Y")
-        #await ctx.send("N")
 
 def setup(bot):
     bot.add_cog(Type(bot))
