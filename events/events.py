@@ -27,8 +27,6 @@ class Events(Cog_Ext):
             await msg.add_reaction("<:emoji_101:713997954201157723>")
         elif msg.content == "尻尻":
             await msg.add_reaction("<a:emoji_103:713998749680009250>")
-        elif msg.content == "c8763":
-            await msg.add_reaction("\N{THUMBS DOWN SIGN}")
 
 def setup(bot):
     bot.add_cog(Events(bot))
