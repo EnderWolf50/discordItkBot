@@ -12,19 +12,32 @@ class Clean(Cog_Ext):
     @commands.command()
     async def clean(self, ctx, number: int= None):
         def predicate(msg: discord.Message) -> bool:
-            return msg == ctx.message or msg.author == self.bot.get_user(Bot)
+            return msg.author == self.bot.user
 
-        await ctx.channel.purge(before= datetime.datetime.now(), check= predicate)
-        await ctx.message.delete()
+        if number == None:
+            await ctx.message.delete(delay= 3)
+            deleted_msg_count = len(await ctx.channel.purge(limit= None, before= datetime.datetime.now(), check= predicate))
+            await ctx.send(f"> 已清除 {deleted_msg_count} 則 {self.bot.user.name} 的訊息", delete_after= 10)
+        else:
+            await ctx.message.delete(delay= 3)
+            deleted_msg_count = len(await ctx.channel.purge(limit= number + 1, check= predicate))
+            await ctx.send(f"> 已清除 {deleted_msg_count} 則 {self.bot.user.name} 的訊息", delete_after= 10)
             
     @commands.command()
     async def purge(self, ctx, number: int, member: discord.Member= None):
         if ctx.author == self.bot.get_user(Owner) or ctx.author == self.bot.get_user(Traveler):
             def predicate(msg: discord.Message) -> bool:
-                return msg == ctx.message or member == None or msg.author == member
+                return member == None or msg.author == member
 
-            await ctx.channel.purge(limit= number + 1, check= predicate)
-            await ctx.message.delete()
+            if member == None:
+                deleted_msg_count = len(await ctx.channel.purge(limit= number + 1, check= predicate))
+                await ctx.send(f"> 已清除 {deleted_msg_count - 1} 則訊息", delete_after= 3)
+            else:
+                DC_Member = str(member)[:-5]
+                await ctx.message.delete(delay= 3)
+                deleted_msg_count = len(await ctx.channel.purge(limit= number + 1, check= predicate))
+                await ctx.send(f"> 已清除 {deleted_msg_count} 則 {DC_Member} 的訊息", delete_after= 10)
+
             
 def setup(bot):
     bot.add_cog(Clean(bot))
