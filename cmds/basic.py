@@ -28,10 +28,6 @@ class Basic(Cog_Ext):
             await ctx.send(f"**{extension}** has been reloaded!", delete_after= 3)
 
     @commands.command()
-    async def ping(self, ctx):
-        await ctx.send(f'Ping is {round(self.bot.latency*1000)} ms and... Pong!')
-
-    @commands.command()
     async def help(self, ctx):
         embed = discord.Embed(title= "Command Help", color= 0xfda34e)
         embed.set_author(name= "Itk Bot", icon_url= "https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128")

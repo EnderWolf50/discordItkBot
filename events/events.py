@@ -23,11 +23,8 @@ class Events(Cog_Ext):
             if msg.author != self.bot.user:
 
                 File = rFile("IDK_url")
-                for key, value in File.items():
-                    url.append(key)
-                    url_weights.append(value)
 
-                Picture = str(random.choices(url, weights= url_weights)).strip("[]'")
+                Picture = str(random.choices(list(File.keys()), weights= list(File.values()))).strip("[]'")
 
                 if Picture == "https://i.imgur.com/x1qmYCT.gif":
                     await msg.channel.send(Picture, delete_after= 18.68)
