@@ -4,7 +4,6 @@ from core.classes import Cog_Ext
 from core.rwFile import rFile, wFile
 
 import random
-import json
 import datetime
 
 class Bzz(Cog_Ext): 

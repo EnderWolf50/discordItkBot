@@ -1,19 +1,8 @@
 import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
-import asyncio
 
-class Type(Cog_Ext):
-    @commands.command()
-    async def Type(self, ctx, *args):
-        test = list(args)
-        await ctx.message.delete()
-        msg = await ctx.send("** **")
-        for i in test:
-            await asyncio.sleep(1)
-            await msg.edit(content= i)
-        await msg.delete(delay= 5)
-        
+class Others(Cog_Ext):
     @commands.command()
     async def Mconvert(self, ctx, ID):
         Member = await commands.MemberConverter().convert(ctx, ID)
@@ -26,4 +15,4 @@ class Type(Cog_Ext):
             await ctx.send(f"test message {i + 1}")
 
 def setup(bot):
-    bot.add_cog(Type(bot))
+    bot.add_cog(Others(bot))

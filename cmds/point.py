@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
 from core.rwFile import rFile, wFile
+
 class Point(Cog_Ext):
     @commands.command()
     async def Point(self, ctx):
