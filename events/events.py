@@ -22,7 +22,7 @@ class Events(Cog_Ext):
         if "窩不知道" in msg.content or "idk" in msg.content.lower():
             if msg.author != self.bot.user:
 
-                File = rFile("IDK_url")
+                File = rFile("others")["IDK_url"]
 
                 Picture = str(random.choices(list(File.keys()), weights= list(File.values()))).strip("[]'")
 

@@ -1,0 +1,19 @@
+{
+    "IDK_url": {
+                "https://i.imgur.com/R5iTVuQ.jpg": 40,
+                "https://i.imgur.com/ZDQpQ1o.jpg": 35,
+                "https://i.imgur.com/4SFISGK.jpg": 15,
+                "https://i.imgur.com/13gP6KH.jpg": 9,
+                "https://i.imgur.com/x1qmYCT.gif": 1
+                },
+
+    "help": [
+            [".bzz", "抽籤！", "True"],
+            [".tdbzz", "當日運勢", "True"],
+            [".choose (選項...) ", "協助選擇障礙者做決定", "True"],
+            [".poll | vote <標題> (選項...) ", "發起投票", "True"],
+            [".roll <最大值> (字句) ({} | %)", "抽...數字？", "False"],
+            [".point", "查看沒什麼用的點數", "True"],
+            [".help", "就你現在在看的這個 ._.", "True"]
+            ]
+}
