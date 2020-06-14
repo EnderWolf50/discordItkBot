@@ -38,5 +38,9 @@ class Basic(Cog_Ext):
             embed.add_field(name= command, value= description, inline= inline)
         await ctx.send(embed= embed)
 
+    @commands.command()
+    async def close(self, ctx):
+        await self.bot.close()
+
 def setup(bot):
     bot.add_cog(Basic(bot))

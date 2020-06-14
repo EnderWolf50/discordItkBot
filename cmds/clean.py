@@ -17,7 +17,7 @@ class Clean(Cog_Ext):
 
         if number == None:
             await ctx.message.delete(delay= 3)
-            deleted_msg_count = len(await ctx.channel.purge(limit= None, before= datetime.datetime.now(), check= predicate))
+            deleted_msg_count = len(await ctx.channel.purge(limit= None, after= datetime.datetime.now() + datetime.timedelta(days= -5), check= predicate))
             await ctx.send(f"> 已清除 {deleted_msg_count} 則 {self.bot.user.name} 的訊息", delete_after= 10)
         else:
             await ctx.message.delete(delay= 3)
@@ -39,6 +39,12 @@ class Clean(Cog_Ext):
                 deleted_msg_count = len(await ctx.channel.purge(limit= number + 1, check= predicate))
                 await ctx.send(f"> 已清除 {deleted_msg_count} 則 {DC_Member} 的訊息", delete_after= 10)
 
+    #@commands.command()
+    #async def count(self, ctx):
+    #    counter = 0
+    #    async for m in ctx.channel.history(limit= None):
+    #        counter += 1
+    #    await ctx.send(counter)
             
 def setup(bot):
     bot.add_cog(Clean(bot))
