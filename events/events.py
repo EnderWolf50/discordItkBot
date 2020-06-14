@@ -43,7 +43,7 @@ class Events(Cog_Ext):
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
-        if str(reaction.emoji) == "\N{THUMBS DOWN SIGN}" and reaction.count > 0:
+        if str(reaction.emoji) == "\N{THUMBS DOWN SIGN}" and reaction.count > 0 and reaction.message.author.bot == False:
             await reaction.message.add_reaction("\N{THUMBS DOWN SIGN}")
             # async for u in reaction.users():
             #     if self.bot.get_user(719120395571298336) == u:
@@ -52,7 +52,7 @@ class Events(Cog_Ext):
 
     @commands.Cog.listener()
     async def on_reaction_remove(self, reaction, user):
-        if str(reaction.emoji) == "\N{THUMBS DOWN SIGN}" and reaction.count == 1:
+        if str(reaction.emoji) == "\N{THUMBS DOWN SIGN}" and reaction.count == 1 and reaction.message.author.bot == False:
             await reaction.message.remove_reaction("\N{THUMBS DOWN SIGN}", self.bot.user)
             # async for u in reaction.users():
             #     if self.bot.get_user(719120395571298336) == u:

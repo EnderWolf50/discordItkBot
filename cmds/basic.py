@@ -33,8 +33,7 @@ class Basic(Cog_Ext):
         embed = discord.Embed(title= "Command Help", color= 0xfda34e)
         embed.set_author(name= "Itk Bot", icon_url= "https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128")
         embed.set_footer(text= "那個...窩不知道")
-        for line in rFile("others")["help"]:
-            command, description, inline = tuple(line)
+        for command, description, inline in rFile("others")["help"]:
             embed.add_field(name= command, value= description, inline= inline)
         await ctx.send(embed= embed)
 
