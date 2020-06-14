@@ -11,7 +11,7 @@ Bot = get_setting("Bot")
 
 class Clean(Cog_Ext):
     @commands.command()
-    async def clean(self, ctx, number: int= None):
+    async def clean(self, ctx, number: int= 1):
         await ctx.message.delete()
         
         def predicate(msg: discord.Message) -> bool:
@@ -24,47 +24,25 @@ class Clean(Cog_Ext):
                 else:
                     raise CancelCommand
 
-        if number == None:
-            Check_msg = await ctx.send(f"{ctx.author.mention} 你確定要清除 `{self.bot.user.name}` `3` 日內的訊息嗎？")
-            await Check_msg.add_reaction("\N{WHITE HEAVY CHECK MARK}")
-            await Check_msg.add_reaction("\N{NEGATIVE SQUARED CROSS MARK}")
+        Check_msg = await ctx.send(f"{ctx.author.mention} 你確定要清除 `{self.bot.user.name}` `{number}` 日內的所有訊息嗎？")
+        await Check_msg.add_reaction("\N{WHITE HEAVY CHECK MARK}")
+        await Check_msg.add_reaction("\N{NEGATIVE SQUARED CROSS MARK}")
 
-            try:
-                await self.bot.wait_for('reaction_add', timeout= 7.5, check= Command_check)
-            except ActiveCommand:
-                await Check_msg.delete()
-                Start_Time = datetime.datetime.now()
-                deleted_msg_count = len(await ctx.channel.purge(limit= None, after= datetime.datetime.now() - datetime.timedelta(days= 3), check= predicate))
-                End_Time = datetime.datetime.now()
-                During = (End_Time - Start_Time).seconds
-                await ctx.send(f"> 已清除 {deleted_msg_count} 則 {self.bot.user.name} 的訊息（{During}s）", delete_after= 3)
-            except CancelCommand:
-                await Check_msg.delete()
-                await ctx.send(f"{ctx.author.mention} 指令已取消", delete_after= 3)
-            except:
-                await Check_msg.delete()
-                await ctx.send(f"{ctx.author.mention} 超過等待時間，指令已取消", delete_after= 3)
-
-        else:
-            Check_msg = await ctx.send(f"{ctx.author.mention} 你確定要清除 `{self.bot.user.name}` `{number}` 日內的訊息嗎？")
-            await Check_msg.add_reaction("\N{WHITE HEAVY CHECK MARK}")
-            await Check_msg.add_reaction("\N{NEGATIVE SQUARED CROSS MARK}")
-
-            try:
-                await self.bot.wait_for('reaction_add', timeout= 7.5, check= Command_check)
-            except ActiveCommand:
-                await Check_msg.delete()
-                Start_Time = datetime.datetime.now()
-                deleted_msg_count = len(await ctx.channel.purge(limit= None, after= datetime.datetime.now() - datetime.timedelta(days= number), check= predicate))
-                End_Time = datetime.datetime.now()
-                During = (End_Time - Start_Time).seconds
-                await ctx.send(f"> 已清除 {deleted_msg_count} 則 {self.bot.user.name} 的訊息（{During}s）", delete_after= 3)
-            except CancelCommand:
-                await Check_msg.delete()
-                await ctx.send(f"{ctx.author.mention} 指令已取消", delete_after= 3)
-            except:
-                await Check_msg.delete()
-                await ctx.send(f"{ctx.author.mention} 超過等待時間，指令已取消", delete_after= 3)
+        try:
+            await self.bot.wait_for('reaction_add', timeout= 7.5, check= Command_check)
+        except ActiveCommand:
+            await Check_msg.delete()
+            Start_Time = datetime.datetime.now()
+            deleted_msg_count = len(await ctx.channel.purge(limit= None, after= datetime.datetime.now() - datetime.timedelta(days= number), check= predicate))
+            End_Time = datetime.datetime.now()
+            During = (End_Time - Start_Time).seconds
+            await ctx.send(f"> 已清除 {deleted_msg_count} 則 {self.bot.user.name} 的訊息（{During}s）", delete_after= 5)
+        except CancelCommand:
+            await Check_msg.delete()
+            await ctx.send(f"{ctx.author.mention} 指令已取消", delete_after= 5)
+        except:
+            await Check_msg.delete()
+            await ctx.send(f"{ctx.author.mention} 超過等待時間，指令已取消", delete_after= 5)
             
     @commands.command()
     async def purge(self, ctx, number: int, ID: discord.Member= None):
@@ -93,13 +71,13 @@ class Clean(Cog_Ext):
                     deleted_msg_count = len(await ctx.channel.purge(limit= number, check= predicate))
                     End_Time = datetime.datetime.now()
                     During = (End_Time - Start_Time).seconds
-                    await ctx.send(f"> 已清除 {deleted_msg_count} 則訊息（{During}s）", delete_after= 3)
+                    await ctx.send(f"> 已清除 {deleted_msg_count} 則訊息（{During}s）", delete_after= 5)
                 except CancelCommand:
                     await Check_msg.delete()
-                    await ctx.send(f"{ctx.author.mention} 指令已取消", delete_after= 3)
+                    await ctx.send(f"{ctx.author.mention} 指令已取消", delete_after= 5)
                 except:
                     await Check_msg.delete()
-                    await ctx.send(f"{ctx.author.mention} 超過等待時間，指令已取消", delete_after= 3)
+                    await ctx.send(f"{ctx.author.mention} 超過等待時間，指令已取消", delete_after= 5)
 
             else:
                 DC_Member = str(ID)[:-5]
@@ -115,13 +93,13 @@ class Clean(Cog_Ext):
                     deleted_msg_count = len(await ctx.channel.purge(limit= number, check= predicate))
                     End_Time = datetime.datetime.now()
                     During = (End_Time - Start_Time).seconds
-                    await ctx.send(f"> 已清除 {deleted_msg_count} 則 {DC_Member} 的訊息（{During}s）", delete_after= 3)
+                    await ctx.send(f"> 已清除 {deleted_msg_count} 則 {DC_Member} 的訊息（{During}s）", delete_after= 5)
                 except CancelCommand:
                     await Check_msg.delete()
-                    await ctx.send(f"{ctx.author.mention} 指令已取消", delete_after= 3)
+                    await ctx.send(f"{ctx.author.mention} 指令已取消", delete_after= 5)
                 except:
                     await Check_msg.delete()
-                    await ctx.send(f"{ctx.author.mention} 超過等待時間，指令已取消", delete_after= 3)
+                    await ctx.send(f"{ctx.author.mention} 超過等待時間，指令已取消", delete_after= 5)
 
 class ActiveCommand(Exception):
     pass

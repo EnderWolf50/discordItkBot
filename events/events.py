@@ -43,21 +43,21 @@ class Events(Cog_Ext):
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
-        if str(reaction.emoji) == "\N{THUMBS DOWN SIGN}" and reaction.count > 0 and reaction.message.author.bot == False:
-            await reaction.message.add_reaction("\N{THUMBS DOWN SIGN}")
-            # async for u in reaction.users():
-            #     if self.bot.get_user(719120395571298336) == u:
-            #         await reaction.message.add_reaction("\N{THUMBS DOWN SIGN}")
-            #         break
+        if str(reaction.emoji) == "\N{THUMBS DOWN SIGN}":
+            if user == self.bot.get_user(Owner) or user.bot == True:
+                await reaction.message.add_reaction("\N{THUMBS DOWN SIGN}")
+            elif reaction.count >= 2:
+                await reaction.message.add_reaction("\N{THUMBS DOWN SIGN}")
+        elif "ldcat" in reaction.message.content:
+            await reaction.message.remove_reaction(reaction, user)
 
     @commands.Cog.listener()
     async def on_reaction_remove(self, reaction, user):
-        if str(reaction.emoji) == "\N{THUMBS DOWN SIGN}" and reaction.count == 1 and reaction.message.author.bot == False:
-            await reaction.message.remove_reaction("\N{THUMBS DOWN SIGN}", self.bot.user)
-            # async for u in reaction.users():
-            #     if self.bot.get_user(719120395571298336) == u:
-            #         await reaction.message.add_reaction("\N{THUMBS DOWN SIGN}")
-            #         break
+        if str(reaction.emoji) == "\N{THUMBS DOWN SIGN}":
+            if user == self.bot.get_user(Owner):
+                await reaction.message.remove_reaction("\N{THUMBS DOWN SIGN}", self.bot.user)
+            elif reaction.count == 1:
+                await reaction.message.remove_reaction("\N{THUMBS DOWN SIGN}", self.bot.user)
 
 def setup(bot):
     bot.add_cog(Events(bot))
