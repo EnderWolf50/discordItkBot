@@ -25,7 +25,7 @@ class Clean(Cog_Ext):
                     raise CancelCommand
 
         if number == None:
-            Check_msg = await ctx.send(f"{ctx.author.mention} 你確定要清除 `{self.bot.user.name}` `5` 日內的訊息嗎？")
+            Check_msg = await ctx.send(f"{ctx.author.mention} 你確定要清除 `{self.bot.user.name}` `3` 日內的訊息嗎？")
             await Check_msg.add_reaction("\N{WHITE HEAVY CHECK MARK}")
             await Check_msg.add_reaction("\N{NEGATIVE SQUARED CROSS MARK}")
 
@@ -33,8 +33,11 @@ class Clean(Cog_Ext):
                 await self.bot.wait_for('reaction_add', timeout= 7.5, check= Command_check)
             except ActiveCommand:
                 await Check_msg.delete()
-                deleted_msg_count = len(await ctx.channel.purge(limit= None, after= datetime.datetime.now() - datetime.timedelta(days= 5), check= predicate))
-                await ctx.send(f"> 已清除 {deleted_msg_count} 則 {self.bot.user.name} 的訊息", delete_after= 3)
+                Start_Time = datetime.datetime.now()
+                deleted_msg_count = len(await ctx.channel.purge(limit= None, after= datetime.datetime.now() - datetime.timedelta(days= 3), check= predicate))
+                End_Time = datetime.datetime.now()
+                During = (End_Time - Start_Time).seconds
+                await ctx.send(f"> 已清除 {deleted_msg_count} 則 {self.bot.user.name} 的訊息（{During}s）", delete_after= 3)
             except CancelCommand:
                 await Check_msg.delete()
                 await ctx.send(f"{ctx.author.mention} 指令已取消", delete_after= 3)
@@ -51,8 +54,11 @@ class Clean(Cog_Ext):
                 await self.bot.wait_for('reaction_add', timeout= 7.5, check= Command_check)
             except ActiveCommand:
                 await Check_msg.delete()
+                Start_Time = datetime.datetime.now()
                 deleted_msg_count = len(await ctx.channel.purge(limit= None, after= datetime.datetime.now() - datetime.timedelta(days= number), check= predicate))
-                await ctx.send(f"> 已清除 {deleted_msg_count} 則 {self.bot.user.name} 的訊息", delete_after= 3)
+                End_Time = datetime.datetime.now()
+                During = (End_Time - Start_Time).seconds
+                await ctx.send(f"> 已清除 {deleted_msg_count} 則 {self.bot.user.name} 的訊息（{During}s）", delete_after= 3)
             except CancelCommand:
                 await Check_msg.delete()
                 await ctx.send(f"{ctx.author.mention} 指令已取消", delete_after= 3)
@@ -83,8 +89,11 @@ class Clean(Cog_Ext):
                     await self.bot.wait_for('reaction_add', timeout= 7.5, check= Command_check)
                 except ActiveCommand:
                     await Check_msg.delete()
+                    Start_Time = datetime.datetime.now()
                     deleted_msg_count = len(await ctx.channel.purge(limit= number, check= predicate))
-                    await ctx.send(f"> 已清除 {deleted_msg_count} 則訊息", delete_after= 3)
+                    End_Time = datetime.datetime.now()
+                    During = (End_Time - Start_Time).seconds
+                    await ctx.send(f"> 已清除 {deleted_msg_count} 則訊息（{During}s）", delete_after= 3)
                 except CancelCommand:
                     await Check_msg.delete()
                     await ctx.send(f"{ctx.author.mention} 指令已取消", delete_after= 3)
@@ -102,8 +111,11 @@ class Clean(Cog_Ext):
                     await self.bot.wait_for('reaction_add', timeout= 7.5, check= Command_check)
                 except ActiveCommand:
                     await Check_msg.delete()
+                    Start_Time = datetime.datetime.now()
                     deleted_msg_count = len(await ctx.channel.purge(limit= number, check= predicate))
-                    await ctx.send(f"> 已清除 {deleted_msg_count} 則 {DC_Member} 的訊息", delete_after= 3)
+                    End_Time = datetime.datetime.now()
+                    During = (End_Time - Start_Time).seconds
+                    await ctx.send(f"> 已清除 {deleted_msg_count} 則 {DC_Member} 的訊息（{During}s）", delete_after= 3)
                 except CancelCommand:
                     await Check_msg.delete()
                     await ctx.send(f"{ctx.author.mention} 指令已取消", delete_after= 3)
