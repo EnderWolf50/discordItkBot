@@ -84,7 +84,7 @@ class _1A2B(Cog_Ext):
                         B = 0
                         for i in range(Amount):
                             for j in range(Amount):
-                                if i == j:
+                                if i != j:
                                     if Number_Guessed[i] == Number_Guessed[j]:
                                         Duplicate = True
                                         break
