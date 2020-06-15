@@ -49,8 +49,10 @@ class _1A2B(Cog_Ext):
             Playing = False
             Number = "".join(Answer)
             End_Time = datetime.datetime.now()
+
             def predicate(msg: discord.Message) -> bool:
                 return msg.author == self.bot.get_user(710498084194484235) or (len(msg.content) == Amount and msg.content.isdigit())
+
             await asyncio.sleep(0.5)
             await channel.send(ctx.author.mention + " 結束了遊戲！")
             await channel.send("正確答案為： " + f"**{Number}**！")
@@ -78,38 +80,22 @@ class _1A2B(Cog_Ext):
                 else:
                     if msg.content.isdigit() == True and len(msg.content) == Amount:
                         Number_Guessed = list(msg.content)
-                        j = 0
-                        while j < Amount:
-                            k = 0
-                            while k < Amount:
-                                if j == k:
-                                    k += 1
-                                    continue
-                                if Duplicate == True:
-                                    j = Amount
-                                    k = Amount
-                                else:
-                                    if (Number_Guessed[j] == Number_Guessed[k]):
+                        A = 0
+                        B = 0
+                        for i in range(Amount):
+                            for j in range(Amount):
+                                if i == j:
+                                    if Number_Guessed[i] == Number_Guessed[j]:
                                         Duplicate = True
-                                k += 1
-                            j += 1
-                        if Duplicate == False:
-                            A = 0
-                            for i in range(Amount):
-                                if (Number_Guessed[i] == Answer[i]):
-                                    A += 1
-                            B = 0
-                            j = 0
-                            while j < Amount:
-                                k = 0
-                                while k < Amount:
-                                    if j == k:
-                                        k += 1
-                                        continue
-                                    if (Number_Guessed[j] == Answer[k]):
+                                        break
+                                    elif Number_Guessed[i] == Answer[j]:
                                         B += 1
-                                    k += 1
-                                j += 1
+                                else:
+                                    if Number_Guessed[i] == Answer[j]:
+                                        A += 1
+                            if Duplicate == True:
+                                break
+                        if Duplicate == False:
                             if A == Amount:
                                 AB_G = False
                                 wait = False
