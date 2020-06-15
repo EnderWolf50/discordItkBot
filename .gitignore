@@ -4,4 +4,5 @@ poetry.lock
 requirements.txt
 keep_alive.py
 .replit
+try.py
 __pycache__/
