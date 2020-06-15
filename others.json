@@ -6,6 +6,9 @@
                 "https://i.imgur.com/13gP6KH.jpg": 9,
                 "https://i.imgur.com/x1qmYCT.gif": 1
                 },
+    
+    "Mention_react": ["窩不知道…", ":thinking:", "品橋品橋", "嘎嘎嘎", "ㄐㄐ", "先幫我打卡", "乾～爹～"
+        , "那個我會晚點到哦", "你先走沒關係", "你等一下有空嗎", "你今天可以到幾點", "你晚上有事嗎"],
 
     "help": [
             [".bzz", "抽籤！", "False"],

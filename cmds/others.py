@@ -9,7 +9,7 @@ class Others(Cog_Ext):
         await ctx.send(Member)
         await ctx.send(Member.status)
 
-    @commands.command(aliases= ["t_msg"])
+    @commands.command(aliases= ["t_m", "tm", "t_msg"])
     async def test_message(self, ctx, times: int):
         for i in range(times):
             await ctx.send(f"test message {i + 1}")

@@ -40,6 +40,8 @@ class Events(Cog_Ext):
             await msg.channel.send("<a:ldcat_001:720660862876123166><a:ldcat_002:720660879888351262><a:ldcat_003:720660898406203400><a:ldcat_004:720660908669665371><a:ldcat_005:720660929678803037>")
             await msg.channel.send("<a:ldcat_006:720660939518771262><a:ldcat_007:720660949723512896><a:ldcat_008:720660960850870292><a:ldcat_009:720660972670418954><a:ldcat_010:720660987174453319>")
             await msg.channel.send("<a:ldcat_011:720660998650069013><a:ldcat_012:720661008477323325><a:ldcat_013:720661018262634597><a:ldcat_014:720661027381051393><a:ldcat_015:720661035836768306>")
+        elif self.bot.user in msg.mentions and len(msg.mentions) == 1:
+             await msg.channel.send(random.choice(rFile("others")["Mention_react"]))
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
