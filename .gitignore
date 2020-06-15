@@ -5,3 +5,4 @@ requirements.txt
 keep_alive.py
 .replit
 __pycache__/
+try.py
