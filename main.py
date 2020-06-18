@@ -1,4 +1,5 @@
-import discord, os
+import discord
+import os
 from discord.ext import commands
 from core.rwFile import get_setting
 
@@ -6,7 +7,7 @@ from keep_alive import keep_alive
 
 TOKEN = get_setting("TOKEN")
 
-bot = commands.Bot(command_prefix= ".", case_insensitive= True)
+bot = commands.Bot(command_prefix=".", case_insensitive=True)
 bot.remove_command("help")
 
 for Filename in os.listdir("./cmds"):
