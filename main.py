@@ -2,7 +2,6 @@ import discord, os
 from discord.ext import commands
 from core.rwFile import get_setting
 
-from keep_alive import keep_alive
 
 TOKEN = get_setting("TOKEN")
 
@@ -11,7 +10,7 @@ bot.remove_command("help")
 
 for Filename in os.listdir("./cmds"):
     if Filename.endswith(".py"):
-        bot.load_extension(F"cmds.{Filename[:-3]}")
+        bot.load_extension(f"cmds.{Filename[:-3]}")
 
 for Filename in os.listdir("./events"):
     if Filename.endswith(".py"):
@@ -26,5 +25,4 @@ for Filename in os.listdir("./tasks"):
         bot.load_extension(f"tasks.{Filename[:-3]}")
 
 if __name__ == "__main__":
-    keep_alive()
     bot.run(TOKEN)
