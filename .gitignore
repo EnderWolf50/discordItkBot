@@ -6,3 +6,4 @@ keep_alive.py
 .replit
 try.py
 __pycache__/
+.vscode/

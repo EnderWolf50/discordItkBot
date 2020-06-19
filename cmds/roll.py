@@ -4,13 +4,14 @@ from core.classes import Cog_Ext
 
 import random
 
+
 class Roll(Cog_Ext):
     @commands.command()
-    async def roll(self, ctx, num: int, *,args= "{}"):
+    async def roll(self, ctx, num: int, *, args="{}"):
         if num <= 0:
             await ctx.send("ㄐㄐ")
             await ctx.send("雞雞")
-            await ctx.send("尻尻")    
+            await ctx.send("尻尻")
         else:
             if "{}" in args:
                 msg = args.replace("{}", f"{random.randrange(1, num + 1)}", 1)
@@ -37,6 +38,7 @@ class Roll(Cog_Ext):
     #             json.dump(other, jothers, indent= 4)
 
     #         await ctx.send("訊息已設定為 __" + other["Roll Message"] + "__")
+
 
 def setup(bot):
     bot.add_cog(Roll(bot))
