@@ -1,12 +1,11 @@
 import json
 
-
 def get_setting(Data=None):
     if Data == None:
-        with open("settings.json", "r", encoding="utf8") as jsettings:
+        with open("setting.json", "r", encoding="utf8") as jsettings:
             return json.load(jsettings)
     else:
-        with open("settings.json", "r", encoding="utf8") as jsettings:
+        with open("setting.json", "r", encoding="utf8") as jsettings:
             return json.load(jsettings)[Data]
 
 

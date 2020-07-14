@@ -1,8 +1,5 @@
-settings.json
-pyproject.toml
-poetry.lock
 requirements.txt
-keep_alive.py
-.replit
 try.py
 __pycache__/
+.vscode/
+setting.json
