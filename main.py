@@ -1,11 +1,10 @@
-import discord
-import os
+import discord, os
 from discord.ext import commands
 from core.rwFile import get_setting
 
 TOKEN = get_setting("TOKEN")
 
-bot = commands.Bot(command_prefix=".", case_insensitive=True)
+bot = commands.Bot(command_prefix= ".", case_insensitive= True)
 bot.remove_command("help")
 
 for Filename in os.listdir("./cmds"):

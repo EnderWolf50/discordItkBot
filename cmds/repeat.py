@@ -10,7 +10,6 @@ Repeat_cmd_status = False
 Cannot_delete = False
 Edit_repeat = False
 
-
 class Repeat(Cog_Ext):
     @commands.command()
     async def repeat(self, ctx):
@@ -58,7 +57,6 @@ class Repeat(Cog_Ext):
         if before.author != self.bot.user:
             if Edit_repeat == True:
                 await before.channel.send(before.author.mention + "：" + before.content + " → " + after.content)
-
 
 def setup(bot):
     bot.add_cog(Repeat(bot))

@@ -4,10 +4,9 @@ from core.classes import Cog_Ext
 
 import unicodedata
 
-
 class Emo_search(Cog_Ext):
-    @commands.command(aliases=["Emoji", "Emo", "Unicode", "Uni"])
-    async def Emo_search(self, ctx, *, E_input):
+    @commands.command(aliases= ["Emoji", "Emo", "Unicode", "Uni"])
+    async def Emo_search(self, ctx, *,E_input):
         if E_input.startswith(":") and E_input.endswith(":"):
             E_input = E_input.strip(":")
         try:
@@ -24,8 +23,7 @@ class Emo_search(Cog_Ext):
                 await ctx.send(f"\<a:{Emoji.name}:{Emoji.id}>")
             else:
                 await ctx.send(f"\<:{Emoji.name}:{Emoji.id}>")
-        await ctx.message.delete(delay=3)
-
+        await ctx.message.delete(delay= 3)
 
 def setup(bot):
     bot.add_cog(Emo_search(bot))
