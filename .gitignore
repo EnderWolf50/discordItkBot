@@ -3,3 +3,4 @@ try.py
 __pycache__/
 .vscode/
 settings.json
+.env
