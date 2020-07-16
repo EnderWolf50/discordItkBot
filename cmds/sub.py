@@ -29,7 +29,7 @@ class Subscribe(Cog_Ext):
                     subscriberList[key.decode("utf-8")] = r.get(key).decode("utf-8").split(
                         ", ")
                 pool.disconnect()
-                await asyncio.sleep(600)
+                await asyncio.sleep(900)
 
         self.listAutoRefreshTask = self.bot.loop.create_task(listAutoRefresh())
 
