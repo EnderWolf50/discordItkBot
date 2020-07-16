@@ -253,7 +253,7 @@ class Subscribe(Cog_Ext):
     @subscriber.command()
     async def test(self, ctx, ID: int):
         Msg = await ctx.fetch_message(ID)
-        await ctx.send(Msg.embeds)
+        await ctx.send(Msg.embeds[0].fields)
         await ctx.send(Msg.embeds[0])
         await ctx.send(Msg.jump_url)
 
