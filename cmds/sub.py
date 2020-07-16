@@ -36,7 +36,7 @@ class Subscribe(Cog_Ext):
     @commands.Cog.listener()
     async def on_message(self, msg):
         if msg.channel == self.bot.get_channel(
-                channel) and msg.author != self.bot.user:
+                channel) and not msg.author.bot:
             if msg.content.startswith('.subscriber') or msg.content.startswith('.sub') or msg.content.startswith('.s'): return
             if len(msg.mentions) == 1 and str(
                     msg.mentions[0].id) in subscriberList.keys():
