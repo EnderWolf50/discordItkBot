@@ -101,7 +101,6 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases= ['s'])
     async def set(self, ctx, user: discord.Member = None, *args):
-        if ctx.channel != self.bot.get_channel(channel): return
         if ctx.author.id not in administrators: return
         if user == None or not args: return
 
@@ -123,7 +122,6 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases= ['r', 're', 'del', 'delete'])
     async def remove(self, ctx, user: discord.Member = None):
-        if ctx.channel != self.bot.get_channel(channel): return
         if ctx.author.id not in administrators: return
         if user == None: return
 
