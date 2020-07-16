@@ -35,6 +35,7 @@ class Subscribe(Cog_Ext):
 
     @commands.Cog.listener()
     async def on_message(self, msg):
+        await msg.delete(delay=5)
         if msg.channel == self.bot.get_channel(
                 channel) and msg.author != self.bot.user:
             if len(msg.mentions) == 1 and str(
