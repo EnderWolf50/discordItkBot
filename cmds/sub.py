@@ -49,8 +49,11 @@ class Subscribe(Cog_Ext):
                 await msg.channel.send(subscriptionInfo, delete_after=60)
 
     @commands.group(aliases=['s', 'sub'])
-    async def subscriber(self, ctx, user: discord.Member= None):
+    async def subscriber(self, ctx):
         await ctx.message.delete(delay= 5)
+
+    @subscriber.command(aliases= ['i'])
+    async def info(self, ctx, user: discord.Member= None):
         if ctx.channel != self.bot.get_channel(channel) or ctx.author == self.bot.user: return
         if user == None: return
 
