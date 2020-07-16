@@ -80,7 +80,7 @@ class Subscribe(Cog_Ext):
                     ", ")
         except:
             await ctx.send(
-                'There something went wrong while processing the command.', delete_after=5)
+                'There's something went wrong while processing the command.', delete_after=5)
         else:
             await ctx.channel.send('List refresh successful.', delete_after=5)
         finally:
@@ -98,7 +98,7 @@ class Subscribe(Cog_Ext):
             subscriberList[str(user.id)] = newSubscriptionInfo.split(", ")
         except:
             await ctx.send(
-                'There something went wrong while processing the command.', delete_after=5)
+                'There's something went wrong while processing the command.', delete_after=5)
         else:
             infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
             for arg in args:
@@ -117,9 +117,11 @@ class Subscribe(Cog_Ext):
             r.delete(user.id)
             if str(user.id) in subscriberList.keys():
                 del subscriberList[str(user.id)]
+            if f"{user.id}_msg" in subscriberList.keys():
+                del subscriberList[f"{user.id}_msg"]
         except:
             await ctx.send(
-                'There something went wrong while processing the command.', delete_after=5)
+                'There's something went wrong while processing the command.', delete_after=5)
         else:
             await ctx.send(f'Subscription info of {user.mention} has been removed successfully.', delete_after=7)
         finally:
@@ -137,7 +139,7 @@ class Subscribe(Cog_Ext):
             r.set(user.id, newSubscriptionInfo)
             subscriberList[str(user.id)] = newSubscriptionInfo.split(', ')
         except:
-            await ctx.send('There something went wrong while processing the command.', delete_after=5)
+            await ctx.send('There's something went wrong while processing the command.', delete_after=5)
         else:
             infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
             for arg in subscriberList[str(user.id)]:
@@ -161,7 +163,7 @@ class Subscribe(Cog_Ext):
             subscriberList[str(user.id)] = newSubscriptionInfo.split(', ')
         except:
             await ctx.send(
-                'There something went wrong while processing the command.',
+                'There's something went wrong while processing the command.',
                 delete_after=5)
         else:
             infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
@@ -261,7 +263,7 @@ class Subscribe(Cog_Ext):
             r.set(f"{user.id}_msg", msg.id)
             subscriberList[f"{user.id}_msg"] = msg.id
         except:
-            await ctx.send("There is something went wrong while processing the command.", delete_after= 5)
+            await ctx.send("There's something went wrong while processing the command.", delete_after= 5)
         else:
             await ctx.send(msg.jump_url)
         finally:
