@@ -250,5 +250,12 @@ class Subscribe(Cog_Ext):
         embed.set_author(name= "Itk Bot", icon_url= "https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128")
         await ctx.send(embed= embed)
 
+    @subscriber.command()
+    async def test(self, ctx, ID: int):
+        Msg = ctx.fetch_message(ID)
+        await ctx.send(Msg.embeds)
+        await ctx.send(Msg.embeds[0])
+        await ctx.send(Msg.jump_url)
+
 def setup(bot):
     bot.add_cog(Subscribe(bot))
