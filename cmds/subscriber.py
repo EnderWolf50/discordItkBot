@@ -14,7 +14,7 @@ r = redis.Redis(host="redis-17540.c56.east-us.azure.cloud.redislabs.com",
 for key in r.keys():
 	subscriberList[key.decode("utf-8")] = r.get(key).decode("utf-8").split(", ")
 
-class On_Mention(Cog_Ext):
+class Subscribe(Cog_Ext):
     @commands.Cog.listener()
     async def on_message(self, msg):
         if msg.channel == self.bot.get_channel(675956755112394753) and msg.author != self.bot.user:
@@ -26,5 +26,13 @@ class On_Mention(Cog_Ext):
 
                 await msg.channel.send(subscriptionInfo, delete_after= 180)
 
+    @commands.command()
+    async def slist(self, ctx):
+        for k, v in subscriberList.items():
+            listMsg += f"<@{k}>\n"
+            for line in v:
+                listMsg += f"{line}\n"
+        await ctx.channel.send(subscriberList)
+
 def setup(bot):
-    bot.add_cog(On_Mention(bot))
+    bot.add_cog(Subscribe(bot))
