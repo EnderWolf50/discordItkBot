@@ -191,6 +191,7 @@ class Subscribe(Cog_Ext):
 
         for key, value in subscriberList.items():
             description = ""
+            user = self.bot.get_user(key)
             for line in value:
                 description += f"{line}\n"
             embed = discord.Embed(description= description, color= int(color, 16))
