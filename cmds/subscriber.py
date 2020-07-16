@@ -28,11 +28,16 @@ class Subscribe(Cog_Ext):
 
     @commands.group(aliases= ['s', 'sub'])
     async def subscriber(self, ctx):
-        await ctx.send('test')
+        pass
 
-    # @commands.command()
-    # async def s
-
+    @subscriber.command()
+    async def list(self, ctx):
+        listMsg = ""
+        for k, v in subscriberList.items():
+            listMsg += f"<@{k}>\n"
+            for line in v:
+                listMsg += f"{line}\n"
+        await ctx.channel.send(listMsg)
 
 def setup(bot):
     bot.add_cog(Subscribe(bot))
