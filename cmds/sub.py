@@ -193,6 +193,7 @@ class Subscribe(Cog_Ext):
         if ctx.author.id not in administrators: return
 
         for key, value in subscriberList.items():
+            if key.endswith("_msg"): continue
             description = ""
             user = self.bot.get_user(int(key))
             for line in value:
