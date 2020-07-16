@@ -192,7 +192,7 @@ class Subscribe(Cog_Ext):
         for key, value in subscriberList.items():
             description = ""
             for line in value:
-                description += f"{value}\n"
+                description += f"{line}\n"
             embed = discord.Embed(description= description, color= int(color, 16))
             embed.set_author(name=user.name, icon_url=user.avatar_url)
             await ctx.send(embed=embed)
