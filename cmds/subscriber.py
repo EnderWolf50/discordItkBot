@@ -27,7 +27,7 @@ class Subscribe(Cog_Ext):
                 await msg.channel.send(subscriptionInfo, delete_after= 180)
 
     @commands.group(aliases= ['s', 'sub'])
-    async def subscriber(self):
+    async def subscriber(self, ctx):
         pass
 
     @subscriber.command()
