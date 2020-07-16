@@ -9,6 +9,7 @@ from redis import Redis, ConnectionPool
 administrators = [get_setting("Owner"), get_setting("Traveler"), get_setting("Juxta")]
 
 subscriberList = {}
+channel = 675956755112394753
 
 pool = ConnectionPool(host="redis-17540.c56.east-us.azure.cloud.redislabs.com",
                       port="17540",
@@ -35,7 +36,7 @@ class Subscribe(Cog_Ext):
     @commands.Cog.listener()
     async def on_message(self, msg):
         if msg.channel == self.bot.get_channel(
-                675956755112394753) and msg.author != self.bot.user:
+                channel) and msg.author != self.bot.user:
             if len(msg.mentions) == 1 and str(
                     msg.mentions[0].id) in subscriberList.keys():
 
@@ -48,10 +49,11 @@ class Subscribe(Cog_Ext):
     @commands.group(aliases=['s', 'sub'])
     async def subscriber(self, ctx):
         await ctx.message.delete(delay= 5)
-        if ctx.channel != self.bot.get_channel(675956755112394753): return
 
     @subscriber.command(aliases= ['l'])
     async def list(self, ctx):
+        if ctx.channel != self.bot.get_channel(channel): return
+
         listMsg = ""
         for k, v in subscriberList.items():
             listMsg += f"<@{k}>\n"
@@ -61,8 +63,10 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases= ['lr', 'reload', 'refresh', 'listReload'])
     async def listRefresh(self, ctx):
+        if ctx.channel != self.bot.get_channel(channel): return
         if ctx.author.id not in administrators: return
         subscriberList = {}
+
         try:
             r = Redis(connection_pool=pool)
             for key in r.keys():
@@ -83,6 +87,7 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases= ['s'])
     async def set(self, ctx, user: discord.Member = None, *args):
+        if ctx.channel != self.bot.get_channel(channel): return
         if ctx.author.id not in administrators: return
         if user == None or not args: return
 
@@ -104,14 +109,15 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases= ['r', 're', 'del', 'delete'])
     async def remove(self, ctx, user: discord.Member = None):
+        if ctx.channel != self.bot.get_channel(channel): return
         if ctx.author.id not in administrators: return
         if user == None: return
 
         try:
             r = Redis(connection_pool=pool)
             r.delete(user.id)
-            # if str(user.id) in subscriberList.keys():
-            #     del subscriberList[str(user.id)]
+            if str(user.id) in subscriberList.keys():
+                del subscriberList[str(user.id)]
         except:
             await ctx.send(
                 'There something went wrong while using this command.', delete_after=5)
