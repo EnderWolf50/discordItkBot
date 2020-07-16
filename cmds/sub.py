@@ -191,7 +191,7 @@ class Subscribe(Cog_Ext):
 
         for key, value in subscriberList.items():
             description = ""
-            user = self.bot.get_user(key)
+            user = self.bot.get_user(int(key))
             for line in value:
                 description += f"{line}\n"
             embed = discord.Embed(description= description, color= int(color, 16))
@@ -231,7 +231,9 @@ class Subscribe(Cog_Ext):
 
 `delete|del|d <Tag 人>` 刪除指定訂閱者
 
-`embed <Tag 人> (色碼)` 以嵌入方式呈現訂閱資訊
+`embed|e <Tag 人> (色碼)` 以嵌入方式呈現訂閱資訊
+
+`embedAll|ea (色碼)` 以嵌入方式呈現所有訂閱資訊
 
 `list|l` 列出所有訂閱資訊
 
