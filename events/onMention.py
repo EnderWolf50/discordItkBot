@@ -1,9 +1,18 @@
 import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
-from core.rwFile import rFile
+from core.rwFile import rFile, wFile
 
-subscriberList = rFile("subscriberList")
+import redis
+
+subscriberList = {}
+
+r = redis.Redis(host="redis-17540.c56.east-us.azure.cloud.redislabs.com",
+                port="17540",
+                password="i7KZ0dEX4TP01e8HCM20vRkvNb7U2yUr")
+
+for key in r.keys():
+	subscriberList[key.decode("utf-8")] = r.get(key).decode("utf-8").split(", ")
 
 class On_Mention(Cog_Ext):
     @commands.Cog.listener()
