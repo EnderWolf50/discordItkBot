@@ -48,6 +48,7 @@ class Subscribe(Cog_Ext):
     @commands.group(aliases=['s', 'sub'])
     async def subscriber(self, ctx):
         await ctx.message.delete(delay= 5)
+        if ctx.channel != self.bot.get_channel(675956755112394753)
 
     @subscriber.command(aliases= ['l'])
     async def list(self, ctx):
