@@ -69,7 +69,6 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases= ['e'])
     async def embed(self, ctx, user: discord.Member = None, color= "202225"):
-        if ctx.channel != self.bot.get_channel(channel) and ctx.author.id not in administrators: return
         if ctx.author.id not in administrators: return
         if user == None: return
         if str(user.id) not in subscriberList.keys(): return
