@@ -62,6 +62,7 @@ class Subscribe(Cog_Ext):
 
         listMsg = ""
         for k, v in subscriberList.items():
+            if k.endswith("_msg"): continue
             listMsg += f"<@{k}>\n"
             for line in v:
                 listMsg += f"{line}\n"
