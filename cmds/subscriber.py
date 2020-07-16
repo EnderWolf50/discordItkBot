@@ -26,14 +26,13 @@ class Subscribe(Cog_Ext):
 
                 await msg.channel.send(subscriptionInfo, delete_after= 180)
 
+    @commands.group(aliases= ['s', 'sub'])
+    async def subscriber(self, ctx):
+        await ctx.send('test')
+
     @commands.command()
-    async def slist(self, ctx):
-        listMsg = ""
-        for k, v in subscriberList.items():
-            listMsg += f"<@{k}>\n"
-            for line in v:
-                listMsg += f"{line}\n"
-        await ctx.channel.send(listMsg)
+    # async def s
+        pass
 
 
 def setup(bot):
