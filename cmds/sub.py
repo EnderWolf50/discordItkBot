@@ -3,7 +3,7 @@ from discord.ext import commands
 from core.classes import Cog_Ext
 from core.rwFile import rFile, wFile, get_setting
 
-import asyncio
+import asyncio, os
 from redis import Redis, ConnectionPool
 
 administrators = [get_setting("Owner"), get_setting("Traveler"), get_setting("Juxta")]
@@ -11,9 +11,9 @@ administrators = [get_setting("Owner"), get_setting("Traveler"), get_setting("Ju
 subscriberList = {}
 channel = 675956755112394753
 
-pool = ConnectionPool(host="redis-17540.c56.east-us.azure.cloud.redislabs.com",
-                      port="17540",
-                      password="i7KZ0dEX4TP01e8HCM20vRkvNb7U2yUr")
+pool = ConnectionPool(host=os.environ["host"],
+                      port=os.environ["port"],
+                      password=os.environ["password"])
 
 class Subscribe(Cog_Ext):
     def __init__(self, *args, **kwargs):
