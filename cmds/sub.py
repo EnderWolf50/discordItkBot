@@ -56,35 +56,6 @@ class Subscribe(Cog_Ext):
     async def subscriber(self, ctx):
         await ctx.message.delete(delay= 5)
 
-    @subscriber.command(aliases= ['i'])
-    async def info(self, ctx, user: discord.Member= None):
-        if ctx.channel != self.bot.get_channel(channel): return
-        if user == None: return
-
-        if len(ctx.message.mentions) == 1 and str(
-                ctx.message.mentions[0].id) in subscriberList.keys():
-            await ctx.message.delete(delay=5)
-
-            subscriptionInfo = f"<@{ctx.message.mentions[0].id}>"
-            for value in subscriberList[f"{ctx.message.mentions[0].id}"]:
-                subscriptionInfo += f"\n{value}"
-
-            await ctx.send(subscriptionInfo)
-
-    @subscriber.command(aliases= ['e'])
-    async def embed(self, ctx, user: discord.Member = None, color="485696"):
-        if ctx.author.id not in administrators: return
-        if user == None: return
-        if str(user.id) not in subscriberList.keys(): return
-
-        description = ""
-        for value in subscriberList[str(user.id)]:
-            description += f"{value}\n"
-
-        embed = discord.Embed(description= description, color= int(color, 16))
-        embed.set_author(name= user.name, icon_url= user.avatar_url)
-        await ctx.send(embed= embed)
-
     @subscriber.command(aliases= ['l'])
     async def list(self, ctx):
         if ctx.channel != self.bot.get_channel(channel): return
@@ -200,8 +171,50 @@ class Subscribe(Cog_Ext):
         finally:
             pool.disconnect()
 
+    @subscriber.command(aliases= ['e'])
+    async def embed(self, ctx, user: discord.Member = None, color="485696"):
+        if ctx.author.id not in administrators: return
+        if user == None: return
+        if str(user.id) not in subscriberList.keys(): return
+
+        description = ""
+        for value in subscriberList[str(user.id)]:
+            description += f"{value}\n"
+
+        embed = discord.Embed(description= description, color= int(color, 16))
+        embed.set_author(name= user.name, icon_url= user.avatar_url)
+        await ctx.send(embed= embed)
+
+    @subscriber.command(aliases= ['ea'])
+    async def embedAll(self, ctx, color="485696"):
+        if ctx.author.id not in administrators: return
+
+        for key, value in subscriberList.items():
+            description = ""
+            for line in value:
+                description += f"{value}\n"
+            embed = discord.Embed(description= description, color= int(color, 16))
+            embed.set_author(name=user.name, icon_url=user.avatar_url)
+            await ctx.send(embed=embed)
+
+    @subscriber.command(aliases= ['i'])
+    async def info(self, ctx, user: discord.Member= None):
+        if ctx.channel != self.bot.get_channel(channel): return
+        if user == None: return
+
+        if len(ctx.message.mentions) == 1 and str(
+                ctx.message.mentions[0].id) in subscriberList.keys():
+            await ctx.message.delete(delay=5)
+
+            subscriptionInfo = f"<@{ctx.message.mentions[0].id}>"
+            for value in subscriberList[f"{ctx.message.mentions[0].id}"]:
+                subscriptionInfo += f"\n{value}"
+
+            await ctx.send(subscriptionInfo)
+
     @subscriber.command(aliases= ['h'])
     async def help(self, ctx):
+        if ctx.author.id not in administrators: return
         description = '''
 主指令:
 `s|sub|subscriber <子指令>`
@@ -227,7 +240,7 @@ class Subscribe(Cog_Ext):
 
         embed = discord.Embed(title="SubscribeInfo Command Help",
                               description=description,
-                              color=0xCCDBDC)
+                              color=0x7a9e7e)
         embed.set_author(name= "Itk Bot", icon_url= "https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128")
         await ctx.send(embed= embed)
 
