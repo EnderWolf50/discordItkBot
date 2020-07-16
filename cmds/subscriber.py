@@ -41,10 +41,15 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command()
     async def set(self, ctx, user: discord.Member= None, *args):
-        if user == None return
+        if user == None: return
+
+        newSubscribeString = ""
         for newValue in len(args):
+            newSubscribeString += args[newValue]
             print(newValue)
-            print(args)
+
+        print(args)
+        print(newSubscribeString)
 
 
 def setup(bot):
