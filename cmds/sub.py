@@ -187,6 +187,7 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases= ['ea'])
     async def embedAll(self, ctx, color="485696"):
+        if ctx.channel != self.bot.get_channel(channel): return
         if ctx.author.id not in administrators: return
 
         for key, value in subscriberList.items():
