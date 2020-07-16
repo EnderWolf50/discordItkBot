@@ -239,6 +239,8 @@ class Subscribe(Cog_Ext):
 
 `listRefresh|reload|lr` 刷新訂閱資訊（不會自動列出）
 * 預設每 15 min 會自動更新資訊
+
+`info|i <Tag 人>` 以訊息方式呈現訂閱資訊（不會消失）
 '''
 
         embed = discord.Embed(title="SubscribeInfo Command Help",
