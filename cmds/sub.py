@@ -251,7 +251,7 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases= ["b"])
     async def bound(self, ctx, user: discord.Member= None, msg: discord.Message= None):
-        if ctx.author not in administrators: return
+        if ctx.author.id not in administrators: return
         if user == None or msg == None: return
         if msg.author != self.bot.user: return
 
