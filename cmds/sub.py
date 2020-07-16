@@ -69,7 +69,6 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases= ['lr', 'reload', 'refresh', 'listReload'])
     async def listRefresh(self, ctx):
-        if ctx.channel != self.bot.get_channel(channel): return
         if ctx.author.id not in administrators: return
         subscriberList = {}
 
@@ -250,11 +249,22 @@ class Subscribe(Cog_Ext):
         embed.set_author(name= "Itk Bot", icon_url= "https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128")
         await ctx.send(embed= embed)
 
-    @subscriber.command()
-    async def test(self, ctx, user: discord.Member= None, msg: discord.Message= None):
-        embed = msg.embeds[0]
-        description = embed.description.split("\n")
-        await ctx.send(description)
+    @subscriber.command(aliases= ["b"])
+    async def bound(self, ctx, user: discord.Member= None, msg: discord.Message= None):
+        if ctx.author not in administrators: return
+        if not user or not msg: return
+        if msg.author != self.bot.user: return
+
+        try:
+            r = Redis(connection_pool=pool)
+            r.set(f"{user.id}_msg", msg.id)
+            subscriberList[f"{user.id}_msg"] = msg.id
+        except:
+            await ctx.send("There is something went wrong while processing the command.", delete_after= 5)
+        else:
+            await ctx.send(msg.jump_url)
+        finally:
+            pool.disconnect()
 
 def setup(bot):
     bot.add_cog(Subscribe(bot))
