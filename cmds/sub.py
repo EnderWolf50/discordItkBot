@@ -8,12 +8,16 @@ from redis import Redis, ConnectionPool
 
 administrators = [get_setting("Owner"), get_setting("Traveler"), get_setting("Juxta")]
 
+host = os.environ["host"]
+port = os.environ["port"]
+password = os.environ["password"]
+
 subscriberList = {}
 channel = 675956755112394753
 
-pool = ConnectionPool(host=os.environ["host"],
-                      port=os.environ["port"],
-                      password=os.environ["password"])
+pool = ConnectionPool(host=host,
+                      port=port,
+                      password=password)
 
 class Subscribe(Cog_Ext):
     def __init__(self, *args, **kwargs):
@@ -103,16 +107,11 @@ class Subscribe(Cog_Ext):
             for key in r.keys():
                 subscriberList[key.decode("utf-8")] = r.get(key).decode("utf-8").split(
                     ", ")
-            listMsg = ""
-            for k, v in subscriberList.items():
-                listMsg += f"<@{k}>\n"
-                for line in v:
-                    listMsg += f"{line}\n"
         except:
             await ctx.send(
-                'There something went wrong while using this command.', delete_after=5)
+                'There something went wrong while processing the command.', delete_after=5)
         else:
-            await ctx.channel.send(listMsg, delete_after=60)
+            await ctx.channel.send('List refresh successful.', delete_after=5)
         finally:
             pool.disconnect()
 
@@ -128,7 +127,7 @@ class Subscribe(Cog_Ext):
             subscriberList[str(user.id)] = newSubscriptionInfo.split(", ")
         except:
             await ctx.send(
-                'There something went wrong while using this command.', delete_after=5)
+                'There something went wrong while processing the command.', delete_after=5)
         else:
             infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
             for arg in args:
@@ -137,8 +136,8 @@ class Subscribe(Cog_Ext):
         finally:
             pool.disconnect()
 
-    @subscriber.command(aliases= ['r', 're', 'del', 'delete'])
-    async def remove(self, ctx, user: discord.Member = None):
+    @subscriber.command(aliases= ['d', 'del'])
+    async def delete(self, ctx, user: discord.Member = None):
         if ctx.author.id not in administrators: return
         if user == None: return
 
@@ -149,9 +148,55 @@ class Subscribe(Cog_Ext):
                 del subscriberList[str(user.id)]
         except:
             await ctx.send(
-                'There something went wrong while using this command.', delete_after=5)
+                'There something went wrong while processing the command.', delete_after=5)
         else:
             await ctx.send(f'Subscription info of {user.mention} has been removed successfully.', delete_after=7)
+        finally:
+            pool.disconnect()
+
+    @subscriber.command(aliases= ['a'])
+    async def add(self, ctx, user: discord.Member, *args):
+        if ctx.author.id not in administrators: return
+        if user == None or not args: return
+
+        try:
+            r = Redis(connection_pool=pool)
+            newSubscriptionInfo = f"{r.get(user.id).decode('utf-8')}, {', '.join(args)}"
+
+            r.set(user.id, newSubscriptionInfo)
+            subscriberList[str(user.id)] = newSubscriptionInfo.split(', ')
+        except:
+            await ctx.send('There something went wrong while processing the command.', delete_after=5)
+        else:
+            infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
+            for arg in subscriberList[str(user.id)]:
+                infoMsg += f"\n{arg}"
+            await ctx.send(infoMsg, delete_after=10)
+        finally:
+            pool.disconnect()
+
+    @subscriber.command(aliases= ['r', 're'])
+    async def remove(self, ctx, user: discord.Member, line: int):
+        if ctx.author.id not in administrators: return
+        if user == None or not line: return
+
+        try:
+            r = Redis(connection_pool=pool)
+            uneditedInfo = r.get(user.id).decode('utf-8').split(', ')
+            lineRemoved = uneditedInfo.pop(line - 1)
+            newSubscriptionInfo = ", ".join(uneditedInfo)
+
+            r.set(user.id, newSubscriptionInfo)
+            subscriberList[str(user.id)] = newSubscriptionInfo.split(', ')
+        except:
+            await ctx.send(
+                'There something went wrong while processing the command.',
+                delete_after=5)
+        else:
+            infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
+            for arg in subscriberList[str(user.id)]:
+                infoMsg += f"\n{arg}"
+            await ctx.send(infoMsg, delete_after=10)
         finally:
             pool.disconnect()
 
