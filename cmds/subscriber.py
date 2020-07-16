@@ -12,7 +12,7 @@ r = redis.Redis(host="redis-17540.c56.east-us.azure.cloud.redislabs.com",
                 password="i7KZ0dEX4TP01e8HCM20vRkvNb7U2yUr")
 
 for key in r.keys():
-	subscriberList[key.decode("utf-8")] = r.get(key).decode("utf-8").split(", ")
+    subscriberList[key.decode("utf-8")] = r.get(key).decode("utf-8").split(", ")
 
 class Subscribe(Cog_Ext):
     @commands.Cog.listener()
@@ -28,11 +28,13 @@ class Subscribe(Cog_Ext):
 
     @commands.command()
     async def slist(self, ctx):
+        listMsg = ""
         for k, v in subscriberList.items():
             listMsg += f"<@{k}>\n"
             for line in v:
                 listMsg += f"{line}\n"
-        await ctx.channel.send(subscriberList)
+        await ctx.channel.send(listMsg)
+
 
 def setup(bot):
     bot.add_cog(Subscribe(bot))
