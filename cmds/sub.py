@@ -60,6 +60,7 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases= ['lr', 'reload', 'refresh', 'listReload'])
     async def listRefresh(self, ctx):
+        if ctx.author.id not in administrators: return
         subscriberList = {}
         try:
             r = Redis(connection_pool=pool)
