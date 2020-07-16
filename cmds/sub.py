@@ -202,7 +202,6 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases= ['h'])
     async def help(self, ctx):
-        color = random.randint(0, 0xffffff)
         description = '''
 主指令:
 `s|sub|subscriber <子指令>`
@@ -226,7 +225,7 @@ class Subscribe(Cog_Ext):
 * 預設每 15 min 會自動更新資訊
 '''
 
-        embed = discord.Embed(title= "SubscribeInfo Command Help", description= description, color= color)
+        embed = discord.Embed(title= "SubscribeInfo Command Help", description= description, color= 0xE7E7E7)
         embed.set_author(name= "Itk Bot", icon_url= "https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128")
         embed.set_footer(text= "那個...窩不知道")
         await ctx.send(embed= embed)
