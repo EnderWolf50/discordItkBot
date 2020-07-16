@@ -10,7 +10,7 @@ class Roll(Cog_Ext):
         if num <= 0:
             await ctx.send("ㄐㄐ")
             await ctx.send("雞雞")
-            await ctx.send("尻尻")    
+            await ctx.send("尻尻")
         else:
             if "{}" in args:
                 msg = args.replace("{}", f"{random.randrange(1, num + 1)}", 1)

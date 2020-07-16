@@ -54,7 +54,7 @@ class Poll(Cog_Ext):
             embed_msg = await ctx.send(title, embed= embed)
             for i in range(len(arg)):
                 await embed_msg.add_reaction(Emoji[i])
-        
+
         # elif 10 <= len(arg) <= 20:
         #     PD = ""
         #     for i in range(len(arg)):
