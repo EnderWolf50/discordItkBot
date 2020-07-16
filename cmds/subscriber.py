@@ -27,7 +27,7 @@ class Subscribe(Cog_Ext):
                 await msg.channel.send(subscriptionInfo, delete_after= 180)
 
     @commands.group(aliases= ['s', 'sub'])
-    async def subscriber():
+    async def subscriber(self):
         pass
 
     @subscriber.command()
@@ -40,7 +40,8 @@ class Subscribe(Cog_Ext):
         await ctx.channel.send(listMsg)
 
     @subscriber.command()
-    async def set(self, ctx, user: discord.Member, *args):
+    async def set(self, ctx, user: discord.Member= None, *args):
+        if user == None return
         for newValue in len(args):
             print(newValue)
             print(args)
