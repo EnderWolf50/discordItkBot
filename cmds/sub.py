@@ -37,6 +37,7 @@ class Subscribe(Cog_Ext):
     async def on_message(self, msg):
         if msg.channel == self.bot.get_channel(
                 channel) and msg.author != self.bot.user:
+            if msg.content.startswith('.subscriber') or msg.content.startswith('.sub') or msg.content.startswith('.s'): return
             if len(msg.mentions) == 1 and str(
                     msg.mentions[0].id) in subscriberList.keys():
                 await msg.delete(delay=5)
@@ -48,8 +49,20 @@ class Subscribe(Cog_Ext):
                 await msg.channel.send(subscriptionInfo, delete_after=60)
 
     @commands.group(aliases=['s', 'sub'])
-    async def subscriber(self, ctx):
+    async def subscriber(self, ctx, user: discord.Member= None):
         await ctx.message.delete(delay= 5)
+        if ctx.channel != self.bot.get_channel(channel) or ctx.author == self.bot.user: return
+        if user == None: return
+
+        if len(ctx.message.mentions) == 1 and str(
+                ctx.message.mentions[0].id) in subscriberList.keys():
+            await ctx.message.delete(delay=5)
+
+            subscriptionInfo = f"<@{ctx.message.mentions[0].id}>"
+            for value in subscriberList[f"{ctx.message.mentions[0].id}"]:
+                subscriptionInfo += f"\n{value}"
+
+            await ctx.send(subscriptionInfo)
 
     @subscriber.command(aliases= ['l'])
     async def list(self, ctx):
@@ -101,7 +114,7 @@ class Subscribe(Cog_Ext):
             await ctx.send(
                 'There something went wrong while using this command.', delete_after=5)
         else:
-            infoMsg = f'New subscription info of `{user.name}` must be looked like:\n{user.mention}'
+            infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
             for arg in args:
                 infoMsg += f"\n{arg}"
             await ctx.send(infoMsg, delete_after=10)
