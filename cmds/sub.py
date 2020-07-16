@@ -54,7 +54,7 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases= ['i'])
     async def info(self, ctx, user: discord.Member= None):
-        if ctx.channel != self.bot.get_channel(channel) or ctx.author == self.bot.user: return
+        if ctx.channel != self.bot.get_channel(channel): return
         if user == None: return
 
         if len(ctx.message.mentions) == 1 and str(
@@ -66,6 +66,21 @@ class Subscribe(Cog_Ext):
                 subscriptionInfo += f"\n{value}"
 
             await ctx.send(subscriptionInfo)
+
+    @subscriber.command(aliases= ['e'])
+    async def embed(self, ctx, user: discord.Member = None, color= "202225"):
+        if ctx.channel != self.bot.get_channel(channel): return
+        if ctx.author.id not in administrators: return
+        if user == None: return
+        if str(user.id) not in subscriberList.keys(): return
+
+        description = ""
+        for value in subscriberList[str(user.id)]:
+            description += f"{value}\n"
+
+        embed = discord.Embed(description= description, color= int(color, 16))
+        embed.set_author(name= user.name, icon_url= user.avatar_url)
+        await ctx.send(embed= embed)
 
     @subscriber.command(aliases= ['l'])
     async def list(self, ctx):
