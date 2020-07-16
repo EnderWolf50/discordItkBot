@@ -251,9 +251,8 @@ class Subscribe(Cog_Ext):
         await ctx.send(embed= embed)
 
     @subscriber.command()
-    async def test(self, ctx, ID: int):
-        Msg = await ctx.fetch_message(ID)
-        embed = Msg.embeds[0]
+    async def test(self, ctx, user: discord.Member= None, msg: discord.Message= None):
+        embed = msg.embeds[0]
         description = embed.description.split("\n")
         await ctx.send(description)
 
