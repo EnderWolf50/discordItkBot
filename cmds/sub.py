@@ -72,7 +72,7 @@ class Subscribe(Cog_Ext):
             await ctx.send(subscriptionInfo)
 
     @subscriber.command(aliases= ['e'])
-    async def embed(self, ctx, user: discord.Member = None, color= "202225"):
+    async def embed(self, ctx, user: discord.Member = None, color="485696"):
         if ctx.author.id not in administrators: return
         if user == None: return
         if str(user.id) not in subscriberList.keys(): return
@@ -200,6 +200,34 @@ class Subscribe(Cog_Ext):
         finally:
             pool.disconnect()
 
+    @subscriber.command(aliases= ['h'])
+    async def help(self, ctx):
+        color = random.randint(0, 0xffffff)
+        description = '''
+主指令:
+`s|sub|subscriber <子指令>`
+
+子指令:
+`set|s <Tag 人> <內容...>` 設定訂閱資訊
+
+`add|a <Tag 人> <內容...>` 增加訂閱資訊
+
+`remove|re|r <Tag 人> <行數>` 移除指定行數
+
+`delete|del|d <Tag 人>` 刪除指定訂閱者
+
+`embed <Tag 人> (色碼)` 以嵌入方式呈現訂閱資訊
+
+`list|l` 列出所有訂閱資訊
+
+`listRefresh|reload|lr` 刷新訂閱資訊（不會自動列出）
+* 預設每 15 min 會自動更新資訊
+'''
+
+        embed = discord.Embed(title= "SubscribeInfo Command Help", description= description, color= color)
+        embed.set_author(name= "Itk Bot", icon_url= "https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128")
+        embed.set_footer(text= "那個...窩不知道")
+        await ctx.send(embed= embed)
 
 def setup(bot):
     bot.add_cog(Subscribe(bot))
