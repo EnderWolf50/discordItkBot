@@ -254,7 +254,7 @@ class Subscribe(Cog_Ext):
     async def test(self, ctx, ID: int):
         Msg = await ctx.fetch_message(ID)
         embed = Msg.embeds[0]
-        embed.addfield(name="test", value="foo"))
+        embed.addfield(name="test", value="foo")
         await ctx.send(Msg.jump_url)
         await Msg.edit(embed= embed)
 
