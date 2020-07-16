@@ -30,9 +30,8 @@ class Subscribe(Cog_Ext):
     async def subscriber(self, ctx):
         await ctx.send('test')
 
-    @commands.command()
+    # @commands.command()
     # async def s
-        pass
 
 
 def setup(bot):
