@@ -359,8 +359,6 @@ class Subscribe(Cog_Ext):
                 await ctx.send(f"`Msg` bounding successful", embed= embed, delete_after=30)
         except:
             await ctx.send("There is something went wrong while processing the command.", delete_after= 5)
-        else:
-            await ctx.send(f"Bounding {msg.jump_url}", delete_after= 30)
         finally:
             pool.disconnect()
 
