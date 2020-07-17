@@ -35,6 +35,7 @@ class Subscribe(Cog_Ext):
         async def autoRefreshMsgEmbed():
             await self.bot.wait_until_ready()
             while not self.bot.is_closed():
+                await asyncio.sleep(20)
                 for key, value in subscriberList.keys():
                     if re.search(r"(_embed)$", key):
                         user = self.bot.get_user(key[:18])
