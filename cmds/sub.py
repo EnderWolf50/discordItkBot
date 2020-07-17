@@ -101,7 +101,7 @@ class Subscribe(Cog_Ext):
             await ctx.send(infoMsg, delete_after=10)
 
             if f"{user.id}_embed" in subscriberList.keys():
-                await refreshMsg(ctx, user)
+                await refreshEmbed(ctx, user)
             else:
                 print('no')
         finally:
@@ -150,7 +150,7 @@ class Subscribe(Cog_Ext):
             await ctx.send(infoMsg, delete_after=10)
 
             if f"{user.id}_embed" in subscriberList.keys():
-                await refreshMsg(ctx, user)
+                await refreshEmbed(ctx, user)
         finally:
             pool.disconnect()
 
@@ -179,7 +179,7 @@ class Subscribe(Cog_Ext):
             await ctx.send(infoMsg, delete_after=10)
 
             if f"{user.id}_embed" in subscriberList.keys():
-                await refreshMsg(ctx, user)
+                await refreshEmbed(ctx, user)
         finally:
             pool.disconnect()
 
@@ -288,9 +288,13 @@ class Subscribe(Cog_Ext):
         if msg.author != self.bot.user: return
 
         try:
-            r = Redis(connection_pool=pool)
-            r.set(f"{user.id}_embed", msg.id)
-            subscriberList[f"{user.id}_embed"] = [str(msg.id)]
+            if len(msg.embeds) = 1:
+                r = Redis(connection_pool=pool)
+                r.set(f"{user.id}_embed", msg.id)
+                subscriberList[f"{user.id}_embed"] = [str(msg.id)]
+            else:
+                r.set(f"{user.id}_msg", msg.id)
+                subscriberList[f"{user.id}_msg"] = [str(msg.id)]
         except:
             await ctx.send("There is something went wrong while processing the command.", delete_after= 5)
         else:
@@ -298,7 +302,7 @@ class Subscribe(Cog_Ext):
         finally:
             pool.disconnect()
 
-async def refreshMsg(ctx, user):
+async def refreshEmbed(ctx, user):
     msgID = "".join(subscriberList[f"{user.id}_embed"])
 
     msg = await ctx.fetch_message(msgID)
