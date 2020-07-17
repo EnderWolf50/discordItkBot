@@ -6,7 +6,7 @@ from core.rwFile import rFile, wFile
 class Point(Cog_Ext):
     @commands.command()
     async def Point(self, ctx):
-        
+
         point = rFile("points")
 
         await ctx.message.delete(delay= 0.5)
@@ -15,7 +15,7 @@ class Point(Cog_Ext):
             wFile(point, "points")
 
             await ctx.send(ctx.author.mention + " 目前的點數為 0")
-        
+
         else:
             await ctx.send(ctx.author.mention + f' 目前的點數為 {point[f"{ctx.author.id}"]}')
 
