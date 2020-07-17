@@ -35,7 +35,6 @@ class Subscribe(Cog_Ext):
         async def autoRefreshMsgEmbed():
             await self.bot.wait_until_ready()
             while not self.bot.is_closed():
-                await asyncio.sleep(900)
                 for key, value in subscriberList.keys():
                     if re.search(r"(_embed)$", key):
                         user = self.bot.get_user(key[:18])
@@ -55,6 +54,7 @@ class Subscribe(Cog_Ext):
 
                         msg.content = f"<@{user.id}>\n" + "\n".join(subscriberList[f"{user.id}"])
                         await msg.edit(content= msg.content)
+                await asyncio.sleep(900)
 
         self.autoRefreshMsgEmbedTask = self.bot.loop.create_task(autoRefreshMsgEmbed())
 
