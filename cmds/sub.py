@@ -38,9 +38,7 @@ class Subscribe(Cog_Ext):
                 await asyncio.sleep(20)
                 for key in subscriberList.keys():
                     if re.search(r"(_embed)$", key):
-                        print(key)
-                        print(key[:18])
-                        user = await self.bot.get_user(key[:18])
+                        user = self.bot.get_user(int(key[:18]))
                         msgID = "".join(subscriberList[f"{user.id}_embed"])
 
                         msg = await self.bot.get_channel(channel).fetch_message(msgID)
