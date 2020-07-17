@@ -87,7 +87,7 @@ class Subscribe(Cog_Ext):
         newSubscriptionInfo = ", ".join(args)
         try:
             r = Redis(connection_pool=pool)
-            r.set(user.id, newSubscriptionInfo)
+            r.set(f"{user.id}", newSubscriptionInfo)
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(", ")
         except:
             await ctx.send(
@@ -113,7 +113,7 @@ class Subscribe(Cog_Ext):
 
         try:
             r = Redis(connection_pool=pool)
-            r.delete(user.id)
+            r.delete(f"{user.id}")
             r.delete(f"{user.id}_msg")
             if f"{user.id}" in subscriberList.keys():
                 del subscriberList[f"{user.id}"]
@@ -128,7 +128,6 @@ class Subscribe(Cog_Ext):
         finally:
             pool.disconnect()
 
-
     @subscriber.command(aliases= ['a'])
     async def add(self, ctx, user: discord.Member, *args):
         if ctx.author.id not in administrators: return
@@ -136,9 +135,9 @@ class Subscribe(Cog_Ext):
 
         try:
             r = Redis(connection_pool=pool)
-            newSubscriptionInfo = f"{r.get(user.id).decode('utf-8')}, {', '.join(args)}"
+            newSubscriptionInfo = f"{r.get(f"{user.id}").decode('utf-8')}, {', '.join(args)}"
 
-            r.set(user.id, newSubscriptionInfo)
+            r.set(f"{user.id}", newSubscriptionInfo)
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(', ')
         except:
             await ctx.send('There something went wrong while processing the command.', delete_after=5)
@@ -161,11 +160,11 @@ class Subscribe(Cog_Ext):
 
         try:
             r = Redis(connection_pool=pool)
-            uneditedInfo = r.get(user.id).decode('utf-8').split(', ')
+            uneditedInfo = r.get(f"{user.id}").decode('utf-8').split(', ')
             lineRemoved = uneditedInfo.pop(line - 1)
             newSubscriptionInfo = ", ".join(uneditedInfo)
 
-            r.set(user.id, newSubscriptionInfo)
+            r.set(f"{user.id}", newSubscriptionInfo)
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(', ')
         except:
             await ctx.send(
