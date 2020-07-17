@@ -322,10 +322,14 @@ class Subscribe(Cog_Ext):
                 r = Redis(connection_pool=pool)
                 r.set(f"{user.id}_embed", msg.id)
                 subscriberList[f"{user.id}_embed"] = [str(msg.id)]
+                embed = discord.Embed(description=f"[Link]({msg.jump_url})", color=0xBAD9A2)
+                await ctx.send(f"`Embed` bounding successful", embed= embed, delete_after=30)
             else:
                 r = Redis(connection_pool=pool)
                 r.set(f"{user.id}_msg", msg.id)
                 subscriberList[f"{user.id}_msg"] = [str(msg.id)]
+                embed = discord.Embed(description=f"[Link]({msg.jump_url})", color=0xBAD9A2)
+                await ctx.send(f"`Msg` bounding successful", embed= embed, delete_after=30)
         except:
             await ctx.send("There is something went wrong while processing the command.", delete_after= 5)
         else:
@@ -361,7 +365,7 @@ async def deleteEmbed(ctx, user):
     await msg.delete()
 
 async def deleteMsg(ctx, user):
-    msgID = "".join(subscriberList[f"{user.id}_embed"])
+    msgID = "".join(subscriberList[f"{user.id}_msg"])
 
     msg = await ctx.fetch_message(msgID)
 
