@@ -6,7 +6,11 @@ from core.rwFile import rFile, wFile, get_setting
 import asyncio, os, re
 from redis import Redis, ConnectionPool
 
-administrators = [get_setting("Owner"), get_setting("Traveler"), get_setting("Juxta")]
+administrators = [
+    get_setting("Owner"),
+    get_setting("Traveler"),
+    get_setting("Juxta")
+]
 
 host = os.environ["host"]
 port = os.environ["port"]
@@ -15,9 +19,8 @@ password = os.environ["password"]
 subscriberList = {}
 channel = 675956755112394753
 
-pool = ConnectionPool(host=host,
-                      port=port,
-                      password=password)
+pool = ConnectionPool(host=host, port=port, password=password)
+
 
 class Subscribe(Cog_Ext):
     def __init__(self, *args, **kwargs):
@@ -35,35 +38,16 @@ class Subscribe(Cog_Ext):
         async def autoRefreshMsgEmbed():
             await self.bot.wait_until_ready()
             while not self.bot.is_closed():
-                await asyncio.sleep(20)
-                for key in subscriberList.keys():
-                    if re.search(r"(_embed)$", key):
-                        user = self.bot.get_user(int(key[:18]))
-                        ctx = self.bot.get_channel(channel)
-                        msgID = "".join(subscriberList[f"{user.id}_embed"])
+                await refreshMsgEmbedFunc(self)
+                await asyncio.sleep(920)
 
-                        msg = await ctx.fetch_message(msgID)
-                        embed = msg.embeds[0]
-
-                        embed.description = "\n".join(subscriberList[f"{user.id}"])
-                        embed.set_author(name=user.name, icon_url=user.avatar_url)
-                        await msg.edit(embed= embed)
-                    elif re.search(r"(_msg)$", key):
-                        user = self.bot.get_user(int(key[:18]))
-                        ctx = self.bot.get_channel(channel)
-                        msgID = "".join(subscriberList[f"{user.id}_msg"])
-
-                        msg = await ctx.fetch_message(msgID)
-
-                        msg.content = f"<@{user.id}>\n" + "\n".join(subscriberList[f"{user.id}"])
-                        await msg.edit(content= msg.content)
-                await asyncio.sleep(900)
-
-        self.autoRefreshMsgEmbedTask = self.bot.loop.create_task(autoRefreshMsgEmbed())
+        self.autoRefreshMsgEmbedTask = self.bot.loop.create_task(
+            autoRefreshMsgEmbed())
 
     @commands.Cog.listener()
     async def on_message(self, msg):
-        if msg.channel != self.bot.get_channel(channel) or msg.author.bot: return
+        if msg.channel != self.bot.get_channel(channel) or msg.author.bot:
+            return
         if re.search(r"^(\.(subscriber|sub|s))\b", msg.content.lower()): return
         if len(msg.mentions) == 0: return
 
@@ -76,7 +60,9 @@ class Subscribe(Cog_Ext):
             for value in subscriberList[f"{user.id}"]:
                 subscriptionInfo += f"\n{value}"
 
-            if re.search(r"\b(b|bind|bound)$", msg.content.lower()) and msg.author.id in administrators:
+            if re.search(
+                    r"\b(b|bind|bound)$",
+                    msg.content.lower()) and msg.author.id in administrators:
                 msgSent = await msg.channel.send(subscriptionInfo)
                 r.set(f"{user.id}_msg", msgSent.id)
                 subscriberList[f"{user.id}_msg"] = [str(msgSent.id)]
@@ -86,9 +72,9 @@ class Subscribe(Cog_Ext):
 
     @commands.group(aliases=['s', 'sub'])
     async def subscriber(self, ctx):
-        await ctx.message.delete(delay= 5)
+        await ctx.message.delete(delay=5)
 
-    @subscriber.command(aliases= ['l'])
+    @subscriber.command(aliases=['l'])
     async def list(self, ctx):
         if ctx.channel != self.bot.get_channel(channel): return
 
@@ -106,10 +92,10 @@ class Subscribe(Cog_Ext):
                 r.set(f"{key}_msg", msg.id)
                 subscriberList[f"{key}_msg"] = [str(msg.id)]
             else:
-                await ctx.channel.send(listMsg, delete_after= 60)
+                await ctx.channel.send(listMsg, delete_after=60)
         pool.disconnect()
 
-    @subscriber.command(aliases= ['lr', 'reload', 'refresh', 'listReload'])
+    @subscriber.command(aliases=['lr', 'reload', 'refresh', 'listReload'])
     async def listRefresh(self, ctx):
         if ctx.author.id not in administrators: return
 
@@ -117,13 +103,14 @@ class Subscribe(Cog_Ext):
             listRefreshFunc()
         except:
             await ctx.send(
-                "There is something went wrong while processing the command.", delete_after=5)
+                "There is something went wrong while processing the command.",
+                delete_after=5)
         else:
             await ctx.channel.send('List refresh complete.', delete_after=5)
         finally:
             pool.disconnect()
 
-    @subscriber.command(aliases= ['s'])
+    @subscriber.command(aliases=['s'])
     async def set(self, ctx, user: discord.Member = None, *args):
         if ctx.author.id not in administrators: return
         if user == None or not args: return
@@ -135,7 +122,8 @@ class Subscribe(Cog_Ext):
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(", ")
         except:
             await ctx.send(
-                'There something went wrong while processing the command.', delete_after=5)
+                'There something went wrong while processing the command.',
+                delete_after=5)
         else:
             infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
 
@@ -150,7 +138,7 @@ class Subscribe(Cog_Ext):
         finally:
             pool.disconnect()
 
-    @subscriber.command(aliases= ['d', 'del'])
+    @subscriber.command(aliases=['d', 'del'])
     async def delete(self, ctx, user: discord.Member = None):
         if ctx.author.id not in administrators: return
         if user == None: return
@@ -164,9 +152,12 @@ class Subscribe(Cog_Ext):
                 del subscriberList[f"{user.id}"]
         except:
             await ctx.send(
-                'There something went wrong while processing the command.', delete_after=5)
+                'There something went wrong while processing the command.',
+                delete_after=5)
         else:
-            await ctx.send(f'Subscription info of {user.mention} has been removed successfully.', delete_after=7)
+            await ctx.send(
+                f'Subscription info of {user.mention} has been removed successfully.',
+                delete_after=7)
 
             if f"{user.id}_embed" in subscriberList.keys():
                 await deleteEmbed(ctx, user)
@@ -175,7 +166,7 @@ class Subscribe(Cog_Ext):
         finally:
             pool.disconnect()
 
-    @subscriber.command(aliases= ['a'])
+    @subscriber.command(aliases=['a'])
     async def add(self, ctx, user: discord.Member, *args):
         if ctx.author.id not in administrators: return
         if user == None or not args: return
@@ -187,7 +178,9 @@ class Subscribe(Cog_Ext):
             r.set(f"{user.id}", newSubscriptionInfo)
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(', ')
         except:
-            await ctx.send('There something went wrong while processing the command.', delete_after=5)
+            await ctx.send(
+                'There something went wrong while processing the command.',
+                delete_after=5)
         else:
             infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
 
@@ -202,7 +195,7 @@ class Subscribe(Cog_Ext):
         finally:
             pool.disconnect()
 
-    @subscriber.command(aliases= ['r', 're'])
+    @subscriber.command(aliases=['r', 're'])
     async def remove(self, ctx, user: discord.Member, line: int):
         if ctx.author.id not in administrators: return
         if user == None or not line: return
@@ -233,7 +226,7 @@ class Subscribe(Cog_Ext):
         finally:
             pool.disconnect()
 
-    @subscriber.command(aliases= ['e'])
+    @subscriber.command(aliases=['e'])
     async def embed(self, ctx, user: discord.Member = None, color="BAD9A2"):
         if ctx.author.id not in administrators: return
         if user == None: return
@@ -244,9 +237,9 @@ class Subscribe(Cog_Ext):
         for value in subscriberList[f"{user.id}"]:
             description += f"{value}\n"
 
-        embed = discord.Embed(description= description, color= int(color, 16))
-        embed.set_author(name= user.name, icon_url= user.avatar_url)
-        msg = await ctx.send(embed= embed)
+        embed = discord.Embed(description=description, color=int(color, 16))
+        embed.set_author(name=user.name, icon_url=user.avatar_url)
+        msg = await ctx.send(embed=embed)
 
         if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
             r = Redis(connection_pool=pool)
@@ -254,7 +247,7 @@ class Subscribe(Cog_Ext):
             subscriberList[f"{user.id}_embed"] = [str(msg.id)]
             pool.disconnect()
 
-    @subscriber.command(aliases= ['ea'])
+    @subscriber.command(aliases=['ea'])
     async def embedAll(self, ctx, color="BAD9A2"):
         if ctx.channel != self.bot.get_channel(channel): return
         if ctx.author.id not in administrators: return
@@ -271,7 +264,8 @@ class Subscribe(Cog_Ext):
             for line in value:
                 description += f"{line}\n"
 
-            embed = discord.Embed(description= description, color= int(color, 16))
+            embed = discord.Embed(description=description,
+                                  color=int(color, 16))
             embed.set_author(name=user.name, icon_url=user.avatar_url)
 
             msg = await ctx.send(embed=embed)
@@ -280,8 +274,8 @@ class Subscribe(Cog_Ext):
                 subscriberList[f"{user.id}_embed"] = [str(msg.id)]
         pool.disconnect()
 
-    @subscriber.command(aliases= ['i'])
-    async def info(self, ctx, user: discord.Member= None):
+    @subscriber.command(aliases=['i'])
+    async def info(self, ctx, user: discord.Member = None):
         if ctx.channel != self.bot.get_channel(channel): return
         if ctx.author.id not in administrators: return
         if user == None: return
@@ -296,7 +290,7 @@ class Subscribe(Cog_Ext):
 
             await ctx.send(subscriptionInfo)
 
-    @subscriber.command(aliases= ['h'])
+    @subscriber.command(aliases=['h'])
     async def help(self, ctx):
         if ctx.author.id not in administrators: return
         description = '''
@@ -337,11 +331,18 @@ class Subscribe(Cog_Ext):
         embed = discord.Embed(title="SubscribeInfo Command Help",
                               description=description,
                               color=0x7a9e7e)
-        embed.set_author(name= "Itk Bot", icon_url= "https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128")
-        await ctx.send(embed= embed)
+        embed.set_author(
+            name="Itk Bot",
+            icon_url=
+            "https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128"
+        )
+        await ctx.send(embed=embed)
 
-    @subscriber.command(aliases= ["b", "bind"])
-    async def bound(self, ctx, user: discord.Member= None, msg: discord.Message= None):
+    @subscriber.command(aliases=["b", "bind"])
+    async def bound(self,
+                    ctx,
+                    user: discord.Member = None,
+                    msg: discord.Message = None):
         if ctx.author.id not in administrators: return
         if user == None or msg == None: return
         if msg.author != self.bot.user: return
@@ -351,36 +352,61 @@ class Subscribe(Cog_Ext):
                 r = Redis(connection_pool=pool)
                 r.set(f"{user.id}_embed", msg.id)
                 subscriberList[f"{user.id}_embed"] = [str(msg.id)]
-                embed = discord.Embed(description=f"[Link]({msg.jump_url})", color=0xBAD9A2)
-                await ctx.send(f"`Embed` bounding successful", embed= embed, delete_after=30)
+                embed = discord.Embed(description=f"[Link]({msg.jump_url})",
+                                      color=0xBAD9A2)
+                await ctx.send(f"`Embed` bounding successful",
+                               embed=embed,
+                               delete_after=30)
             else:
                 r = Redis(connection_pool=pool)
                 r.set(f"{user.id}_msg", msg.id)
                 subscriberList[f"{user.id}_msg"] = [str(msg.id)]
-                embed = discord.Embed(description=f"[Link]({msg.jump_url})", color=0xBAD9A2)
-                await ctx.send(f"`Msg` bounding successful", embed= embed, delete_after=30)
+                embed = discord.Embed(description=f"[Link]({msg.jump_url})",
+                                      color=0xBAD9A2)
+                await ctx.send(f"`Msg` bounding successful",
+                               embed=embed,
+                               delete_after=30)
         except:
-            await ctx.send("There is something went wrong while processing the command.", delete_after= 5)
+            await ctx.send(
+                "There is something went wrong while processing the command.",
+                delete_after=5)
         finally:
             pool.disconnect()
+
 
 async def refreshEmbed(ctx, user):
     msgID = "".join(subscriberList[f"{user.id}_embed"])
 
-    msg = await ctx.fetch_message(msgID)
+    msg = await ctx.fetch_message(int(msgID))
     embed = msg.embeds[0]
 
     embed.description = "\n".join(subscriberList[f"{user.id}"])
     embed.set_author(name=user.name, icon_url=user.avatar_url)
-    await msg.edit(embed= embed)
+    await msg.edit(embed=embed)
+
 
 async def refreshMsg(ctx, user):
     msgID = "".join(subscriberList[f"{user.id}_msg"])
 
-    msg = await ctx.fetch_message(msgID)
+    msg = await ctx.fetch_message(int(msgID))
 
     msg.content = f"<@{user.id}>\n" + "\n".join(subscriberList[f"{user.id}"])
-    await msg.edit(content= msg.content)
+    await msg.edit(content=msg.content)
+
+
+async def refreshMsgEmbedFunc(self):
+    for key in subscriberList.keys():
+        if re.search(r"(_embed)$", key):
+            user = self.bot.get_user(int(key[:18]))
+            ctx = self.bot.get_channel(channel)
+
+            await refreshEmbed(ctx, user)
+        elif re.search(r"(_msg)$", key):
+            user = self.bot.get_user(int(key[:18]))
+            ctx = self.bot.get_channel(channel)
+
+            await refreshMsg(ctx, user)
+
 
 async def deleteEmbed(ctx, user):
     msgID = "".join(subscriberList[f"{user.id}_embed"])
@@ -391,6 +417,7 @@ async def deleteEmbed(ctx, user):
         del subscriberList[f"{user.id}_embed"]
     await msg.delete()
 
+
 async def deleteMsg(ctx, user):
     msgID = "".join(subscriberList[f"{user.id}_msg"])
 
@@ -400,12 +427,15 @@ async def deleteMsg(ctx, user):
         del subscriberList[f"{user.id}_msg"]
     await msg.delete()
 
+
 def listRefreshFunc():
     global subscriberList
     subscriberList = {}
     r = Redis(connection_pool=pool)
     for key in r.keys():
-        subscriberList[key.decode("utf-8")] = r.get(key).decode("utf-8").split(", ")
+        subscriberList[key.decode("utf-8")] = r.get(key).decode("utf-8").split(
+            ", ")
+
 
 def setup(bot):
     bot.add_cog(Subscribe(bot))
