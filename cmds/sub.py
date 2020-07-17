@@ -49,7 +49,8 @@ class Subscribe(Cog_Ext):
                         embed.set_author(name=user.name, icon_url=user.avatar_url)
                         await msg.edit(embed= embed)
                     elif re.search(r"(_msg)$", key):
-                        user = self.bot.get_user(key[:18])
+                        user = self.bot.get_user(int(key[:18]))
+                        ctx = self.bot.get_channel(channel)
                         msgID = "".join(subscriberList[f"{user.id}_msg"])
 
                         msg = await ctx.fetch_message(msgID)
