@@ -59,9 +59,10 @@ class Subscribe(Cog_Ext):
         if ctx.channel != self.bot.get_channel(channel): return
 
         listMsg = ""
-        for k, v in subscriberList.items():
-            listMsg += f"<@{k}>\n"
-            for line in v:
+        for key, value in subscriberList.items():
+            if key.endswith('_msg'): continue
+            listMsg += f"<@{key}>\n"
+            for line in value:
                 listMsg += f"{line}\n"
         await ctx.channel.send(listMsg, delete_after= 60)
 
@@ -183,7 +184,7 @@ class Subscribe(Cog_Ext):
             pool.disconnect()
 
     @subscriber.command(aliases= ['e'])
-    async def embed(self, ctx, user: discord.Member = None, color="485696"):
+    async def embed(self, ctx, user: discord.Member = None, color="BAD9A2"):
         if ctx.author.id not in administrators: return
         if user == None: return
         if f"{user.id}" not in subscriberList.keys(): return
@@ -194,21 +195,36 @@ class Subscribe(Cog_Ext):
 
         embed = discord.Embed(description= description, color= int(color, 16))
         embed.set_author(name= user.name, icon_url= user.avatar_url)
-        await ctx.send(embed= embed)
+        msg = await ctx.send(embed= embed)
+
+        if re.search(r"\b(b|bound)$", ctx.message.content.lower()):
+            subscriberList[f"{user.id}_msg"] = [str(msg.id)]
 
     @subscriber.command(aliases= ['ea'])
-    async def embedAll(self, ctx, color="485696"):
+    async def embedAll(self, ctx, color="BAD9A2"):
         if ctx.channel != self.bot.get_channel(channel): return
         if ctx.author.id not in administrators: return
 
-        for key, value in subscriberList.items():
+        subscriberListCopy = subscriberList.copy()
+        r = Redis(connection_pool=pool)
+        if len(color) != 6: color = "BAD9A2"
+
+        for key, value in subscriberListCopy.items():
+            if key.endswith('_msg'): continue
             description = ""
             user = self.bot.get_user(int(key))
+
             for line in value:
                 description += f"{line}\n"
+
             embed = discord.Embed(description= description, color= int(color, 16))
             embed.set_author(name=user.name, icon_url=user.avatar_url)
-            await ctx.send(embed=embed)
+
+            msg = await ctx.send(embed=embed)
+            if re.search(r"\b(b|bound)$", ctx.message.content.lower()):
+                r.set(f"{user.id}_msg", msg.id)
+                subscriberList[f"{user.id}_msg"] = [str(msg.id)]
+        pool.disconnect()
 
     @subscriber.command(aliases= ['i'])
     async def info(self, ctx, user: discord.Member= None):
@@ -282,11 +298,6 @@ class Subscribe(Cog_Ext):
         finally:
             pool.disconnect()
 
-    @subscriber.command()
-    async def test(self, ctx, user: discord.Member):
-        await ctx.send(subscriberList.keys())
-
-
 async def refreshMsg(ctx, user):
     msgID = "".join(subscriberList[f"{user.id}_msg"])
 
@@ -311,7 +322,6 @@ def listRefreshFunc():
     r = Redis(connection_pool=pool)
     for key in r.keys():
         subscriberList[key.decode("utf-8")] = r.get(key).decode("utf-8").split(", ")
-    print(subscriberList.keys())
 
 def setup(bot):
     bot.add_cog(Subscribe(bot))
