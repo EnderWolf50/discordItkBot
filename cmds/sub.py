@@ -60,7 +60,7 @@ class Subscribe(Cog_Ext):
 
         listMsg = ""
         for key, value in subscriberList.items():
-            if key.endswith('_embed'): continue
+            if re.search(r"(_embed|_msg)$", key): continue
             listMsg += f"<@{key}>\n"
             for line in value:
                 listMsg += f"{line}\n"
@@ -202,7 +202,7 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases= ['ea'])
     async def embedAll(self, ctx, color="BAD9A2"):
-        if ctx.channel != self.bot.get_channel(channel): return
+        # if ctx.channel != self.bot.get_channel(channel): return
         if ctx.author.id not in administrators: return
 
         subscriberListCopy = subscriberList.copy()
@@ -210,7 +210,7 @@ class Subscribe(Cog_Ext):
         if len(color) != 6: color = "BAD9A2"
 
         for key, value in subscriberListCopy.items():
-            if key.endswith('_embed'): continue
+            if re.search(r"(_embed|_msg)$", key): continue
             description = ""
             user = self.bot.get_user(int(key))
 
