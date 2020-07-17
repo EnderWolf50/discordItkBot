@@ -45,7 +45,7 @@ class Subscribe(Cog_Ext):
 
         await msg.delete(delay=5)
         for user in msg.mentions:
-            if str(user.id) not in subscriberList.keys(): continue
+            if f"{user.id}" not in subscriberList.keys(): continue
             subscriptionInfo = f"<@{user.id}>"
             for value in subscriberList[f"{user.id}"]:
                 subscriptionInfo += f"\n{value}"
@@ -98,7 +98,7 @@ class Subscribe(Cog_Ext):
         try:
             r = Redis(connection_pool=pool)
             r.set(user.id, newSubscriptionInfo)
-            subscriberList[str(user.id)] = newSubscriptionInfo.split(", ")
+            subscriberList[f"{user.id}"] = newSubscriptionInfo.split(", ")
         except:
             await ctx.send(
                 'There something went wrong while processing the command.', delete_after=5)
@@ -120,8 +120,8 @@ class Subscribe(Cog_Ext):
         try:
             r = Redis(connection_pool=pool)
             r.delete(user.id)
-            if str(user.id) in subscriberList.keys():
-                del subscriberList[str(user.id)]
+            if f"{user.id}" in subscriberList.keys():
+                del subscriberList[f"{user.id}"]
         except:
             await ctx.send(
                 'There something went wrong while processing the command.', delete_after=5)
@@ -140,12 +140,12 @@ class Subscribe(Cog_Ext):
             newSubscriptionInfo = f"{r.get(user.id).decode('utf-8')}, {', '.join(args)}"
 
             r.set(user.id, newSubscriptionInfo)
-            subscriberList[str(user.id)] = newSubscriptionInfo.split(', ')
+            subscriberList[f"{user.id}"] = newSubscriptionInfo.split(', ')
         except:
             await ctx.send('There something went wrong while processing the command.', delete_after=5)
         else:
             infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
-            for arg in subscriberList[str(user.id)]:
+            for arg in subscriberList[f"{user.id}"]:
                 infoMsg += f"\n{arg}"
             await ctx.send(infoMsg, delete_after=10)
         finally:
@@ -163,14 +163,14 @@ class Subscribe(Cog_Ext):
             newSubscriptionInfo = ", ".join(uneditedInfo)
 
             r.set(user.id, newSubscriptionInfo)
-            subscriberList[str(user.id)] = newSubscriptionInfo.split(', ')
+            subscriberList[f"{user.id}"] = newSubscriptionInfo.split(', ')
         except:
             await ctx.send(
                 'There something went wrong while processing the command.',
                 delete_after=5)
         else:
             infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
-            for arg in subscriberList[str(user.id)]:
+            for arg in subscriberList[f"{user.id}"]:
                 infoMsg += f"\n{arg}"
             await ctx.send(infoMsg, delete_after=10)
         finally:
@@ -180,10 +180,10 @@ class Subscribe(Cog_Ext):
     async def embed(self, ctx, user: discord.Member = None, color="485696"):
         if ctx.author.id not in administrators: return
         if user == None: return
-        if str(user.id) not in subscriberList.keys(): return
+        if f"{user.id}" not in subscriberList.keys(): return
 
         description = ""
-        for value in subscriberList[str(user.id)]:
+        for value in subscriberList[f"{user.id}"]:
             description += f"{value}\n"
 
         embed = discord.Embed(description= description, color= int(color, 16))
