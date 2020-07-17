@@ -47,7 +47,7 @@ class Subscribe(Cog_Ext):
             for value in subscriberList[f"{user.id}"]:
                 subscriptionInfo += f"\n{value}"
 
-            if re.search(r"\b(b|bound)$", msg.content.lower()) and msg.author.id in administrators:
+            if re.search(r"\b(b|bind|bound)$", msg.content.lower()) and msg.author.id in administrators:
                 msgSent = await msg.channel.send(subscriptionInfo)
                 r.set(f"{user.id}_msg", msgSent.id)
                 subscriberList[f"{user.id}_msg"] = [str(msgSent.id)]
@@ -72,7 +72,7 @@ class Subscribe(Cog_Ext):
             for line in value:
                 listMsg += f"{line}\n"
 
-            if re.search(r"\b(b|bound)$", ctx.message.content.lower()):
+            if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
                 msg = await ctx.channel.send(listMsg)
                 r.set(f"{key}_msg", msg.id)
                 subscriberList[f"{key}_msg"] = [str(msg.id)]
@@ -219,7 +219,7 @@ class Subscribe(Cog_Ext):
         embed.set_author(name= user.name, icon_url= user.avatar_url)
         msg = await ctx.send(embed= embed)
 
-        if re.search(r"\b(b|bound)$", ctx.message.content.lower()):
+        if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
             r = Redis(connection_pool=pool)
             r.set(f"{user.id}_embed", msg.id)
             subscriberList[f"{user.id}_embed"] = [str(msg.id)]
@@ -246,7 +246,7 @@ class Subscribe(Cog_Ext):
             embed.set_author(name=user.name, icon_url=user.avatar_url)
 
             msg = await ctx.send(embed=embed)
-            if re.search(r"\b(b|bound)$", ctx.message.content.lower()):
+            if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
                 r.set(f"{user.id}_embed", msg.id)
                 subscriberList[f"{user.id}_embed"] = [str(msg.id)]
         pool.disconnect()
@@ -272,7 +272,7 @@ class Subscribe(Cog_Ext):
         if ctx.author.id not in administrators: return
         description = '''
 在 <#675956755112394753> Tag 人（可複數）即可查詢訂閱現況
-* 管理者於最後打上 f|forever 可使訊息不消失
+* 管理者於最後打上 b|bind|bound 可使訊息不消失且綁定
 
 主指令:
 `s|sub|subscriber <子指令>`
@@ -288,11 +288,16 @@ class Subscribe(Cog_Ext):
 
 `delete|del|d <Tag 人>` 刪除指定訂閱者
 
+`bound|b <Tag 人> <訊息 ID>` 綁定訂閱者訊息（嵌入與普通訊息各一）
+
 `embed|e <Tag 人> (色碼)` 以嵌入方式呈現訂閱資訊
+* 管理者於最後打上 b|bind|bound 可使訊息綁定
 
 `embedAll|ea (色碼)` 以嵌入方式呈現所有訂閱資訊
+* 管理者於最後打上 b|bind|bound 可使訊息綁定
 
 `list|l` 列出所有訂閱資訊
+* 管理者於最後打上 b|bind|bound 可使訊息不消失且綁定
 
 `listRefresh|reload|lr` 刷新訂閱資訊（不會自動列出）
 * 預設每 15 min 會自動更新資訊
@@ -306,7 +311,7 @@ class Subscribe(Cog_Ext):
         embed.set_author(name= "Itk Bot", icon_url= "https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128")
         await ctx.send(embed= embed)
 
-    @subscriber.command(aliases= ["b"])
+    @subscriber.command(aliases= ["b", "bound"])
     async def bound(self, ctx, user: discord.Member= None, msg: discord.Message= None):
         if ctx.author.id not in administrators: return
         if user == None or msg == None: return
@@ -324,7 +329,7 @@ class Subscribe(Cog_Ext):
         except:
             await ctx.send("There is something went wrong while processing the command.", delete_after= 5)
         else:
-            await ctx.send(msg.jump_url, delete_after= 30)
+            await ctx.send(f"Bounding {msg.jump_url}", delete_after= 30)
         finally:
             pool.disconnect()
 
