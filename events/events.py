@@ -20,6 +20,7 @@ class Events(Cog_Ext):
         global url
         global url_weights
         if msg.author.bot: return
+        if msg.channel == self.bot.get_channel(675956755112394753)
         if "窩不知道" in msg.content or "idk" in msg.content.lower():
             File = rFile("others")["IDK_url"]
 
