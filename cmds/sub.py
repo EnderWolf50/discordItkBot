@@ -3,14 +3,14 @@ from discord.ext import commands
 from core.classes import Cog_Ext
 from core.rwFile import rFile, wFile, get_setting
 
-import asyncio, os
+import asyncio, os, re
 from redis import Redis, ConnectionPool
 
 administrators = [get_setting("Owner"), get_setting("Traveler"), get_setting("Juxta")]
 
-host = os.environ["host"]
-port = os.environ["port"]
-password = os.environ["password"]
+host = "redis-16578.c56.east-us.azure.cloud.redislabs.com"#os.environ["host"]
+port = "16578"#os.environ["port"]
+password = "wPlVgO9HWu21Cs96GWnWUO29xvMtBV50"#os.environ["password"]
 
 subscriberList = {}
 channel = 675956755112394753
@@ -39,18 +39,21 @@ class Subscribe(Cog_Ext):
 
     @commands.Cog.listener()
     async def on_message(self, msg):
-        if msg.channel == self.bot.get_channel(
-                channel) and not msg.author.bot:
-            if msg.content.startswith('.subscriber') or msg.content.startswith('.sub') or msg.content.startswith('.s'): return
-            if len(msg.mentions) == 1 and str(
-                    msg.mentions[0].id) in subscriberList.keys():
-                await msg.delete(delay=5)
+        if msg.channel != self.bot.get_channel(channel) or msg.author.bot: return
+        if re.search(r"^(\.(subscriber|sub|s))\b", msg.content.lower()): return
+        if len(msg.mentions) == 0: return
 
-                subscriptionInfo = f"<@{msg.mentions[0].id}>"
-                for value in subscriberList[f"{msg.mentions[0].id}"]:
-                    subscriptionInfo += f"\n{value}"
+        await msg.delete(delay=5)
+        for user in msg.mentions:
+            if str(user.id) not in subscriberList.keys(): continue
+            subscriptionInfo = f"<@{user.id}>"
+            for value in subscriberList[f"{user.id}"]:
+                subscriptionInfo += f"\n{value}"
 
-                await msg.channel.send(subscriptionInfo, delete_after=60)
+            if re.search(r"\b(f|forever)$", msg.content.lower()) and msg.author.id in administrators:
+                await msg.channel.send(subscriptionInfo)
+            else:
+                await msg.channel.send(subscriptionInfo, delete_after=45)
 
     @commands.group(aliases=['s', 'sub'])
     async def subscriber(self, ctx):
@@ -62,7 +65,6 @@ class Subscribe(Cog_Ext):
 
         listMsg = ""
         for k, v in subscriberList.items():
-            if k.endswith("_msg"): continue
             listMsg += f"<@{k}>\n"
             for line in v:
                 listMsg += f"{line}\n"
@@ -70,6 +72,7 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases= ['lr', 'reload', 'refresh', 'listReload'])
     async def listRefresh(self, ctx):
+        if ctx.channel != self.bot.get_channel(channel): return
         if ctx.author.id not in administrators: return
         subscriberList = {}
 
@@ -80,7 +83,7 @@ class Subscribe(Cog_Ext):
                     ", ")
         except:
             await ctx.send(
-                "There's something went wrong while processing the command.", delete_after=5)
+                "There is something went wrong while processing the command.", delete_after=5)
         else:
             await ctx.channel.send('List refresh successful.', delete_after=5)
         finally:
@@ -98,12 +101,14 @@ class Subscribe(Cog_Ext):
             subscriberList[str(user.id)] = newSubscriptionInfo.split(", ")
         except:
             await ctx.send(
-                "There's something went wrong while processing the command.", delete_after=5)
+                'There something went wrong while processing the command.', delete_after=5)
         else:
             infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
             for arg in args:
                 infoMsg += f"\n{arg}"
             await ctx.send(infoMsg, delete_after=10)
+            if subscriberList[f"{user.id}_msg"]:
+                print('yes')
         finally:
             pool.disconnect()
 
@@ -117,11 +122,9 @@ class Subscribe(Cog_Ext):
             r.delete(user.id)
             if str(user.id) in subscriberList.keys():
                 del subscriberList[str(user.id)]
-            if f"{user.id}_msg" in subscriberList.keys():
-                del subscriberList[f"{user.id}_msg"]
         except:
             await ctx.send(
-                "There's something went wrong while processing the command.", delete_after=5)
+                'There something went wrong while processing the command.', delete_after=5)
         else:
             await ctx.send(f'Subscription info of {user.mention} has been removed successfully.', delete_after=7)
         finally:
@@ -139,7 +142,7 @@ class Subscribe(Cog_Ext):
             r.set(user.id, newSubscriptionInfo)
             subscriberList[str(user.id)] = newSubscriptionInfo.split(', ')
         except:
-            await ctx.send("There's something went wrong while processing the command.", delete_after=5)
+            await ctx.send('There something went wrong while processing the command.', delete_after=5)
         else:
             infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
             for arg in subscriberList[str(user.id)]:
@@ -163,7 +166,7 @@ class Subscribe(Cog_Ext):
             subscriberList[str(user.id)] = newSubscriptionInfo.split(', ')
         except:
             await ctx.send(
-                "There's something went wrong while processing the command.",
+                'There something went wrong while processing the command.',
                 delete_after=5)
         else:
             infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
@@ -193,7 +196,6 @@ class Subscribe(Cog_Ext):
         if ctx.author.id not in administrators: return
 
         for key, value in subscriberList.items():
-            if key.endswith("_msg"): continue
             description = ""
             user = self.bot.get_user(int(key))
             for line in value:
@@ -205,6 +207,7 @@ class Subscribe(Cog_Ext):
     @subscriber.command(aliases= ['i'])
     async def info(self, ctx, user: discord.Member= None):
         if ctx.channel != self.bot.get_channel(channel): return
+        if ctx.author.id not in administrators: return
         if user == None: return
 
         if len(ctx.message.mentions) == 1 and str(
@@ -221,6 +224,9 @@ class Subscribe(Cog_Ext):
     async def help(self, ctx):
         if ctx.author.id not in administrators: return
         description = '''
+在 <#675956755112394753> Tag 人（可複數）即可查詢訂閱現況
+* 管理者於最後打上 f|forever 可使訊息不消失
+
 主指令:
 `s|sub|subscriber <子指令>`
 
@@ -264,7 +270,7 @@ class Subscribe(Cog_Ext):
             r.set(f"{user.id}_msg", msg.id)
             subscriberList[f"{user.id}_msg"] = msg.id
         except:
-            await ctx.send("There's something went wrong while processing the command.", delete_after= 5)
+            await ctx.send("There is something went wrong while processing the command.", delete_after= 5)
         else:
             await ctx.send(msg.jump_url)
         finally:
