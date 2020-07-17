@@ -311,7 +311,7 @@ class Subscribe(Cog_Ext):
         embed.set_author(name= "Itk Bot", icon_url= "https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128")
         await ctx.send(embed= embed)
 
-    @subscriber.command(aliases= ["b", "bound"])
+    @subscriber.command(aliases= ["b", "bind"])
     async def bound(self, ctx, user: discord.Member= None, msg: discord.Message= None):
         if ctx.author.id not in administrators: return
         if user == None or msg == None: return
