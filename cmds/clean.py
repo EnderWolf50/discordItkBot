@@ -9,11 +9,13 @@ Owner = get_setting("Owner")
 Traveler = get_setting("Traveler")
 Bot = get_setting("Bot")
 
+administrators = [get_setting("Owner"), get_setting("Traveler"), get_setting("Juxta")]
 
 class Clean(Cog_Ext):
     @commands.command()
     async def clean(self, ctx, number: int = 1, ID: discord.Member = None):
         await ctx.message.delete()
+        if ctx.channel == self.bot.get_channel(675956755112394753) and ctx.author.id not in administrators: return
         if ID == None:
             ID = self.bot.user
 
