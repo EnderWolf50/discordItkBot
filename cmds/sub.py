@@ -25,13 +25,8 @@ class Subscribe(Cog_Ext):
 
         async def listAutoRefresh():
             await self.bot.wait_until_ready()
-            global subscriberList
             while not self.bot.is_closed():
-                subscriberList = {}
-                r = Redis(connection_pool=pool)
-                for key in r.keys():
-                    subscriberList[key.decode("utf-8")] = r.get(key).decode("utf-8").split(
-                        ", ")
+                listRefreshFunc()
                 pool.disconnect()
                 await asyncio.sleep(900)
 
@@ -72,20 +67,15 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases= ['lr', 'reload', 'refresh', 'listReload'])
     async def listRefresh(self, ctx):
-        if ctx.channel != self.bot.get_channel(channel): return
         if ctx.author.id not in administrators: return
-        subscriberList = {}
 
         try:
-            r = Redis(connection_pool=pool)
-            for key in r.keys():
-                subscriberList[key.decode("utf-8")] = r.get(key).decode("utf-8").split(
-                    ", ")
+            listRefreshFunc()
         except:
             await ctx.send(
                 "There is something went wrong while processing the command.", delete_after=5)
         else:
-            await ctx.channel.send('List refresh successful.', delete_after=5)
+            await ctx.channel.send('List refresh complete.', delete_after=5)
         finally:
             pool.disconnect()
 
@@ -104,11 +94,15 @@ class Subscribe(Cog_Ext):
                 'There something went wrong while processing the command.', delete_after=5)
         else:
             infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
+
             for arg in args:
                 infoMsg += f"\n{arg}"
             await ctx.send(infoMsg, delete_after=10)
-            if subscriberList[f"{user.id}_msg"]:
-                print('yes')
+
+            if f"{user.id}_msg" in subscriberList.keys():
+                await refreshMsg(ctx, user)
+            else:
+                print('no')
         finally:
             pool.disconnect()
 
@@ -120,6 +114,7 @@ class Subscribe(Cog_Ext):
         try:
             r = Redis(connection_pool=pool)
             r.delete(user.id)
+            r.delete(f"{user.id}_msg")
             if f"{user.id}" in subscriberList.keys():
                 del subscriberList[f"{user.id}"]
         except:
@@ -127,6 +122,9 @@ class Subscribe(Cog_Ext):
                 'There something went wrong while processing the command.', delete_after=5)
         else:
             await ctx.send(f'Subscription info of {user.mention} has been removed successfully.', delete_after=7)
+
+            if f"{user.id}_msg" in subscriberList.keys():
+                await deleteMsg(ctx, user)
         finally:
             pool.disconnect()
 
@@ -145,9 +143,13 @@ class Subscribe(Cog_Ext):
             await ctx.send('There something went wrong while processing the command.', delete_after=5)
         else:
             infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
+
             for arg in subscriberList[f"{user.id}"]:
                 infoMsg += f"\n{arg}"
             await ctx.send(infoMsg, delete_after=10)
+
+            if f"{user.id}_msg" in subscriberList.keys():
+                await refreshMsg(ctx, user)
         finally:
             pool.disconnect()
 
@@ -170,9 +172,13 @@ class Subscribe(Cog_Ext):
                 delete_after=5)
         else:
             infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
+
             for arg in subscriberList[f"{user.id}"]:
                 infoMsg += f"\n{arg}"
             await ctx.send(infoMsg, delete_after=10)
+
+            if f"{user.id}_msg" in subscriberList.keys():
+                await refreshMsg(ctx, user)
         finally:
             pool.disconnect()
 
@@ -268,13 +274,44 @@ class Subscribe(Cog_Ext):
         try:
             r = Redis(connection_pool=pool)
             r.set(f"{user.id}_msg", msg.id)
-            subscriberList[f"{user.id}_msg"] = msg.id
+            subscriberList[f"{user.id}_msg"] = [str(msg.id)]
         except:
             await ctx.send("There is something went wrong while processing the command.", delete_after= 5)
         else:
             await ctx.send(msg.jump_url)
         finally:
             pool.disconnect()
+
+    @subscriber.command()
+    async def test(self, ctx, user: discord.Member):
+        await ctx.send(subscriberList.keys())
+
+
+async def refreshMsg(ctx, user):
+    msgID = "".join(subscriberList[f"{user.id}_msg"])
+
+    msg = await ctx.fetch_message(msgID)
+    embed = msg.embeds[0]
+
+    embed.description = "\n".join(subscriberList[f"{user.id}"])
+    await msg.edit(embed= embed)
+
+async def deleteMsg(ctx, user):
+    msgID = "".join(subscriberList[f"{user.id}_msg"])
+
+    msg = await ctx.fetch_message(msgID)
+
+    if f"{user.id}_msg" in subscriberList.keys():
+        del subscriberList[f"{user.id}_msg"]
+    await msg.delete()
+
+def listRefreshFunc():
+    global subscriberList
+    subscriberList = {}
+    r = Redis(connection_pool=pool)
+    for key in r.keys():
+        subscriberList[key.decode("utf-8")] = r.get(key).decode("utf-8").split(", ")
+    print(subscriberList.keys())
 
 def setup(bot):
     bot.add_cog(Subscribe(bot))
