@@ -135,7 +135,7 @@ class Subscribe(Cog_Ext):
 
         try:
             r = Redis(connection_pool=pool)
-            newSubscriptionInfo = f"{r.get(f"{user.id}").decode('utf-8')}, {', '.join(args)}"
+            newSubscriptionInfo = f"{r.get(f'{user.id}').decode('utf-8')}, {', '.join(args)}"
 
             r.set(f"{user.id}", newSubscriptionInfo)
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(', ')
@@ -160,7 +160,7 @@ class Subscribe(Cog_Ext):
 
         try:
             r = Redis(connection_pool=pool)
-            uneditedInfo = r.get(f"{user.id}").decode('utf-8').split(', ')
+            uneditedInfo = r.get(f'{user.id}').decode('utf-8').split(', ')
             lineRemoved = uneditedInfo.pop(line - 1)
             newSubscriptionInfo = ", ".join(uneditedInfo)
 
