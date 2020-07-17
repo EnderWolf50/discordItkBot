@@ -17,8 +17,6 @@ class Bzz(Cog_Ext):
 
         result = rFile("result")
 
-        point = rFile("points")
-
         if f"{ctx.author.id}" in record:
             if record[f"{ctx.author.id}"] != (datetime.datetime.now() + datetime.timedelta(hours= 8)).strftime("%Y.%m.%d"):
 
@@ -31,16 +29,6 @@ class Bzz(Cog_Ext):
                 result[f"{ctx.author.id}"] = bzz_msg
 
                 wFile(result, "result")
-
-                if f"{ctx.author.id}" in point:
-                    point[f"{ctx.author.id}"] += 5
-
-                    wFile(point, "points")
-
-                else:
-                    point[f"{ctx.author.id}"] = 5
-
-                    wFile(point, "points")
 
             else:
                 bzz_msg = result[f"{ctx.author.id}"]

@@ -44,7 +44,7 @@ class _1A2B(Cog_Ext):
         global wait
         await ctx.message.delete(delay= 5)
         if AB_G == True:
-            AB_G = False 
+            AB_G = False
             wait = False
             Playing = False
             Number = "".join(Answer)
@@ -111,23 +111,6 @@ class _1A2B(Cog_Ext):
                             else:
                                 wait = False
                                 await channel.send(msg.author.mention + f"（{msg.content}）" + f"：**{A}A{B}B**")
-                                
-                                with open("points.json" ,"r", encoding= "utf8") as jpoints:
-                                    point = json.load(jpoints)
-
-                                if f"{msg.author.id}" in point:
-                                    point[f"{msg.author.id}"] += 1 * B
-                                    point[f"{msg.author.id}"] += 5 * A
-
-                                    with open("points.json", "w", encoding= "utf-8") as jpoints:
-                                        json.dump(point, jpoints, indent= 4)
-                                
-                                else:
-                                    point[f"{msg.author.id}"] += 1 * B
-                                    point[f"{msg.author.id}"] += 5 * A
-
-                                    with open("points.json", "w", encoding= "utf-8") as jpoints:
-                                        json.dump(point, jpoints, indent= 4)
                         else:
                             await channel.send(msg.author.mention + " 請勿輸入重複的數字！")
                             Duplicate = False
