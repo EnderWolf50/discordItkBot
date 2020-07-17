@@ -60,7 +60,7 @@ class Subscribe(Cog_Ext):
 
         listMsg = ""
         for key, value in subscriberList.items():
-            if key.endswith('_msg'): continue
+            if key.endswith('_embed'): continue
             listMsg += f"<@{key}>\n"
             for line in value:
                 listMsg += f"{line}\n"
@@ -100,7 +100,7 @@ class Subscribe(Cog_Ext):
                 infoMsg += f"\n{arg}"
             await ctx.send(infoMsg, delete_after=10)
 
-            if f"{user.id}_msg" in subscriberList.keys():
+            if f"{user.id}_embed" in subscriberList.keys():
                 await refreshMsg(ctx, user)
             else:
                 print('no')
@@ -115,7 +115,7 @@ class Subscribe(Cog_Ext):
         try:
             r = Redis(connection_pool=pool)
             r.delete(f"{user.id}")
-            r.delete(f"{user.id}_msg")
+            r.delete(f"{user.id}_embed")
             if f"{user.id}" in subscriberList.keys():
                 del subscriberList[f"{user.id}"]
         except:
@@ -124,7 +124,7 @@ class Subscribe(Cog_Ext):
         else:
             await ctx.send(f'Subscription info of {user.mention} has been removed successfully.', delete_after=7)
 
-            if f"{user.id}_msg" in subscriberList.keys():
+            if f"{user.id}_embed" in subscriberList.keys():
                 await deleteMsg(ctx, user)
         finally:
             pool.disconnect()
@@ -149,7 +149,7 @@ class Subscribe(Cog_Ext):
                 infoMsg += f"\n{arg}"
             await ctx.send(infoMsg, delete_after=10)
 
-            if f"{user.id}_msg" in subscriberList.keys():
+            if f"{user.id}_embed" in subscriberList.keys():
                 await refreshMsg(ctx, user)
         finally:
             pool.disconnect()
@@ -178,7 +178,7 @@ class Subscribe(Cog_Ext):
                 infoMsg += f"\n{arg}"
             await ctx.send(infoMsg, delete_after=10)
 
-            if f"{user.id}_msg" in subscriberList.keys():
+            if f"{user.id}_embed" in subscriberList.keys():
                 await refreshMsg(ctx, user)
         finally:
             pool.disconnect()
@@ -198,7 +198,7 @@ class Subscribe(Cog_Ext):
         msg = await ctx.send(embed= embed)
 
         if re.search(r"\b(b|bound)$", ctx.message.content.lower()):
-            subscriberList[f"{user.id}_msg"] = [str(msg.id)]
+            subscriberList[f"{user.id}_embed"] = [str(msg.id)]
 
     @subscriber.command(aliases= ['ea'])
     async def embedAll(self, ctx, color="BAD9A2"):
@@ -210,7 +210,7 @@ class Subscribe(Cog_Ext):
         if len(color) != 6: color = "BAD9A2"
 
         for key, value in subscriberListCopy.items():
-            if key.endswith('_msg'): continue
+            if key.endswith('_embed'): continue
             description = ""
             user = self.bot.get_user(int(key))
 
@@ -222,8 +222,8 @@ class Subscribe(Cog_Ext):
 
             msg = await ctx.send(embed=embed)
             if re.search(r"\b(b|bound)$", ctx.message.content.lower()):
-                r.set(f"{user.id}_msg", msg.id)
-                subscriberList[f"{user.id}_msg"] = [str(msg.id)]
+                r.set(f"{user.id}_embed", msg.id)
+                subscriberList[f"{user.id}_embed"] = [str(msg.id)]
         pool.disconnect()
 
     @subscriber.command(aliases= ['i'])
@@ -289,8 +289,8 @@ class Subscribe(Cog_Ext):
 
         try:
             r = Redis(connection_pool=pool)
-            r.set(f"{user.id}_msg", msg.id)
-            subscriberList[f"{user.id}_msg"] = [str(msg.id)]
+            r.set(f"{user.id}_embed", msg.id)
+            subscriberList[f"{user.id}_embed"] = [str(msg.id)]
         except:
             await ctx.send("There is something went wrong while processing the command.", delete_after= 5)
         else:
@@ -299,7 +299,7 @@ class Subscribe(Cog_Ext):
             pool.disconnect()
 
 async def refreshMsg(ctx, user):
-    msgID = "".join(subscriberList[f"{user.id}_msg"])
+    msgID = "".join(subscriberList[f"{user.id}_embed"])
 
     msg = await ctx.fetch_message(msgID)
     embed = msg.embeds[0]
@@ -308,12 +308,12 @@ async def refreshMsg(ctx, user):
     await msg.edit(embed= embed)
 
 async def deleteMsg(ctx, user):
-    msgID = "".join(subscriberList[f"{user.id}_msg"])
+    msgID = "".join(subscriberList[f"{user.id}_embed"])
 
     msg = await ctx.fetch_message(msgID)
 
-    if f"{user.id}_msg" in subscriberList.keys():
-        del subscriberList[f"{user.id}_msg"]
+    if f"{user.id}_embed" in subscriberList.keys():
+        del subscriberList[f"{user.id}_embed"]
     await msg.delete()
 
 def listRefreshFunc():
