@@ -39,9 +39,10 @@ class Subscribe(Cog_Ext):
                 for key in subscriberList.keys():
                     if re.search(r"(_embed)$", key):
                         user = self.bot.get_user(int(key[:18]))
+                        ctx = self.bot.get_channel(channel)
                         msgID = "".join(subscriberList[f"{user.id}_embed"])
 
-                        msg = await self.bot.get_channel(channel).fetch_message(msgID)
+                        msg = await ctx.fetch_message(msgID)
                         embed = msg.embeds[0]
 
                         embed.description = "\n".join(subscriberList[f"{user.id}"])
