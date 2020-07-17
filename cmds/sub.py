@@ -128,6 +128,7 @@ class Subscribe(Cog_Ext):
         finally:
             pool.disconnect()
 
+
     @subscriber.command(aliases= ['a'])
     async def add(self, ctx, user: discord.Member, *args):
         if ctx.author.id not in administrators: return
