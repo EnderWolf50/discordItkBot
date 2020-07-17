@@ -23,14 +23,40 @@ class Subscribe(Cog_Ext):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        async def listAutoRefresh():
+        async def autoRefreshList():
             await self.bot.wait_until_ready()
             while not self.bot.is_closed():
                 listRefreshFunc()
                 pool.disconnect()
                 await asyncio.sleep(900)
 
-        self.listAutoRefreshTask = self.bot.loop.create_task(listAutoRefresh())
+        self.autoRefreshListTask = self.bot.loop.create_task(autoRefreshList())
+
+        async def autoRefreshMsgEmbed():
+            await self.bot.wait_until_ready()
+            while not self.bot.is_closed():
+                await asyncio.sleep(900)
+                for key, value in subscriberList.keys():
+                    if re.search(r"(_embed)$", key):
+                        user = self.bot.get_user(key[:18])
+                        msgID = "".join(subscriberList[f"{user.id}_embed"])
+
+                        msg = await self.bot.get_channel(channel).fetch_message(msgID)
+                        embed = msg.embeds[0]
+
+                        embed.description = "\n".join(subscriberList[f"{user.id}"])
+                        embed.set_author(name=user.name, icon_url=user.avatar_url)
+                        await msg.edit(embed= embed)
+                    elif re.search(r"(_msg)$", key):
+                        user = self.bot.get_user(key[:18])
+                        msgID = "".join(subscriberList[f"{user.id}_msg"])
+
+                        msg = await ctx.fetch_message(msgID)
+
+                        msg.content = f"<@{user.id}>\n" + "\n".join(subscriberList[f"{user.id}"])
+                        await msg.edit(content= msg.content)
+
+        self.autoRefreshMsgEmbedTask = self.bot.loop.create_task(autoRefreshMsgEmbed())
 
     @commands.Cog.listener()
     async def on_message(self, msg):
