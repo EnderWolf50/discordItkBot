@@ -8,9 +8,9 @@ from redis import Redis, ConnectionPool
 
 administrators = [get_setting("Owner"), get_setting("Traveler"), get_setting("Juxta")]
 
-host = "redis-16578.c56.east-us.azure.cloud.redislabs.com"#os.environ["host"]
-port = "16578"#os.environ["port"]
-password = "wPlVgO9HWu21Cs96GWnWUO29xvMtBV50"#os.environ["password"]
+host = os.environ["host"]
+port = os.environ["port"]
+password = os.environ["password"]
 
 subscriberList = {}
 channel = 675956755112394753
