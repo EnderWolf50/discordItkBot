@@ -3,8 +3,9 @@ from discord.ext import commands
 from core.classes import Cog_Ext
 from core.rwFile import rFile, wFile, get_setting
 
-import asyncio, os, re, datetime
+import asyncio, os, re
 from redis import Redis, ConnectionPool
+from datetime import datetime as dt
 
 administrators = [
     get_setting("Owner"),
@@ -400,7 +401,7 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command()
     async def test(self, ctx):
-        await ctx.send(datetime.datetime.now().strftime("%m / %d"))
+        await ctx.send(dt.now().strftime("%m/%d"))
 
 
 async def refreshEmbed(self, user):
