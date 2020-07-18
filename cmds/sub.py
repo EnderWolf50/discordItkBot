@@ -305,18 +305,18 @@ class Subscribe(Cog_Ext):
     async def help(self, ctx):
         if ctx.author.id not in administrators: return
         description = '''
-在 <#675956755112394753> Tag 人（可複數）即可查詢訂閱現況
-* 管理者於最後打上 b|bind|bound 可使訊息不消失且綁定
+於 <#675956755112394753> Tag 人（可複數）可查詢訂閱現況
+* 管理者於最後打上 `b|bind|bound` 可使訊息不消失且綁定
 
 主指令:
 `s|sub|subscriber <子指令>`
 
 子指令:
 `set|s <Tag 人> <內容...>` 設定訂閱資訊
-* 內容有空格時可用 "" 包起即會視為一項
+* 內容有空格時用 "" 框起即可被視為單項
 
 `add|a <Tag 人> <內容...>` 增加訂閱資訊
-* 內容有空格時可用 "" 包起即會視為一項
+* 內容有空格時用 "" 框起即可被視為單項
 
 `remove|re|r <Tag 人> <行數>` 移除指定行數
 
@@ -325,16 +325,16 @@ class Subscribe(Cog_Ext):
 `bound|b <Tag 人> <訊息 ID>` 綁定訂閱者訊息（嵌入與普通訊息各一）
 
 `embed|e <Tag 人> (色碼)` 以嵌入方式呈現訂閱資訊
-* 管理者於最後打上 b|bind|bound 可使訊息綁定
+* 管理者於最後打上 `b|bind|bound` 可使訊息綁定
 
 `embedAll|ea (色碼)` 以嵌入方式呈現所有訂閱資訊
-* 管理者於最後打上 b|bind|bound 可使訊息綁定
+* 管理者於最後打上 `b|bind|bound` 可使訊息綁定
 
 `list|l` 列出所有訂閱資訊
-* 管理者於最後打上 b|bind|bound 可使訊息不消失且綁定
+* 管理者於最後打上 `b|bind|bound` 可使訊息不消失且綁定
 
 `listRefresh|reload|lr` 刷新訂閱資訊（不會自動列出）
-* 預設每 15 min 會自動更新資訊
+* 預設每 15 min 自動更新資訊
 
 `info|i <Tag 人>` 以訊息方式呈現訂閱資訊（不會消失）
 '''
