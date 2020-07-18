@@ -18,9 +18,9 @@ class Bzz(Cog_Ext):
         result = rFile("result")
 
         if f"{ctx.author.id}" in record:
-            if record[f"{ctx.author.id}"] != (datetime.datetime.now() + datetime.timedelta(hours= 8)).strftime("%Y.%m.%d"):
+            if record[f"{ctx.author.id}"] != datetime.datetime.now().strftime("%Y.%m.%d"):
 
-                record[f"{ctx.author.id}"] = (datetime.datetime.now() + datetime.timedelta(hours= 8)).strftime("%Y.%m.%d")
+                record[f"{ctx.author.id}"] = datetime.datetime.now().strftime("%Y.%m.%d")
 
                 wFile(record, "record")
 
@@ -34,7 +34,7 @@ class Bzz(Cog_Ext):
                 bzz_msg = result[f"{ctx.author.id}"]
 
         else:
-            record[f"{ctx.author.id}"] = (datetime.datetime.now() + datetime.timedelta(hours= 8)).strftime("%Y.%m.%d")
+            record[f"{ctx.author.id}"] = datetime.datetime.now().strftime("%Y.%m.%d")
 
             wFile(record, "record")
 
@@ -44,7 +44,7 @@ class Bzz(Cog_Ext):
 
             wFile(result, "result")
 
-        Date = (datetime.datetime.now() + datetime.timedelta(hours= 8)).strftime("%m / %d")
+        Date = datetime.datetime.now().strftime("%m / %d")
 
         await ctx.message.delete(delay= 3)
         await ctx.send(ctx.author.mention + f" 你今日（{Date}）的運勢為：" + bzz_msg, delete_after= 7)
