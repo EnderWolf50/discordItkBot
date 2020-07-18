@@ -47,33 +47,35 @@ class Subscribe(Cog_Ext):
 
     @commands.Cog.listener()
     async def on_message(self, msg):
-        if msg.channel != self.bot.get_channel(channel) or msg.author.bot:
-            return
+        if msg.channel != self.bot.get_channel(channel) or msg.author.bot: return
         if re.search(r"^(\.(subscriber|sub|s))\b", msg.content.lower()): return
         if len(msg.mentions) == 0: return
 
-        r = Redis(connection_pool=pool)
-
         await msg.delete(delay=5)
-        for user in msg.mentions:
-            if f"{user.id}" not in subscriberList.keys(): continue
-            subscriptionInfo = f"<@{user.id}>"
-            for value in subscriberList[f"{user.id}"]:
-                subscriptionInfo += f"\n{value}"
+        try:
+            r = Redis(connection_pool=pool)
 
-            if re.search(
-                    r"\b(b|bind|bound)$",
-                    msg.content.lower()) and msg.author.id in administrators:
-                msgSent = await msg.channel.send(subscriptionInfo)
-                r.set(f"{user.id}_msg", msgSent.id)
-                r.set(f"{user.id}_msg_channel", msgSent.channel.id)
-                subscriberList[f"{user.id}_msg"] = [str(msgSent.id)]
-                subscriberList[f"{user.id}_msg_channel"] = [
-                    str(msgSent.channel.id)
-                ]
-            else:
-                await msg.channel.send(subscriptionInfo, delete_after=45)
-        pool.disconnect()
+            for user in msg.mentions:
+                if f"{user.id}" not in subscriberList.keys(): continue
+                subscriptionInfo = f"<@{user.id}>"
+
+                for value in subscriberList[f"{user.id}"]:
+                    subscriptionInfo += f"\n{value}"
+
+                if re.search(r"\b(b|bind|bound)$", msg.content.lower()) and msg.author.id in administrators:
+                    msgSent = await msg.channel.send(subscriptionInfo)
+
+                    r.set(f"{user.id}_msg", msgSent.id)
+                    subscriberList[f"{user.id}_msg"] = [str(msgSent.id)]
+
+                    r.set(f"{user.id}_msg_channel", msgSent.channel.id)
+                    subscriberList[f"{user.id}_msg_channel"] = [str(msgSent.channel.id)]
+                else:
+                    await msg.channel.send(subscriptionInfo, delete_after=45)
+        except:
+            await ctx.send('There something went wrong while processing the message.', delete_after=5)
+        finally:
+            pool.disconnect()
 
     @commands.group(aliases=['s', 'sub'])
     async def subscriber(self, ctx):
@@ -94,9 +96,11 @@ class Subscribe(Cog_Ext):
 
             if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
                 msg = await ctx.channel.send(listMsg)
+
                 r.set(f"{key}_msg", msg.id)
-                r.set(f"{key}_msg_channel", msg.channel.id)
                 subscriberList[f"{key}_msg"] = [str(msg.id)]
+
+                r.set(f"{key}_msg_channel", msg.channel.id)
                 subscriberList[f"{key}_msg_channel"] = [str(msg.channel.id)]
             else:
                 await ctx.channel.send(listMsg, delete_after=60)
@@ -125,13 +129,14 @@ class Subscribe(Cog_Ext):
         newSubscriptionInfo = ", ".join(args)
         try:
             r = Redis(connection_pool=pool)
+
             r.set(f"{user.id}", newSubscriptionInfo)
-            # r.set(f"{user.id}_time", newSubscriptionInfo)
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(", ")
+
+            r.set(f"{user.id}_time", dt.now().strftime("%m/%d %H:%M"))
+            subscriberList[f"{user.id}_time"] = [dt.now().strftime("%m/%d %H:%M")]
         except:
-            await ctx.send(
-                'There something went wrong while processing the command.',
-                delete_after=5)
+            await ctx.send('There something went wrong while processing the command.', delete_after=5)
         else:
             infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
 
@@ -153,11 +158,16 @@ class Subscribe(Cog_Ext):
 
         try:
             r = Redis(connection_pool=pool)
+
             r.delete(f"{user.id}")
+            r.delete(f"{user.id}_time")
+
             r.delete(f"{user.id}_embed")
             r.delete(f"{user.id}_embed_channel")
+
             r.delete(f"{user.id}_msg")
             r.delete(f"{user.id}_msg_channel")
+
             if f"{user.id}" in subscriberList.keys():
                 del subscriberList[f"{user.id}"]
         except:
@@ -173,6 +183,8 @@ class Subscribe(Cog_Ext):
                 await deleteEmbed(self, user)
             if f"{user.id}_msg" in subscriberList.keys():
                 await deleteMsg(self, user)
+            if f"{user.id}_time" in subscriberList.keys():
+                del subscriberList[f"{user.id}_time"]
         finally:
             pool.disconnect()
 
@@ -181,12 +193,15 @@ class Subscribe(Cog_Ext):
         if ctx.author.id not in administrators: return
         if user == None or not args: return
 
+        newSubscriptionInfo = f"{r.get(f'{user.id}').decode('utf-8')}, {', '.join(args)}"
         try:
             r = Redis(connection_pool=pool)
-            newSubscriptionInfo = f"{r.get(f'{user.id}').decode('utf-8')}, {', '.join(args)}"
 
             r.set(f"{user.id}", newSubscriptionInfo)
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(', ')
+
+            r.set(f"{user.id}_time", dt.now().strftime("%m/%d %H:%M"))
+            subscriberList[f"{user.id}_time"] = [dt.now().strftime("%m/%d %H:%M")]
         except:
             await ctx.send(
                 'There something went wrong while processing the command.',
@@ -210,14 +225,17 @@ class Subscribe(Cog_Ext):
         if ctx.author.id not in administrators: return
         if user == None or not line: return
 
+        uneditedInfo = r.get(f'{user.id}').decode('utf-8').split(', ')
+        lineRemoved = uneditedInfo.pop(line - 1)
+        newSubscriptionInfo = ", ".join(uneditedInfo)
         try:
             r = Redis(connection_pool=pool)
-            uneditedInfo = r.get(f'{user.id}').decode('utf-8').split(', ')
-            lineRemoved = uneditedInfo.pop(line - 1)
-            newSubscriptionInfo = ", ".join(uneditedInfo)
 
             r.set(f"{user.id}", newSubscriptionInfo)
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(', ')
+
+            r.set(f"{user.id}_time", dt.now().strftime("%m/%d %H:%M"))
+            subscriberList[f"{user.id}_time"] = [dt.now().strftime("%m/%d %H:%M")]
         except:
             await ctx.send(
                 'There something went wrong while processing the command.',
