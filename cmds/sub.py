@@ -58,11 +58,11 @@ class Subscribe(Cog_Ext):
 
             for user in msg.mentions:
                 if f"{user.id}" not in subscriberList.keys(): continue
-                subscriptionInfo = f"<@{user.id}>"
                 timestamp = "".join(subscriberList[f"{user.id}_time"])
 
+                subscriptionInfo = f"<@{user.id}>\n"
                 for value in subscriberList[f"{user.id}"]:
-                    subscriptionInfo += f"\n> {value}"
+                    subscriptionInfo += f"> {value}\n"
                 subscriptionInfo += f"`{timestamp}`"
 
                 if re.search(r"\b(b|bind|bound)$", msg.content.lower()) and msg.author.id in administrators:
@@ -94,9 +94,12 @@ class Subscribe(Cog_Ext):
 
             for key, value in subscriberListCopy.items():
                 if re.search(r"(_embed|_msg|_channel)$", key): continue
+                timestamp = "".join(subscriberList[f"{key}_time"])
+
                 listMsg = f"<@{key}>\n"
                 for line in value:
-                    listMsg += f"{line}\n"
+                    listMsg += f"> {line}\n"
+                listMsg += f"`{timestamp}`"
 
                 if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
                     msg = await ctx.channel.send(listMsg)
@@ -275,7 +278,7 @@ class Subscribe(Cog_Ext):
 
             embed = discord.Embed(description=description, color=int(color, 16))
             embed.set_author(name=user.name, icon_url=user.avatar_url)
-            embed.set_footer(text= timestamp)
+            embed.set_footer(text= f"`{timestamp}`")
 
             msg = await ctx.send(embed=embed)
             if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
@@ -313,7 +316,7 @@ class Subscribe(Cog_Ext):
 
                 embed = discord.Embed(description=description, color=int(color, 16))
                 embed.set_author(name=user.name, icon_url=user.avatar_url)
-                embed.set_footer(text= timestamp)
+                embed.set_footer(text= f"`{timestamp}`")
 
                 msg = await ctx.send(embed=embed)
                 if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
@@ -435,7 +438,7 @@ async def refreshEmbed(self, user):
 
     embed.description = "\n".join(subscriberList[f"{user.id}"])
     embed.set_author(name=user.name, icon_url=user.avatar_url)
-    embed.set_footer(text= timestamp)
+    embed.set_footer(text= f"`{timestamp}`")
     await msg.edit(embed=embed)
 
 async def refreshMsg(self, user):
@@ -446,7 +449,7 @@ async def refreshMsg(self, user):
     channel = self.bot.get_channel(int(channelID))
     msg = await channel.fetch_message(int(msgID))
 
-    msg.content = f"<@{user.id}>\n" + "\n> ".join(subscriberList[f"{user.id}"]) + f"\n`{timestamp}`"
+    msg.content = f"<@{user.id}>\n> " + "\n> ".join(subscriberList[f"{user.id}"]) + f"\n`{timestamp}`"
     await msg.edit(content=msg.content)
 
 async def refreshMsgEmbedFunc(self):
