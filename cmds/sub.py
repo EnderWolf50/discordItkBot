@@ -401,7 +401,7 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command()
     async def test(self, ctx):
-        await ctx.send(dt.now().strftime("%m/%d"))
+        await ctx.send(dt.now().strftime("%m/%d %H:%M"), delete_after=3)
 
 
 async def refreshEmbed(self, user):
