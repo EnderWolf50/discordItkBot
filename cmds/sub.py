@@ -30,8 +30,8 @@ class Subscribe(Cog_Ext):
         async def autoRefreshList():
             await self.bot.wait_until_ready()
             while not self.bot.is_closed():
-                listRefreshFunc()
-                pool.disconnect()
+                await listRefreshFunc()
+                print("autoRefreshList >> Complete")
                 await asyncio.sleep(900)
 
         self.autoRefreshListTask = self.bot.loop.create_task(autoRefreshList())
@@ -40,6 +40,7 @@ class Subscribe(Cog_Ext):
             await self.bot.wait_until_ready()
             while not self.bot.is_closed():
                 await refreshMsgEmbedFunc(self)
+                print("autoRefreshMsgEmbed >> Complete")
                 await asyncio.sleep(920)
 
         self.autoRefreshMsgEmbedTask = self.bot.loop.create_task(
@@ -482,12 +483,13 @@ async def deleteMsg(self, user):
     await msg.delete()
 
 
-def listRefreshFunc():
+async def listRefreshFunc():
     global subscriberList
     subscriberList = {}
     r = Redis(connection_pool=pool)
     for key in r.keys():
         subscriberList[key.decode("utf-8")] = r.get(key).decode("utf-8").split(", ")
+    pool.disconnect()
 
 
 def setup(bot):
