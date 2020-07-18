@@ -3,7 +3,7 @@ from discord.ext import commands
 from core.classes import Cog_Ext
 from core.rwFile import rFile, wFile, get_setting
 
-import asyncio, os, re
+import asyncio, os, re, datetime
 from redis import Redis, ConnectionPool
 
 administrators = [
@@ -123,6 +123,7 @@ class Subscribe(Cog_Ext):
         try:
             r = Redis(connection_pool=pool)
             r.set(f"{user.id}", newSubscriptionInfo)
+            # r.set(f"{user.id}_time", newSubscriptionInfo)
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(", ")
         except:
             await ctx.send(
@@ -383,6 +384,10 @@ class Subscribe(Cog_Ext):
                 delete_after=5)
         finally:
             pool.disconnect()
+
+    @subscriber.command()
+    async def test(self, ctx):
+        await ctx.send(datatime.datetime.now().strftime("%m / %d"))
 
 
 async def refreshEmbed(self, user):
