@@ -63,7 +63,7 @@ class Subscribe(Cog_Ext):
                 subscriptionInfo = f"<@{user.id}>\n"
                 for value in subscriberList[f"{user.id}"]:
                     subscriptionInfo += f"> {value}\n"
-                subscriptionInfo += f"`{timestamp}`"
+                subscriptionInfo += f"`最後編輯：{timestamp}`"
 
                 if re.search(r"\b(b|bind|bound)$", msg.content.lower()) and msg.author.id in administrators:
                     msgSent = await msg.channel.send(subscriptionInfo)
@@ -99,7 +99,7 @@ class Subscribe(Cog_Ext):
                 listMsg = f"<@{key}>\n"
                 for line in value:
                     listMsg += f"> {line}\n"
-                listMsg += f"`{timestamp}`"
+                listMsg += f"`最後編輯：{timestamp}`"
 
                 if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
                     msg = await ctx.channel.send(listMsg)
@@ -278,7 +278,7 @@ class Subscribe(Cog_Ext):
 
             embed = discord.Embed(description=description, color=int(color, 16))
             embed.set_author(name=user.name, icon_url=user.avatar_url)
-            embed.set_footer(text= f"{timestamp}")
+            embed.set_footer(text= f"最後編輯：{timestamp}")
 
             msg = await ctx.send(embed=embed)
             if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
@@ -316,7 +316,7 @@ class Subscribe(Cog_Ext):
 
                 embed = discord.Embed(description=description, color=int(color, 16))
                 embed.set_author(name=user.name, icon_url=user.avatar_url)
-                embed.set_footer(text= f"{timestamp}")
+                embed.set_footer(text= f"最後編輯：{timestamp}")
 
                 msg = await ctx.send(embed=embed)
                 if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
@@ -438,7 +438,7 @@ async def refreshEmbed(self, user):
 
     embed.description = "\n".join(subscriberList[f"{user.id}"])
     embed.set_author(name=user.name, icon_url=user.avatar_url)
-    embed.set_footer(text= f"{timestamp}")
+    embed.set_footer(text= f"最後編輯：{timestamp}")
     await msg.edit(embed=embed)
 
 async def refreshMsg(self, user):
