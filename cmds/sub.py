@@ -429,15 +429,6 @@ class Subscribe(Cog_Ext):
         finally:
             pool.disconnect()
 
-    @subscriber.command()
-    async def test(self, ctx):
-        r = Redis(host=host, port=port, password=password)
-        r.delete('test')
-        r.delete('test1')
-        r.delete('test2')
-        await ctx.send('1')
-
-
 async def refreshEmbed(self, user):
     msgID = "".join(subscriberList[f"{user.id}_embed"])
     channelID = "".join(subscriberList[f"{user.id}_embed_channel"])
