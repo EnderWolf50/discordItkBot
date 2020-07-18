@@ -110,7 +110,7 @@ class Subscribe(Cog_Ext):
                     r.set(f"{key}_msg_channel", msg.channel.id)
                     subscriberList[f"{key}_msg_channel"] = [str(msg.channel.id)]
                 else:
-                    await ctx.channel.send(listMsg, delete_after=60)
+                    await ctx.channel.send(listMsg, delete_after=45)
         except:
             await ctx.send("There is something went wrong while processing the command.", delete_after=5)
         finally:
