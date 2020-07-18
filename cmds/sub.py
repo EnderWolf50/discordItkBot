@@ -31,7 +31,7 @@ class Subscribe(Cog_Ext):
             await self.bot.wait_until_ready()
             while not self.bot.is_closed():
                 await listRefreshFunc()
-                print("autoRefreshList >> Complete")
+                print(f"{dt.now().strftime('%m/%d %H:%M:%S')} autoRefreshList >> Complete")
                 await asyncio.sleep(900)
 
         self.autoRefreshListTask = self.bot.loop.create_task(autoRefreshList())
@@ -40,7 +40,7 @@ class Subscribe(Cog_Ext):
             await self.bot.wait_until_ready()
             while not self.bot.is_closed():
                 await refreshMsgEmbedFunc(self)
-                print("autoRefreshMsgEmbed >> Complete")
+                print(f"{dt.now().strftime('%m/%d %H:%M:%S')} autoRefreshMsgEmbed >> Complete")
                 await asyncio.sleep(920)
 
         self.autoRefreshMsgEmbedTask = self.bot.loop.create_task(
@@ -141,8 +141,8 @@ class Subscribe(Cog_Ext):
             r.set(f"{user.id}", newSubscriptionInfo)
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(", ")
 
-            r.set(f"{user.id}_time", dt.now().strftime("%m/%d %H:%M"))
-            subscriberList[f"{user.id}_time"] = [dt.now().strftime("%m/%d %H:%M")]
+            r.set(f"{user.id}_time", dt.now().strftime('%m/%d %H:%M:%S'))
+            subscriberList[f"{user.id}_time"] = [dt.now().strftime('%m/%d %H:%M:%S')]
         except:
             await ctx.send('There something went wrong while processing the command.', delete_after=5)
         else:
@@ -208,8 +208,8 @@ class Subscribe(Cog_Ext):
             r.set(f"{user.id}", newSubscriptionInfo)
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(', ')
 
-            r.set(f"{user.id}_time", dt.now().strftime("%m/%d %H:%M"))
-            subscriberList[f"{user.id}_time"] = [dt.now().strftime("%m/%d %H:%M")]
+            r.set(f"{user.id}_time", dt.now().strftime('%m/%d %H:%M:%S'))
+            subscriberList[f"{user.id}_time"] = [dt.now().strftime('%m/%d %H:%M:%S')]
         except:
             await ctx.send(
                 'There something went wrong while processing the command.',
@@ -242,8 +242,8 @@ class Subscribe(Cog_Ext):
             r.set(f"{user.id}", newSubscriptionInfo)
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(', ')
 
-            r.set(f"{user.id}_time", dt.now().strftime("%m/%d %H:%M"))
-            subscriberList[f"{user.id}_time"] = [dt.now().strftime("%m/%d %H:%M")]
+            r.set(f"{user.id}_time", dt.now().strftime('%m/%d %H:%M:%S'))
+            subscriberList[f"{user.id}_time"] = [dt.now().strftime('%m/%d %H:%M:%S')]
         except:
             await ctx.send(
                 'There something went wrong while processing the command.',
@@ -424,7 +424,7 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command()
     async def test(self, ctx):
-        await ctx.send(dt.now().strftime("%m/%d %H:%M"), delete_after=3)
+        await ctx.send(dt.now().strftime('%m/%d %H:%M:%S'), delete_after=3)
 
 
 async def refreshEmbed(self, user):
