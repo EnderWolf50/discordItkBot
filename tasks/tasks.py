@@ -17,7 +17,7 @@ class Tasks(Cog_Ext):
             await self.bot.wait_until_ready()
             self.channel = self.bot.get_channel(669934356172636208)
             while not self.bot.is_closed():
-                if (datetime.datetime.now() + datetime.timedelta(hours= 8)).strftime("%I %M %S") == "03 00 00":
+                if datetime.datetime.now().strftime("%I %M %S") == "03 00 00":
                     if not Three_oclock_Complete:
                         Three_oclock_Complete = True
                         Pic = discord.File("Yeah_its_three_oclock.png")
@@ -33,7 +33,7 @@ class Tasks(Cog_Ext):
             await self.bot.wait_until_ready()
             self.channel = self.bot.get_channel(669934356172636208)
             while not self.bot.is_closed():
-                if (datetime.datetime.now() + datetime.timedelta(hours= 8)).strftime("%w %H %M %S") == "0 21 00 00":
+                if datetime.datetime.now().strftime("%w %H %M %S") == "0 21 00 00":
                     if not Left_three_hours_Complete:
                         Left_three_hours_Complete = True
                         Pic = discord.File("Left_three_hours.jpg")
@@ -49,7 +49,7 @@ class Tasks(Cog_Ext):
             await self.bot.wait_until_ready()
             self.channel = self.bot.get_channel(669934356172636208)
             while not self.bot.is_closed():
-                if (datetime.datetime.now() + datetime.timedelta(hours= 8)).strftime("%w %H %M %S") == "0 23 59 50":
+                if datetime.datetime.now().strftime("%w %H %M %S") == "0 23 59 50":
                     if not Left_ten_seconds_Complete:
                         Left_ten_seconds_Complete = True
                         Pic = discord.File("Left_ten_seconds.png")
