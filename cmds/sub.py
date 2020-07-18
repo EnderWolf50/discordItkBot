@@ -278,7 +278,7 @@ class Subscribe(Cog_Ext):
 
             embed = discord.Embed(description=description, color=int(color, 16))
             embed.set_author(name=user.name, icon_url=user.avatar_url)
-            embed.set_footer(text= f"`{timestamp}`")
+            embed.set_footer(text= f"{timestamp}")
 
             msg = await ctx.send(embed=embed)
             if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
@@ -316,7 +316,7 @@ class Subscribe(Cog_Ext):
 
                 embed = discord.Embed(description=description, color=int(color, 16))
                 embed.set_author(name=user.name, icon_url=user.avatar_url)
-                embed.set_footer(text= f"`{timestamp}`")
+                embed.set_footer(text= f"{timestamp}")
 
                 msg = await ctx.send(embed=embed)
                 if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
@@ -438,7 +438,7 @@ async def refreshEmbed(self, user):
 
     embed.description = "\n".join(subscriberList[f"{user.id}"])
     embed.set_author(name=user.name, icon_url=user.avatar_url)
-    embed.set_footer(text= f"`{timestamp}`")
+    embed.set_footer(text= f"{timestamp}")
     await msg.edit(embed=embed)
 
 async def refreshMsg(self, user):
