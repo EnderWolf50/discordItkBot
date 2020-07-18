@@ -85,26 +85,30 @@ class Subscribe(Cog_Ext):
     async def list(self, ctx):
         if ctx.channel != self.bot.get_channel(channel): return
 
-        subscriberListCopy = subscriberList.copy()
-        r = Redis(connection_pool=pool)
+        try:
+            r = Redis(connection_pool=pool)
+            subscriberListCopy = subscriberList.copy()
 
-        for key, value in subscriberListCopy.items():
-            if re.search(r"(_embed|_msg|_channel)$", key): continue
-            listMsg = f"<@{key}>\n"
-            for line in value:
-                listMsg += f"{line}\n"
+            for key, value in subscriberListCopy.items():
+                if re.search(r"(_embed|_msg|_channel)$", key): continue
+                listMsg = f"<@{key}>\n"
+                for line in value:
+                    listMsg += f"{line}\n"
 
-            if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
-                msg = await ctx.channel.send(listMsg)
+                if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
+                    msg = await ctx.channel.send(listMsg)
 
-                r.set(f"{key}_msg", msg.id)
-                subscriberList[f"{key}_msg"] = [str(msg.id)]
+                    r.set(f"{key}_msg", msg.id)
+                    subscriberList[f"{key}_msg"] = [str(msg.id)]
 
-                r.set(f"{key}_msg_channel", msg.channel.id)
-                subscriberList[f"{key}_msg_channel"] = [str(msg.channel.id)]
-            else:
-                await ctx.channel.send(listMsg, delete_after=60)
-        pool.disconnect()
+                    r.set(f"{key}_msg_channel", msg.channel.id)
+                    subscriberList[f"{key}_msg_channel"] = [str(msg.channel.id)]
+                else:
+                    await ctx.channel.send(listMsg, delete_after=60)
+        except:
+            await ctx.send("There is something went wrong while processing the command.", delete_after=5)
+        finally:
+            pool.disconnect()
 
     @subscriber.command(aliases=['lr', 'reload', 'refresh', 'listReload'])
     async def listRefresh(self, ctx):
@@ -113,9 +117,7 @@ class Subscribe(Cog_Ext):
         try:
             listRefreshFunc()
         except:
-            await ctx.send(
-                "There is something went wrong while processing the command.",
-                delete_after=5)
+            await ctx.send("There is something went wrong while processing the command.", delete_after=5)
         else:
             await ctx.channel.send('List refresh complete.', delete_after=5)
         finally:
@@ -126,9 +128,9 @@ class Subscribe(Cog_Ext):
         if ctx.author.id not in administrators: return
         if user == None or not args: return
 
-        newSubscriptionInfo = ", ".join(args)
         try:
             r = Redis(connection_pool=pool)
+            newSubscriptionInfo = ", ".join(args)
 
             r.set(f"{user.id}", newSubscriptionInfo)
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(", ")
@@ -193,9 +195,9 @@ class Subscribe(Cog_Ext):
         if ctx.author.id not in administrators: return
         if user == None or not args: return
 
-        newSubscriptionInfo = f"{r.get(f'{user.id}').decode('utf-8')}, {', '.join(args)}"
         try:
             r = Redis(connection_pool=pool)
+            newSubscriptionInfo = f"{r.get(f'{user.id}').decode('utf-8')}, {', '.join(args)}"
 
             r.set(f"{user.id}", newSubscriptionInfo)
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(', ')
@@ -225,11 +227,11 @@ class Subscribe(Cog_Ext):
         if ctx.author.id not in administrators: return
         if user == None or not line: return
 
-        uneditedInfo = r.get(f'{user.id}').decode('utf-8').split(', ')
-        lineRemoved = uneditedInfo.pop(line - 1)
-        newSubscriptionInfo = ", ".join(uneditedInfo)
         try:
             r = Redis(connection_pool=pool)
+            uneditedInfo = r.get(f'{user.id}').decode('utf-8').split(', ')
+            lineRemoved = uneditedInfo.pop(line - 1)
+            newSubscriptionInfo = ", ".join(uneditedInfo)
 
             r.set(f"{user.id}", newSubscriptionInfo)
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(', ')
@@ -261,20 +263,26 @@ class Subscribe(Cog_Ext):
         if f"{user.id}" not in subscriberList.keys(): return
         if len(color) != 6: color = "BAD9A2"
 
-        description = ""
-        for value in subscriberList[f"{user.id}"]:
-            description += f"{value}\n"
+        try:
+            description = ""
+            for value in subscriberList[f"{user.id}"]:
+                description += f"{value}\n"
 
-        embed = discord.Embed(description=description, color=int(color, 16))
-        embed.set_author(name=user.name, icon_url=user.avatar_url)
-        msg = await ctx.send(embed=embed)
+            embed = discord.Embed(description=description, color=int(color, 16))
+            embed.set_author(name=user.name, icon_url=user.avatar_url)
+            msg = await ctx.send(embed=embed)
 
-        if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
-            r = Redis(connection_pool=pool)
-            r.set(f"{user.id}_embed", msg.id)
-            r.set(f"{user.id}_embed_channel", msg.channel.id)
-            subscriberList[f"{user.id}_embed"] = [str(msg.id)]
-            subscriberList[f"{user.id}_embed_channel"] = [str(msg.channel.id)]
+            if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
+                r = Redis(connection_pool=pool)
+
+                r.set(f"{user.id}_embed", msg.id)
+                subscriberList[f"{user.id}_embed"] = [str(msg.id)]
+
+                r.set(f"{user.id}_embed_channel", msg.channel.id)
+                subscriberList[f"{user.id}_embed_channel"] = [str(msg.channel.id)]
+        except:
+            await ctx.send("There is something went wrong while processing the command.", delete_after=5)
+        finally:
             pool.disconnect()
 
     @subscriber.command(aliases=['ea'])
@@ -282,31 +290,35 @@ class Subscribe(Cog_Ext):
         if ctx.channel != self.bot.get_channel(channel): return
         if ctx.author.id not in administrators: return
 
-        subscriberListCopy = subscriberList.copy()
-        r = Redis(connection_pool=pool)
-        if len(color) != 6: color = "BAD9A2"
+        try:
+            r = Redis(connection_pool=pool)
+            subscriberListCopy = subscriberList.copy()
 
-        for key, value in subscriberListCopy.items():
-            if re.search(r"(_embed|_msg|channel)$", key): continue
-            description = ""
-            user = self.bot.get_user(int(key))
+            if len(color) != 6: color = "BAD9A2"
 
-            for line in value:
-                description += f"{line}\n"
+            for key, value in subscriberListCopy.items():
+                if re.search(r"(_embed|_msg|channel)$", key): continue
+                description = ""
+                user = self.bot.get_user(int(key))
 
-            embed = discord.Embed(description=description,
-                                  color=int(color, 16))
-            embed.set_author(name=user.name, icon_url=user.avatar_url)
+                for line in value:
+                    description += f"{line}\n"
 
-            msg = await ctx.send(embed=embed)
-            if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
-                r.set(f"{user.id}_embed", msg.id)
-                r.set(f"{user.id}_embed_channel", msg.channel.id)
-                subscriberList[f"{user.id}_embed"] = [str(msg.id)]
-                subscriberList[f"{user.id}_embed_channel"] = [
-                    str(msg.channel.id)
-                ]
-        pool.disconnect()
+                embed = discord.Embed(description=description,
+                                    color=int(color, 16))
+                embed.set_author(name=user.name, icon_url=user.avatar_url)
+
+                msg = await ctx.send(embed=embed)
+                if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
+                    r.set(f"{user.id}_embed", msg.id)
+                    subscriberList[f"{user.id}_embed"] = [str(msg.id)]
+
+                    r.set(f"{user.id}_embed_channel", msg.channel.id)
+                    subscriberList[f"{user.id}_embed_channel"] = [str(msg.channel.id)]
+        except:
+            await ctx.send("There is something went wrong while processing the command.", delete_after=5)
+        finally:
+            pool.disconnect()
 
     @subscriber.command(aliases=['i'])
     async def info(self, ctx, user: discord.Member = None):
@@ -362,21 +374,12 @@ class Subscribe(Cog_Ext):
 `info|i <Tag 人>` 以訊息方式呈現訂閱資訊（不會消失）
 '''
 
-        embed = discord.Embed(title="SubscribeInfo Command Help",
-                              description=description,
-                              color=0x7a9e7e)
-        embed.set_author(
-            name="Itk Bot",
-            icon_url=
-            "https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128"
-        )
+        embed = discord.Embed(title="SubscribeInfo Command Help", description=description, color=0x7a9e7e)
+        embed.set_author(name="Itk Bot", icon_url="https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128")
         await ctx.send(embed=embed)
 
     @subscriber.command(aliases=["b", "bind"])
-    async def bound(self,
-                    ctx,
-                    user: discord.Member = None,
-                    msg: discord.Message = None):
+    async def bound(self,  ctx, user: discord.Member = None, msg: discord.Message = None):
         if ctx.author.id not in administrators: return
         if user == None or msg == None: return
         if msg.author != self.bot.user: return
@@ -384,36 +387,28 @@ class Subscribe(Cog_Ext):
         try:
             if len(msg.embeds) == 1:
                 r = Redis(connection_pool=pool)
+
                 r.set(f"{user.id}_embed", msg.id)
-                r.set(f"{user.id}_embed_channel", ctx.channel.id)
                 subscriberList[f"{user.id}_embed"] = [str(msg.id)]
-                subscriberList[f"{user.id}_embed_channel"] = [
-                    str(ctx.channel.id)
-                ]
-                embed = discord.Embed(
-                    description=f"[Link to the message here]({msg.jump_url})",
-                    color=0xBAD9A2)
-                await ctx.send(f"`Embed` bounding successful",
-                               embed=embed,
-                               delete_after=30)
+
+                r.set(f"{user.id}_embed_channel", ctx.channel.id)
+                subscriberList[f"{user.id}_embed_channel"] = [str(ctx.channel.id)]
+
+                embed = discord.Embed(description=f"[Link to the message here]({msg.jump_url})", color=0xBAD9A2)
+                await ctx.send(f"`Embed` bounding successful", embed=embed, delete_after=30)
             else:
                 r = Redis(connection_pool=pool)
+
                 r.set(f"{user.id}_msg", msg.id)
-                r.set(f"{user.id}_msg_channel", ctx.channel.id)
                 subscriberList[f"{user.id}_msg"] = [str(msg.id)]
-                subscriberList[f"{user.id}_msg_channel"] = [
-                    str(ctx.channel.id)
-                ]
-                embed = discord.Embed(
-                    description=f"[Link to the message here]({msg.jump_url})",
-                    color=0xBAD9A2)
-                await ctx.send(f"`Msg` bounding successful",
-                               embed=embed,
-                               delete_after=30)
+
+                r.set(f"{user.id}_msg_channel", ctx.channel.id)
+                subscriberList[f"{user.id}_msg_channel"] = [str(ctx.channel.id)]
+
+                embed = discord.Embed(description=f"[Link to the message here]({msg.jump_url})", color=0xBAD9A2)
+                await ctx.send(f"`Msg` bounding successful", embed=embed, delete_after=30)
         except:
-            await ctx.send(
-                "There is something went wrong while processing the command.",
-                delete_after=5)
+            await ctx.send("There is something went wrong while processing the command.", delete_after=5)
         finally:
             pool.disconnect()
 
@@ -425,26 +420,27 @@ class Subscribe(Cog_Ext):
 async def refreshEmbed(self, user):
     msgID = "".join(subscriberList[f"{user.id}_embed"])
     channelID = "".join(subscriberList[f"{user.id}_embed_channel"])
+    timestamp = "".join(subscriberList[f"{user.id}_time"])
 
     channel = self.bot.get_channel(int(channelID))
     msg = await channel.fetch_message(int(msgID))
     embed = msg.embeds[0]
 
     embed.description = "\n".join(subscriberList[f"{user.id}"])
+    embed.timestamp = timestamp
     embed.set_author(name=user.name, icon_url=user.avatar_url)
     await msg.edit(embed=embed)
-
 
 async def refreshMsg(self, user):
     msgID = "".join(subscriberList[f"{user.id}_msg"])
     channelID = "".join(subscriberList[f"{user.id}_msg_channel"])
+    timestamp = "".join(subscriberList[f"{user.id}_time"])
 
     channel = self.bot.get_channel(int(channelID))
     msg = await channel.fetch_message(int(msgID))
 
-    msg.content = f"<@{user.id}>\n" + "\n".join(subscriberList[f"{user.id}"])
+    msg.content = f"<@{user.id}>\n" + "\n".join(subscriberList[f"{user.id}"]) + f"\n> {timestamp}"
     await msg.edit(content=msg.content)
-
 
 async def refreshMsgEmbedFunc(self):
     for key in subscriberList.keys():
@@ -491,8 +487,7 @@ def listRefreshFunc():
     subscriberList = {}
     r = Redis(connection_pool=pool)
     for key in r.keys():
-        subscriberList[key.decode("utf-8")] = r.get(key).decode("utf-8").split(
-            ", ")
+        subscriberList[key.decode("utf-8")] = r.get(key).decode("utf-8").split(", ")
 
 
 def setup(bot):
