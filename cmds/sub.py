@@ -31,7 +31,9 @@ class Subscribe(Cog_Ext):
             await self.bot.wait_until_ready()
             while not self.bot.is_closed():
                 await listRefreshFunc()
-                print(f"autoRefreshList >> Complete（{dt.now().strftime('%m/%d %H:%M:%S')}）")
+                print(" ")
+                print(dt.now().strftime('%m/%d %H:%M:%S'))
+                print(f"autoRefreshList >> Complete")
                 await asyncio.sleep(900)
 
         self.autoRefreshListTask = self.bot.loop.create_task(autoRefreshList())
@@ -39,9 +41,12 @@ class Subscribe(Cog_Ext):
         async def autoRefreshMsgEmbed():
             await self.bot.wait_until_ready()
             while not self.bot.is_closed():
+                await asyncio.sleep(20)
                 await refreshMsgEmbedFunc(self)
-                print(f"autoRefreshMsgEmbed >> Complete（{dt.now().strftime('%m/%d %H:%M:%S')}）")
-                await asyncio.sleep(920)
+                print(" ")
+                print(dt.now().strftime('%m/%d %H:%M:%S'))
+                print(f"autoRefreshMsgEmbed >> Complete")
+                await asyncio.sleep(900)
 
         self.autoRefreshMsgEmbedTask = self.bot.loop.create_task(
             autoRefreshMsgEmbed())
