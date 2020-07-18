@@ -431,10 +431,11 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command()
     async def test(self, ctx):
-        r = Redis(connection_pool=pool)
+        r = Redis(host=host, port=port, password=password)
         r.delete('test')
         r.delete('test1')
         r.delete('test2')
+        await ctx.send('1')
 
 
 async def refreshEmbed(self, user):
