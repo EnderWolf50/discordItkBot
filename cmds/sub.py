@@ -67,7 +67,9 @@ class Subscribe(Cog_Ext):
                 r.set(f"{user.id}_msg", msgSent.id)
                 r.set(f"{user.id}_msg_channel", msgSent.channel.id)
                 subscriberList[f"{user.id}_msg"] = [str(msgSent.id)]
-                subscriberList[f"{user.id}_msg_channel"] = [str(msgSent.channel.id)]
+                subscriberList[f"{user.id}_msg_channel"] = [
+                    str(msgSent.channel.id)
+                ]
             else:
                 await msg.channel.send(subscriptionInfo, delete_after=45)
         pool.disconnect()
@@ -282,7 +284,9 @@ class Subscribe(Cog_Ext):
                 r.set(f"{user.id}_embed", msg.id)
                 r.set(f"{user.id}_embed_channel", msg.channel.id)
                 subscriberList[f"{user.id}_embed"] = [str(msg.id)]
-                subscriberList[f"{user.id}_embed_channel"] = [str(msg.channel.id)]
+                subscriberList[f"{user.id}_embed_channel"] = [
+                    str(msg.channel.id)
+                ]
         pool.disconnect()
 
     @subscriber.command(aliases=['i'])
@@ -350,7 +354,10 @@ class Subscribe(Cog_Ext):
         await ctx.send(embed=embed)
 
     @subscriber.command(aliases=["b", "bind"])
-    async def bound(self, ctx, user: discord.Member = None, msg: discord.Message = None):
+    async def bound(self,
+                    ctx,
+                    user: discord.Member = None,
+                    msg: discord.Message = None):
         if ctx.author.id not in administrators: return
         if user == None or msg == None: return
         if msg.author != self.bot.user: return
@@ -361,9 +368,12 @@ class Subscribe(Cog_Ext):
                 r.set(f"{user.id}_embed", msg.id)
                 r.set(f"{user.id}_embed_channel", ctx.channel.id)
                 subscriberList[f"{user.id}_embed"] = [str(msg.id)]
-                subscriberList[f"{user.id}_embed_channel"] = [str(ctx.channel.id)]
-                embed = discord.Embed(description=f"[Link to the message here]({msg.jump_url})",
-                                      color=0xBAD9A2)
+                subscriberList[f"{user.id}_embed_channel"] = [
+                    str(ctx.channel.id)
+                ]
+                embed = discord.Embed(
+                    description=f"[Link to the message here]({msg.jump_url})",
+                    color=0xBAD9A2)
                 await ctx.send(f"`Embed` bounding successful",
                                embed=embed,
                                delete_after=30)
@@ -372,9 +382,12 @@ class Subscribe(Cog_Ext):
                 r.set(f"{user.id}_msg", msg.id)
                 r.set(f"{user.id}_msg_channel", ctx.channel.id)
                 subscriberList[f"{user.id}_msg"] = [str(msg.id)]
-                subscriberList[f"{user.id}_msg_channel"] = [str(ctx.channel.id)]
-                embed = discord.Embed(description=f"[Link to the message here]({msg.jump_url})",
-                                      color=0xBAD9A2)
+                subscriberList[f"{user.id}_msg_channel"] = [
+                    str(ctx.channel.id)
+                ]
+                embed = discord.Embed(
+                    description=f"[Link to the message here]({msg.jump_url})",
+                    color=0xBAD9A2)
                 await ctx.send(f"`Msg` bounding successful",
                                embed=embed,
                                delete_after=30)
@@ -387,7 +400,7 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command()
     async def test(self, ctx):
-        await ctx.send(datatime.datetime.now().strftime("%m / %d"))
+        await ctx.send(datetime.datetime.now().strftime("%m / %d"))
 
 
 async def refreshEmbed(self, user):
