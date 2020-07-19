@@ -476,7 +476,7 @@ async def refreshMsgEmbedFunc(self):
 
                     await refreshMsg(self, user)
     except:
-        pass
+        continue
 
 
 async def deleteEmbed(self, user):
