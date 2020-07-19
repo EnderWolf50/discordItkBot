@@ -432,7 +432,7 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command()
     async def test(self, ctx, user: discord.Member, arg: bool):
-       await ctx.send(f"{user.mention} test", allowed_mentions= arg)
+       await ctx.send(f"{user.mention} test", allowed_mentions= {user: arg})
 
 async def refreshEmbed(self, user):
     try:
