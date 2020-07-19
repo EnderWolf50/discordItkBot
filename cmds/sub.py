@@ -444,7 +444,7 @@ async def refreshEmbed(self, user):
         embed.set_footer(text= f"最後編輯：{timestamp}")
         await msg.edit(embed=embed)
     except Exception as err:
-        print(f"{user.name} >> {err}")
+        print(f"(Embed)  {err} >> {user.name}")
         pass
 
 async def refreshMsg(self, user):
@@ -459,19 +459,21 @@ async def refreshMsg(self, user):
         msg.content = f"<@{user.id}>\n> " + "\n> ".join(subscriberList[f"{user.id}"]) + f"\n最後編輯：`{timestamp}`"
         await msg.edit(content=msg.content)
     except Exception as err:
-        print(f"{user.name} >> {err}")
+        print(f"(Msg)  {err} >> {user.name}")
         pass
 
 async def refreshMsgEmbedFunc(self):
     for key in subscriberList.keys():
-        if re.search(r"(_embed)$", key):
-            user = self.bot.get_user(int(key[:18]))
+        try:
+            if re.search(r"(_embed)$", key):
+                user = self.bot.get_user(int(key[:18]))
 
-            await refreshEmbed(self, user)
-        if re.search(r"(_msg)$", key):
-            user = self.bot.get_user(int(key[:18]))
+                await refreshEmbed(self, user)
+        finally:
+            if re.search(r"(_msg)$", key):
+                user = self.bot.get_user(int(key[:18]))
 
-            await refreshMsg(self, user)
+                await refreshMsg(self, user)
 
 
 async def deleteEmbed(self, user):
