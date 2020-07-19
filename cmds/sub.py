@@ -159,12 +159,10 @@ class Subscribe(Cog_Ext):
                 infoMsg += f"\n{arg}"
             await ctx.send(infoMsg, delete_after=10)
 
-            try:
-                if f"{user.id}_embed" in subscriberList.keys():
-                    await refreshEmbed(self, user)
-            finally:
-                if f"{user.id}_msg" in subscriberList.keys():
-                    await refreshMsg(self, user)
+            if f"{user.id}_embed" in subscriberList.keys():
+                await refreshEmbed(self, user)
+            if f"{user.id}_msg" in subscriberList.keys():
+                await refreshMsg(self, user)
         finally:
             pool.disconnect()
 
@@ -198,12 +196,10 @@ class Subscribe(Cog_Ext):
 
             if f"{user.id}_time" in subscriberList.keys():
                 del subscriberList[f"{user.id}_time"]
-            try:
-                if f"{user.id}_embed" in subscriberList.keys():
-                    await deleteEmbed(self, user)
-            finally:
-                if f"{user.id}_msg" in subscriberList.keys():
-                    await deleteMsg(self, user)
+            if f"{user.id}_embed" in subscriberList.keys():
+                await deleteEmbed(self, user)
+            if f"{user.id}_msg" in subscriberList.keys():
+                await deleteMsg(self, user)
         finally:
             pool.disconnect()
 
@@ -232,12 +228,10 @@ class Subscribe(Cog_Ext):
                 infoMsg += f"\n{arg}"
             await ctx.send(infoMsg, delete_after=10)
 
-            try:
-                if f"{user.id}_embed" in subscriberList.keys():
-                    await refreshEmbed(self, user)
-            finally:
-                if f"{user.id}_msg" in subscriberList.keys():
-                    await refreshMsg(self, user)
+            if f"{user.id}_embed" in subscriberList.keys():
+                await refreshEmbed(self, user)
+            if f"{user.id}_msg" in subscriberList.keys():
+                await refreshMsg(self, user)
         finally:
             pool.disconnect()
 
@@ -268,12 +262,10 @@ class Subscribe(Cog_Ext):
                 infoMsg += f"\n{arg}"
             await ctx.send(infoMsg, delete_after=10)
 
-            try:
-                if f"{user.id}_embed" in subscriberList.keys():
-                    await refreshEmbed(self, user)
-            finally:
-                if f"{user.id}_msg" in subscriberList.keys():
-                    await refreshMsg(self, user)
+            if f"{user.id}_embed" in subscriberList.keys():
+                await refreshEmbed(self, user)
+            if f"{user.id}_msg" in subscriberList.keys():
+                await refreshMsg(self, user)
         finally:
             pool.disconnect()
 
@@ -451,7 +443,7 @@ async def refreshEmbed(self, user):
         embed.set_author(name=user.name, icon_url=user.avatar_url)
         embed.set_footer(text= f"最後編輯：{timestamp}")
         await msg.edit(embed=embed)
-    except:
+    except Exception as err:
         print(err)
         pass
 
@@ -466,7 +458,7 @@ async def refreshMsg(self, user):
 
         msg.content = f"<@{user.id}>\n> " + "\n> ".join(subscriberList[f"{user.id}"]) + f"\n`{timestamp}`"
         await msg.edit(content=msg.content)
-    except err:
+    except Exception as err:
         print(err)
         pass
 
