@@ -438,18 +438,21 @@ class Subscribe(Cog_Ext):
             pool.disconnect()
 
 async def refreshEmbed(self, user):
-    msgID = "".join(subscriberList[f"{user.id}_embed"])
-    channelID = "".join(subscriberList[f"{user.id}_embed_channel"])
-    timestamp = "".join(subscriberList[f"{user.id}_time"])
+    try:
+        msgID = "".join(subscriberList[f"{user.id}_embed"])
+        channelID = "".join(subscriberList[f"{user.id}_embed_channel"])
+        timestamp = "".join(subscriberList[f"{user.id}_time"])
 
-    channel = self.bot.get_channel(int(channelID))
-    msg = await channel.fetch_message(int(msgID))
-    embed = msg.embeds[0]
+        channel = self.bot.get_channel(int(channelID))
+        msg = await channel.fetch_message(int(msgID))
+        embed = msg.embeds[0]
 
-    embed.description = "\n".join(subscriberList[f"{user.id}"])
-    embed.set_author(name=user.name, icon_url=user.avatar_url)
-    embed.set_footer(text= f"最後編輯：{timestamp}")
-    await msg.edit(embed=embed)
+        embed.description = "\n".join(subscriberList[f"{user.id}"])
+        embed.set_author(name=user.name, icon_url=user.avatar_url)
+        embed.set_footer(text= f"最後編輯：{timestamp}")
+        await msg.edit(embed=embed)
+    except:
+        pass
 
 async def refreshMsg(self, user):
     try:
@@ -467,18 +470,14 @@ async def refreshMsg(self, user):
 
 async def refreshMsgEmbedFunc(self):
     for key in subscriberList.keys():
-        try:
-            if re.search(r"(_embed)$", key):
-                user = self.bot.get_user(int(key[:18]))
+        if re.search(r"(_embed)$", key):
+            user = self.bot.get_user(int(key[:18]))
 
-                await refreshEmbed(self, user)
-        except:
-            continue
-        finally:
-            if re.search(r"(_msg)$", key):
-                user = self.bot.get_user(int(key[:18]))
+            await refreshEmbed(self, user)
+        if re.search(r"(_msg)$", key):
+            user = self.bot.get_user(int(key[:18]))
 
-                await refreshMsg(self, user)
+            await refreshMsg(self, user)
 
 
 async def deleteEmbed(self, user):
