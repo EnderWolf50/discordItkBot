@@ -100,7 +100,7 @@ class Subscribe(Cog_Ext):
             subscriberListCopy = subscriberList.copy()
 
             for key, value in subscriberListCopy.items():
-                if re.search(r"(_embed|_msg|_channel)$", key): continue
+                if re.search(r"(_embed|_msg|_channel|_time)$", key): continue
                 timestamp = "".join(subscriberList[f"{key}_time"])
 
                 listMsg = f"<@{key}>\n"
