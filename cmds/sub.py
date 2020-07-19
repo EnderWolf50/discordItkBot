@@ -444,7 +444,7 @@ async def refreshEmbed(self, user):
         embed.set_footer(text= f"最後編輯：{timestamp}")
         await msg.edit(embed=embed)
     except Exception as err:
-        print(err)
+        print(f"{user.name} >> {err}")
         pass
 
 async def refreshMsg(self, user):
@@ -456,10 +456,10 @@ async def refreshMsg(self, user):
         channel = self.bot.get_channel(int(channelID))
         msg = await channel.fetch_message(int(msgID))
 
-        msg.content = f"<@{user.id}>\n> " + "\n> ".join(subscriberList[f"{user.id}"]) + f"\n`{timestamp}`"
+        msg.content = f"<@{user.id}>\n> " + "\n> ".join(subscriberList[f"{user.id}"]) + f"\n最後編輯：`{timestamp}`"
         await msg.edit(content=msg.content)
     except Exception as err:
-        print(err)
+        print(f"{user.name} >> {err}")
         pass
 
 async def refreshMsgEmbedFunc(self):
