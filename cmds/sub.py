@@ -452,30 +452,29 @@ async def refreshEmbed(self, user):
     await msg.edit(embed=embed)
 
 async def refreshMsg(self, user):
-    msgID = "".join(subscriberList[f"{user.id}_msg"])
-    channelID = "".join(subscriberList[f"{user.id}_msg_channel"])
-    timestamp = "".join(subscriberList[f"{user.id}_time"])
+    try:
+        msgID = "".join(subscriberList[f"{user.id}_msg"])
+        channelID = "".join(subscriberList[f"{user.id}_msg_channel"])
+        timestamp = "".join(subscriberList[f"{user.id}_time"])
 
-    channel = self.bot.get_channel(int(channelID))
-    msg = await channel.fetch_message(int(msgID))
+        channel = self.bot.get_channel(int(channelID))
+        msg = await channel.fetch_message(int(msgID))
 
-    msg.content = f"<@{user.id}>\n> " + "\n> ".join(subscriberList[f"{user.id}"]) + f"\n`{timestamp}`"
-    await msg.edit(content=msg.content)
+        msg.content = f"<@{user.id}>\n> " + "\n> ".join(subscriberList[f"{user.id}"]) + f"\n`{timestamp}`"
+        await msg.edit(content=msg.content)
+    except:
+        pass
 
 async def refreshMsgEmbedFunc(self):
     for key in subscriberList.keys():
-        try:
-            if re.search(r"(_embed)$", key):
-                user = self.bot.get_user(int(key[:18]))
+        if re.search(r"(_embed)$", key):
+            user = self.bot.get_user(int(key[:18]))
 
-                await refreshEmbed(self, user)
-        except:
-            continue
-        finally:
-            if re.search(r"(_msg)$", key):
-                user = self.bot.get_user(int(key[:18]))
+            await refreshEmbed(self, user)
+        if re.search(r"(_msg)$", key):
+            user = self.bot.get_user(int(key[:18]))
 
-                await refreshMsg(self, user)
+            await refreshMsg(self, user)
 
 
 async def deleteEmbed(self, user):
