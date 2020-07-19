@@ -46,7 +46,7 @@ class Subscribe(Cog_Ext):
                 await refreshMsgEmbedFunc(self)
                 print(" ")
                 print(dt.now().strftime('%m/%d %H:%M:%S'))
-                print(f"autoRefreshMsgEmbed >> Complete")
+                print(f"autoRefreshMsgEmbed \n>> Complete")
                 print(" ")
                 await asyncio.sleep(900)
 
@@ -158,12 +158,11 @@ class Subscribe(Cog_Ext):
             for arg in args:
                 infoMsg += f"\n{arg}"
             await ctx.send(infoMsg, delete_after=10)
-            refreshEmbed(self, user)
-            refreshMsg(self, user)
-            # if f"{user.id}_embed" in subscriberList.keys():
-            #     await refreshEmbed(self, user)
-            # if f"{user.id}_msg" in subscriberList.keys():
-            #     await refreshMsg(self, user)
+
+            if f"{user.id}_embed" in subscriberList.keys():
+                await refreshEmbed(self, user)
+            if f"{user.id}_msg" in subscriberList.keys():
+                await refreshMsg(self, user)
         finally:
             pool.disconnect()
 
@@ -430,7 +429,7 @@ class Subscribe(Cog_Ext):
         finally:
             pool.disconnect()
 
-def refreshEmbed(self, user):
+async def refreshEmbed(self, user):
     msgID = "".join(subscriberList[f"{user.id}_embed"])
     channelID = "".join(subscriberList[f"{user.id}_embed_channel"])
     timestamp = "".join(subscriberList[f"{user.id}_time"])
@@ -444,7 +443,7 @@ def refreshEmbed(self, user):
     embed.set_footer(text= f"最後編輯：{timestamp}")
     await msg.edit(embed=embed)
 
-def refreshMsg(self, user):
+async def refreshMsg(self, user):
     msgID = "".join(subscriberList[f"{user.id}_msg"])
     channelID = "".join(subscriberList[f"{user.id}_msg_channel"])
     timestamp = "".join(subscriberList[f"{user.id}_time"])
