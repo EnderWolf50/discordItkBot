@@ -463,20 +463,19 @@ async def refreshMsg(self, user):
     await msg.edit(content=msg.content)
 
 async def refreshMsgEmbedFunc(self):
-    try:
-        for key in subscriberList.keys():
-            try:
-                if re.search(r"(_embed)$", key):
-                    user = self.bot.get_user(int(key[:18]))
+    for key in subscriberList.keys():
+        try:
+            if re.search(r"(_embed)$", key):
+                user = self.bot.get_user(int(key[:18]))
 
-                    await refreshEmbed(self, user)
-            finally:
-                if re.search(r"(_msg)$", key):
-                    user = self.bot.get_user(int(key[:18]))
+                await refreshEmbed(self, user)
+        except:
+            continue
+        finally:
+            if re.search(r"(_msg)$", key):
+                user = self.bot.get_user(int(key[:18]))
 
-                    await refreshMsg(self, user)
-    except:
-        continue
+                await refreshMsg(self, user)
 
 
 async def deleteEmbed(self, user):
