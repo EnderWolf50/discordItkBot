@@ -313,7 +313,7 @@ class Subscribe(Cog_Ext):
             if len(color) != 6: color = "BAD9A2"
 
             for key, value in subscriberListCopy.items():
-                if re.search(r"(_embed|_msg|_channel)$", key): continue
+                if re.search(r"(_embed|_msg|_channel|_time)$", key): continue
                 description = ""
                 user = self.bot.get_user(int(key))
                 timestamp = "".join(subscriberList[f"{user.id}_time"])
