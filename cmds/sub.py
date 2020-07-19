@@ -33,7 +33,7 @@ class Subscribe(Cog_Ext):
                 await listRefreshFunc()
                 print(" ")
                 print(dt.now().strftime('%m/%d %H:%M:%S'))
-                print(f"autoRefreshList >> Complete")
+                print(f"autoRefreshList \n>> Complete")
                 print(" ")
                 await asyncio.sleep(900)
 
@@ -46,7 +46,7 @@ class Subscribe(Cog_Ext):
                 await refreshMsgEmbedFunc(self)
                 print(" ")
                 print(dt.now().strftime('%m/%d %H:%M:%S'))
-                print(f"autoRefreshMsgEmbed \n>> Complete")
+                print(f"autoRefreshMsgEmbed >> Complete")
                 print(" ")
                 await asyncio.sleep(900)
 
@@ -159,10 +159,13 @@ class Subscribe(Cog_Ext):
                 infoMsg += f"\n{arg}"
             await ctx.send(infoMsg, delete_after=10)
 
-            if f"{user.id}_embed" in subscriberList.keys():
-                await refreshEmbed(self, user)
-            if f"{user.id}_msg" in subscriberList.keys():
-                await refreshMsg(self, user)
+            try:
+                if f"{user.id}_embed" in subscriberList.keys():
+                    await refreshEmbed(self, user)
+                if f"{user.id}_msg" in subscriberList.keys():
+                    await refreshMsg(self, user)
+            except:
+                pass
         finally:
             pool.disconnect()
 
