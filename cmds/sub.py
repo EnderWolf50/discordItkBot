@@ -432,7 +432,7 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command()
     async def test(self, ctx, user: discord.Member, arg: bool):
-        await ctx.message.edit(allowed_mentions= discord.AllowedMentions(users= False))
+        await ctx.message.ack()
         msg = await ctx.send(f"{user.mention} test", allowed_mentions= discord.AllowedMentions(users= arg))
         await asyncio.sleep(3)
         await msg.edit(allowed_mentions= discord.AllowedMentions(users= True))
