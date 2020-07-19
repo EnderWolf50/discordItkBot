@@ -33,7 +33,7 @@ class Subscribe(Cog_Ext):
                 await listRefreshFunc()
                 print(" ")
                 print(dt.now().strftime('%m/%d %H:%M:%S'))
-                print(f"autoRefreshList \n>> Complete")
+                print(f"autoRefreshList >> Complete")
                 print(" ")
                 await asyncio.sleep(900)
 
@@ -162,10 +162,9 @@ class Subscribe(Cog_Ext):
             try:
                 if f"{user.id}_embed" in subscriberList.keys():
                     await refreshEmbed(self, user)
+            finally:
                 if f"{user.id}_msg" in subscriberList.keys():
                     await refreshMsg(self, user)
-            except:
-                pass
         finally:
             pool.disconnect()
 
@@ -197,12 +196,14 @@ class Subscribe(Cog_Ext):
                 f'Subscription info of {user.mention} has been removed successfully.',
                 delete_after=7)
 
-            if f"{user.id}_embed" in subscriberList.keys():
-                await deleteEmbed(self, user)
-            if f"{user.id}_msg" in subscriberList.keys():
-                await deleteMsg(self, user)
             if f"{user.id}_time" in subscriberList.keys():
                 del subscriberList[f"{user.id}_time"]
+            try:
+                if f"{user.id}_embed" in subscriberList.keys():
+                    await deleteEmbed(self, user)
+            finally:
+                if f"{user.id}_msg" in subscriberList.keys():
+                    await deleteMsg(self, user)
         finally:
             pool.disconnect()
 
@@ -231,10 +232,12 @@ class Subscribe(Cog_Ext):
                 infoMsg += f"\n{arg}"
             await ctx.send(infoMsg, delete_after=10)
 
-            if f"{user.id}_embed" in subscriberList.keys():
-                await refreshEmbed(self, user)
-            if f"{user.id}_msg" in subscriberList.keys():
-                await refreshMsg(self, user)
+            try:
+                if f"{user.id}_embed" in subscriberList.keys():
+                    await refreshEmbed(self, user)
+            finally:
+                if f"{user.id}_msg" in subscriberList.keys():
+                    await refreshMsg(self, user)
         finally:
             pool.disconnect()
 
@@ -265,10 +268,12 @@ class Subscribe(Cog_Ext):
                 infoMsg += f"\n{arg}"
             await ctx.send(infoMsg, delete_after=10)
 
-            if f"{user.id}_embed" in subscriberList.keys():
-                await refreshEmbed(self, user)
-            if f"{user.id}_msg" in subscriberList.keys():
-                await refreshMsg(self, user)
+            try:
+                if f"{user.id}_embed" in subscriberList.keys():
+                    await refreshEmbed(self, user)
+            finally:
+                if f"{user.id}_msg" in subscriberList.keys():
+                    await refreshMsg(self, user)
         finally:
             pool.disconnect()
 
