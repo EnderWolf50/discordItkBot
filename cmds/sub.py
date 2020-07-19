@@ -128,7 +128,7 @@ class Subscribe(Cog_Ext):
         if ctx.author.id not in administrators: return
 
         try:
-            listRefreshFunc()
+            await listRefreshFunc()
         except:
             await ctx.send("There is something went wrong while processing the command.", delete_after=5)
         else:
