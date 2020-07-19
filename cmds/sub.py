@@ -430,6 +430,10 @@ class Subscribe(Cog_Ext):
         finally:
             pool.disconnect()
 
+    @subscriber.command()
+    async def test(self, ctx, user: discord.Member, arg: bool):
+       await ctx.send(f"{user.mention} test", allowed_mentions= arg)
+
 async def refreshEmbed(self, user):
     try:
         msgID = "".join(subscriberList[f"{user.id}_embed"])
