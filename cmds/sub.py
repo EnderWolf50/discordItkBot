@@ -94,6 +94,7 @@ class Subscribe(Cog_Ext):
     @subscriber.command(aliases=['l'])
     async def list(self, ctx):
         if ctx.channel != self.bot.get_channel(channel) and ctx.author.id not in administrators: return
+        if ctx.author.id not in administrators: return
 
         try:
             r = Redis(connection_pool=pool)
