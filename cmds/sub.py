@@ -303,7 +303,7 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases=['ea'])
     async def embedAll(self, ctx, color="BAD9A2"):
-        # if ctx.channel != self.bot.get_channel(channel): return
+        if ctx.channel != self.bot.get_channel(channel) or ctx.author.id not in administrators: return
         if ctx.author.id not in administrators: return
 
         try:
