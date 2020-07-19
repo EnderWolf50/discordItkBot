@@ -93,7 +93,7 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases=['l'])
     async def list(self, ctx):
-        if ctx.channel != self.bot.get_channel(channel) or ctx.author.id not in administrators: return
+        if ctx.channel != self.bot.get_channel(channel): return
 
         try:
             r = Redis(connection_pool=pool)
@@ -303,7 +303,7 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases=['ea'])
     async def embedAll(self, ctx, color="BAD9A2"):
-        if ctx.channel != self.bot.get_channel(channel) or ctx.author.id not in administrators: return
+        if ctx.channel != self.bot.get_channel(channel): return
         if ctx.author.id not in administrators: return
 
         try:
@@ -456,7 +456,7 @@ async def refreshMsg(self, user):
         channel = self.bot.get_channel(int(channelID))
         msg = await channel.fetch_message(int(msgID))
 
-        msg.content = f"<@{user.id}>\n> " + "\n> ".join(subscriberList[f"{user.id}"]) + f"\n最後編輯：`{timestamp}`"
+        msg.content = f"<@{user.id}>\n> " + "\n> ".join(subscriberList[f"{user.id}"]) + f"\n`最後編輯：{timestamp}`"
         await msg.edit(content=msg.content)
     except Exception as err:
         print(f"(Msg) {err} >> {user.name}")
