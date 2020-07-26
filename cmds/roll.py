@@ -4,9 +4,10 @@ from core.classes import Cog_Ext
 
 import random
 
+
 class Roll(Cog_Ext):
     @commands.command()
-    async def roll(self, ctx, num: int, *,args= "{}"):
+    async def roll(self, ctx, num: int, *, args="{}"):
         if num <= 0:
             await ctx.send("ㄐㄐ")
             await ctx.send("雞雞")
@@ -19,7 +20,8 @@ class Roll(Cog_Ext):
                 msg = args.replace("%", f"{random.randrange(1, num + 1)}", 1)
                 await ctx.send(msg)
             else:
-                await ctx.send(args + " {}".format(random.randrange(1, num + 1)))
+                await ctx.send(args +
+                               " {}".format(random.randrange(1, num + 1)))
         # else:
         #     with open("others.json", "r", encoding= "utf-8") as jothers:
         #         other = json.load(jothers)
@@ -37,6 +39,7 @@ class Roll(Cog_Ext):
     #             json.dump(other, jothers, indent= 4)
 
     #         await ctx.send("訊息已設定為 __" + other["Roll Message"] + "__")
+
 
 def setup(bot):
     bot.add_cog(Roll(bot))

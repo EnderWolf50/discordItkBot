@@ -55,7 +55,8 @@ class Subscribe(Cog_Ext):
 
     @commands.Cog.listener()
     async def on_message(self, msg):
-        if msg.channel != self.bot.get_channel(channel) or msg.author.bot: return
+        if msg.channel != self.bot.get_channel(channel) or msg.author.bot:
+            return
         if re.search(r"^(\.(subscriber|sub|s))\b", msg.content.lower()): return
         if len(msg.mentions) == 0: return
 
@@ -72,18 +73,23 @@ class Subscribe(Cog_Ext):
                     subscriptionInfo += f"> {value}\n"
                 subscriptionInfo += f"`最後編輯：{timestamp}`"
 
-                if re.search(r"\b(b|bind|bound)$", msg.content.lower()) and msg.author.id in administrators:
+                if re.search(r"\b(b|bind|bound)$", msg.content.lower()
+                             ) and msg.author.id in administrators:
                     msgSent = await msg.channel.send(subscriptionInfo)
 
                     r.set(f"{user.id}_msg", msgSent.id)
                     subscriberList[f"{user.id}_msg"] = [str(msgSent.id)]
 
                     r.set(f"{user.id}_msg_channel", msgSent.channel.id)
-                    subscriberList[f"{user.id}_msg_channel"] = [str(msgSent.channel.id)]
+                    subscriberList[f"{user.id}_msg_channel"] = [
+                        str(msgSent.channel.id)
+                    ]
                 else:
                     await msg.channel.send(subscriptionInfo, delete_after=45)
         except:
-            await ctx.send('There something went wrong while processing the message.', delete_after=5)
+            await ctx.send(
+                'There something went wrong while processing the message.',
+                delete_after=5)
         finally:
             pool.disconnect()
 
@@ -93,7 +99,9 @@ class Subscribe(Cog_Ext):
 
     @subscriber.command(aliases=['l'])
     async def list(self, ctx):
-        if ctx.channel != self.bot.get_channel(channel) and ctx.author.id not in administrators: return
+        if ctx.channel != self.bot.get_channel(
+                channel) and ctx.author.id not in administrators:
+            return
         if ctx.author.id not in administrators: return
 
         try:
@@ -109,18 +117,23 @@ class Subscribe(Cog_Ext):
                     listMsg += f"> {line}\n"
                 listMsg += f"`最後編輯：{timestamp}`"
 
-                if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
+                if re.search(r"\b(b|bind|bound)$",
+                             ctx.message.content.lower()):
                     msg = await ctx.channel.send(listMsg)
 
                     r.set(f"{key}_msg", msg.id)
                     subscriberList[f"{key}_msg"] = [str(msg.id)]
 
                     r.set(f"{key}_msg_channel", msg.channel.id)
-                    subscriberList[f"{key}_msg_channel"] = [str(msg.channel.id)]
+                    subscriberList[f"{key}_msg_channel"] = [
+                        str(msg.channel.id)
+                    ]
                 else:
                     await ctx.channel.send(listMsg, delete_after=45)
         except:
-            await ctx.send("There is something went wrong while processing the command.", delete_after=5)
+            await ctx.send(
+                "There is something went wrong while processing the command.",
+                delete_after=5)
         finally:
             pool.disconnect()
 
@@ -131,7 +144,9 @@ class Subscribe(Cog_Ext):
         try:
             await listRefreshFunc()
         except:
-            await ctx.send("There is something went wrong while processing the command.", delete_after=5)
+            await ctx.send(
+                "There is something went wrong while processing the command.",
+                delete_after=5)
         else:
             await ctx.channel.send('List refresh complete.', delete_after=5)
         finally:
@@ -150,9 +165,13 @@ class Subscribe(Cog_Ext):
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(", ")
 
             r.set(f"{user.id}_time", dt.now().strftime('%m/%d %H:%M:%S'))
-            subscriberList[f"{user.id}_time"] = [dt.now().strftime('%m/%d %H:%M:%S')]
+            subscriberList[f"{user.id}_time"] = [
+                dt.now().strftime('%m/%d %H:%M:%S')
+            ]
         except:
-            await ctx.send('There something went wrong while processing the command.', delete_after=5)
+            await ctx.send(
+                'There something went wrong while processing the command.',
+                delete_after=5)
         else:
             infoMsg = f'New subscription info of `{user.name}` will be looked like:\n{user.mention}'
 
@@ -217,7 +236,9 @@ class Subscribe(Cog_Ext):
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(', ')
 
             r.set(f"{user.id}_time", dt.now().strftime('%m/%d %H:%M:%S'))
-            subscriberList[f"{user.id}_time"] = [dt.now().strftime('%m/%d %H:%M:%S')]
+            subscriberList[f"{user.id}_time"] = [
+                dt.now().strftime('%m/%d %H:%M:%S')
+            ]
         except:
             await ctx.send(
                 'There something went wrong while processing the command.',
@@ -251,7 +272,9 @@ class Subscribe(Cog_Ext):
             subscriberList[f"{user.id}"] = newSubscriptionInfo.split(', ')
 
             r.set(f"{user.id}_time", dt.now().strftime('%m/%d %H:%M:%S'))
-            subscriberList[f"{user.id}_time"] = [dt.now().strftime('%m/%d %H:%M:%S')]
+            subscriberList[f"{user.id}_time"] = [
+                dt.now().strftime('%m/%d %H:%M:%S')
+            ]
         except:
             await ctx.send(
                 'There something went wrong while processing the command.',
@@ -284,9 +307,10 @@ class Subscribe(Cog_Ext):
             for value in subscriberList[f"{user.id}"]:
                 description += f"{value}\n"
 
-            embed = discord.Embed(description=description, color=int(color, 16))
+            embed = discord.Embed(description=description,
+                                  color=int(color, 16))
             embed.set_author(name=user.name, icon_url=user.avatar_url)
-            embed.set_footer(text= f"最後編輯：{timestamp}")
+            embed.set_footer(text=f"最後編輯：{timestamp}")
 
             msg = await ctx.send(embed=embed)
             if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
@@ -296,15 +320,21 @@ class Subscribe(Cog_Ext):
                 subscriberList[f"{user.id}_embed"] = [str(msg.id)]
 
                 r.set(f"{user.id}_embed_channel", msg.channel.id)
-                subscriberList[f"{user.id}_embed_channel"] = [str(msg.channel.id)]
+                subscriberList[f"{user.id}_embed_channel"] = [
+                    str(msg.channel.id)
+                ]
         except:
-            await ctx.send("There is something went wrong while processing the command.", delete_after=5)
+            await ctx.send(
+                "There is something went wrong while processing the command.",
+                delete_after=5)
         finally:
             pool.disconnect()
 
     @subscriber.command(aliases=['ea'])
     async def embedAll(self, ctx, color="BAD9A2"):
-        if ctx.channel != self.bot.get_channel(channel) and ctx.author.id not in administrators: return
+        if ctx.channel != self.bot.get_channel(
+                channel) and ctx.author.id not in administrators:
+            return
         if ctx.author.id not in administrators: return
 
         try:
@@ -322,19 +352,25 @@ class Subscribe(Cog_Ext):
                 for line in value:
                     description += f"{line}\n"
 
-                embed = discord.Embed(description=description, color=int(color, 16))
+                embed = discord.Embed(description=description,
+                                      color=int(color, 16))
                 embed.set_author(name=user.name, icon_url=user.avatar_url)
-                embed.set_footer(text= f"最後編輯：{timestamp}")
+                embed.set_footer(text=f"最後編輯：{timestamp}")
 
                 msg = await ctx.send(embed=embed)
-                if re.search(r"\b(b|bind|bound)$", ctx.message.content.lower()):
+                if re.search(r"\b(b|bind|bound)$",
+                             ctx.message.content.lower()):
                     r.set(f"{user.id}_embed", msg.id)
                     subscriberList[f"{user.id}_embed"] = [str(msg.id)]
 
                     r.set(f"{user.id}_embed_channel", msg.channel.id)
-                    subscriberList[f"{user.id}_embed_channel"] = [str(msg.channel.id)]
+                    subscriberList[f"{user.id}_embed_channel"] = [
+                        str(msg.channel.id)
+                    ]
         except:
-            await ctx.send("There is something went wrong while processing the command.", delete_after=5)
+            await ctx.send(
+                "There is something went wrong while processing the command.",
+                delete_after=5)
         finally:
             pool.disconnect()
 
@@ -392,12 +428,21 @@ class Subscribe(Cog_Ext):
 `info|i <Tag 人>` 以訊息方式呈現訂閱資訊（不會消失）
 '''
 
-        embed = discord.Embed(title="SubscribeInfo Command Help", description=description, color=0x7a9e7e)
-        embed.set_author(name="Itk Bot", icon_url="https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128")
+        embed = discord.Embed(title="SubscribeInfo Command Help",
+                              description=description,
+                              color=0x7a9e7e)
+        embed.set_author(
+            name="Itk Bot",
+            icon_url=
+            "https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128"
+        )
         await ctx.send(embed=embed)
 
     @subscriber.command(aliases=["b", "bind"])
-    async def bound(self,  ctx, user: discord.Member = None, msg: discord.Message = None):
+    async def bound(self,
+                    ctx,
+                    user: discord.Member = None,
+                    msg: discord.Message = None):
         if ctx.author.id not in administrators: return
         if user == None or msg == None: return
         if msg.author != self.bot.user: return
@@ -410,10 +455,16 @@ class Subscribe(Cog_Ext):
                 subscriberList[f"{user.id}_embed"] = [str(msg.id)]
 
                 r.set(f"{user.id}_embed_channel", ctx.channel.id)
-                subscriberList[f"{user.id}_embed_channel"] = [str(ctx.channel.id)]
+                subscriberList[f"{user.id}_embed_channel"] = [
+                    str(ctx.channel.id)
+                ]
 
-                embed = discord.Embed(description=f"[Link to the message here]({msg.jump_url})", color=0xBAD9A2)
-                await ctx.send(f"`Embed` bounding successful", embed=embed, delete_after=30)
+                embed = discord.Embed(
+                    description=f"[Link to the message here]({msg.jump_url})",
+                    color=0xBAD9A2)
+                await ctx.send(f"`Embed` bounding successful",
+                               embed=embed,
+                               delete_after=30)
             else:
                 r = Redis(connection_pool=pool)
 
@@ -421,14 +472,23 @@ class Subscribe(Cog_Ext):
                 subscriberList[f"{user.id}_msg"] = [str(msg.id)]
 
                 r.set(f"{user.id}_msg_channel", ctx.channel.id)
-                subscriberList[f"{user.id}_msg_channel"] = [str(ctx.channel.id)]
+                subscriberList[f"{user.id}_msg_channel"] = [
+                    str(ctx.channel.id)
+                ]
 
-                embed = discord.Embed(description=f"[Link to the message here]({msg.jump_url})", color=0xBAD9A2)
-                await ctx.send(f"`Msg` bounding successful", embed=embed, delete_after=30)
+                embed = discord.Embed(
+                    description=f"[Link to the message here]({msg.jump_url})",
+                    color=0xBAD9A2)
+                await ctx.send(f"`Msg` bounding successful",
+                               embed=embed,
+                               delete_after=30)
         except:
-            await ctx.send("There is something went wrong while processing the command.", delete_after=5)
+            await ctx.send(
+                "There is something went wrong while processing the command.",
+                delete_after=5)
         finally:
             pool.disconnect()
+
 
 async def refreshEmbed(self, user):
     try:
@@ -442,11 +502,12 @@ async def refreshEmbed(self, user):
 
         embed.description = "\n".join(subscriberList[f"{user.id}"])
         embed.set_author(name=user.name, icon_url=user.avatar_url)
-        embed.set_footer(text= f"最後編輯：{timestamp}")
+        embed.set_footer(text=f"最後編輯：{timestamp}")
         await msg.edit(embed=embed)
     except Exception as err:
         print(f"(Embed) {err} >> {user.name}")
         pass
+
 
 async def refreshMsg(self, user):
     try:
@@ -457,11 +518,13 @@ async def refreshMsg(self, user):
         channel = self.bot.get_channel(int(channelID))
         msg = await channel.fetch_message(int(msgID))
 
-        msg.content = f"<@{user.id}>\n> " + "\n> ".join(subscriberList[f"{user.id}"]) + f"\n`最後編輯：{timestamp}`"
+        msg.content = f"<@{user.id}>\n> " + "\n> ".join(
+            subscriberList[f"{user.id}"]) + f"\n`最後編輯：{timestamp}`"
         await msg.edit(content=msg.content)
     except Exception as err:
         print(f"(Msg) {err} >> {user.name}")
         pass
+
 
 async def refreshMsgEmbedFunc(self):
     for key in subscriberList.keys():
@@ -510,7 +573,8 @@ async def listRefreshFunc():
     subscriberList = {}
     r = Redis(connection_pool=pool)
     for key in r.keys():
-        subscriberList[key.decode("utf-8")] = r.get(key).decode("utf-8").split(", ")
+        subscriberList[key.decode("utf-8")] = r.get(key).decode("utf-8").split(
+            ", ")
     pool.disconnect()
 
 
