@@ -109,7 +109,6 @@ class _1A2B(Cog_Ext):
                                 End_Time = datetime.datetime.now() + datetime.timedelta(seconds= 5)
 
                                 def predicate(msg: discord.Message) -> bool:
-                                    print(1)
                                     return msg.author == self.bot.get_user(710498084194484235) or (len(msg.content) == Amount and msg.content.isdigit())
 
                                 await asyncio.sleep(0.5)
