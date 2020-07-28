@@ -124,7 +124,7 @@ class _1A2B(Cog_Ext):
                                 await channel.purge(after=Start_time,
                                                     before=End_Time,
                                                     check=predicate)
-                                print(0)
+                                print(Start_time, End_Time)
                             else:
                                 wait = False
                                 await channel.send(msg.author.mention +
