@@ -106,7 +106,7 @@ class _1A2B(Cog_Ext):
                                 AB_G = False
                                 wait = False
                                 Playing = False
-                                End_Time = datetime.datetime.now() + datetime.timedelta(seconds= -5)
+                                End_Time = datetime.datetime.now() + datetime.timedelta(seconds= 5)
 
                                 def predicate(msg: discord.Message) -> bool:
                                     return msg.author == self.bot.get_user(
