@@ -109,10 +109,7 @@ class _1A2B(Cog_Ext):
                                 End_Time = datetime.datetime.now() + datetime.timedelta(seconds= 5)
 
                                 def predicate(msg: discord.Message) -> bool:
-                                    return msg.author == self.bot.get_user(
-                                        710498084194484235) or (
-                                            len(msg.content) == Amount
-                                            and msg.content.isdigit())
+                                    return msg.author == self.bot.get_user(710498084194484235) or (len(msg.content) == Amount and msg.content.isdigit())
 
                                 await asyncio.sleep(0.5)
                                 await channel.send(msg.author.mention +
@@ -121,10 +118,7 @@ class _1A2B(Cog_Ext):
                                 await channel.send(
                                     f"恭喜 {msg.author.mention} 答對了！")
                                 await asyncio.sleep(5)
-                                await channel.purge(after=Start_time,
-                                                    before=End_Time,
-                                                    check=predicate)
-                                print(Start_time, End_Time)
+                                await channel.purge(after=Start_time, before=End_Time, check=predicate)
                             else:
                                 wait = False
                                 await channel.send(msg.author.mention +
