@@ -41,7 +41,7 @@ class Events(Cog_Ext):
         if re.search(r"(窩不知道|我不知道|idk)", msg.content.lower()):
             File = rFile("others")["IDK_url"]
 
-            Picture = str(random.choices(url,
+            Picture = str(random.choices(idk,
                                          weights=idk_weights)).strip("[]'")
 
             if Picture == "https://i.imgur.com/x1qmYCT.gif":
