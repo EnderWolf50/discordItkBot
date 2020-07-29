@@ -66,7 +66,7 @@ class Events(Cog_Ext):
         if "尻尻" in msg.content:
             await msg.add_reaction("<a:emoji_103:713998749680009250>")
         # 撒嬌
-        if re.search(r"(撒嬌|donut|bakery)", msg.author.display_name):
+        if re.search(r"(撒嬌|donut|bakery)", msg.author.display_name.lower()):
             await msg.add_reaction(random.choice(actCute))
         if re.search(r"(撒嬌|donut|bakery)", msg.content.lower()):
             await msg.channel.send(random.choice(actCute))
