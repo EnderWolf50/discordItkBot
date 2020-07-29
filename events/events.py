@@ -10,7 +10,11 @@ url_weights = []
 
 Owner = get_setting("Owner")
 
-actCute = ["<:104:737849572314972181>", "<:103:737846127117991986>", "<:102:737843533611794463>"]
+actCute = [
+    "<:104:737849572314972181>", "<:103:737846127117991986>",
+    "<:102:737843533611794463>"
+]
+
 
 class Events(Cog_Ext):
     @commands.Cog.listener()
@@ -55,7 +59,8 @@ class Events(Cog_Ext):
         elif self.bot.user in msg.mentions and len(msg.mentions) == 1:
             await msg.channel.send(
                 random.choice(rFile("others")["Mention_react"]))
-        elif "撒嬌" in msg.content or "donut" in msg.content:
+        elif "撒嬌" in msg.content or "donut" in msg.content.lower(
+        ) or "bakery" in msg.content.lower():
             await msg.channel.send(random.choice(actCute))
 
     @commands.Cog.listener()
