@@ -53,6 +53,7 @@ class Events(Cog_Ext):
                        msg.content.lower()):
             await msg.channel.send(loadingCatEmos[0])
             await msg.channel.send(loadingCatEmos[1])
+            await msg.channel.send(loadingCatEmos[2])
         # mention
         elif self.bot.user in msg.mentions and len(msg.mentions) == 1:
             await msg.channel.send(random.choice(mentionReact))
