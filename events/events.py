@@ -55,7 +55,7 @@ class Events(Cog_Ext):
         elif self.bot.user in msg.mentions and len(msg.mentions) == 1:
             await msg.channel.send(
                 random.choice(rFile("others")["Mention_react"]))
-        elif "撒嬌" in msg.content:
+        elif "撒嬌" in msg.content or "donut" in msg.content:
             await msg.channel.send(random.choice(actCute))
 
     @commands.Cog.listener()
