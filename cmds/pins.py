@@ -8,6 +8,7 @@ import random
 class Pins(Cog_Ext):
     @commands.command(aliases=['pin'])
     async def pins(self, ctx):
+        await ctx.message.delete(delay=2)
         msg = await ctx.fetch_message(random.choice(await ctx.channel.pins()).id)
         msgContent = msg.content
         msgAuthor = msg.author.display_name
