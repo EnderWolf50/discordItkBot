@@ -1,34 +1,42 @@
 {
-    "IDK_url": {
-                "https://i.imgur.com/R5iTVuQ.jpg": 40,
-                "https://i.imgur.com/ZDQpQ1o.jpg": 35,
-                "https://i.imgur.com/4SFISGK.jpg": 15,
-                "https://i.imgur.com/13gP6KH.jpg": 9,
-                "https://i.imgur.com/x1qmYCT.gif": 1
-                },
-    
-    "Mention_react": [
-                    "窩不知道…",
-                    ":thinking:",
-                    "品橋品橋",
-                    "嘎嘎嘎",
-                    "ㄐㄐ",
-                    "嘿嘿",
-                    "嘿嘿嘿嘿嘿",
-                    "我就爛 <:030:685800596912996393>",
-                    "嗷嗷嗷嗷嗷",
-                    "嗷？",
-                    "修但幾勒",
-                    "話"
-                    ],
+  "IDK_url": {
+    "https://i.imgur.com/R5iTVuQ.jpg": 40,
+    "https://i.imgur.com/ZDQpQ1o.jpg": 35,
+    "https://i.imgur.com/4SFISGK.jpg": 15,
+    "https://i.imgur.com/13gP6KH.jpg": 9,
+    "https://i.imgur.com/x1qmYCT.gif": 1
+  },
 
-    "help": [
-            [".bzz", "抽籤！", "False"],
-            [".tdbzz", "當日運勢", "False"],
-            [".choose (選項...)", "協助選擇障礙者做決定", "False"],
-            [".poll | vote <標題> (選項...) ", "發起投票", "False"],
-            [".roll <最大值> (字句) ({} | %)", "抽...數字？", "False"],
-            [".point", "查看沒什麼用的點數", "False"],
-            [".help", "就你現在在看的這個 ._.", "False"]
-            ]
+  "Mention_react": [
+    "窩不知道…",
+    ":thinking:",
+    "品橋品橋",
+    "撒嬌撒嬌",
+    "硬幣硬幣",
+    "嘎嘎嘎",
+    "ㄐㄐ",
+    "嘿嘿",
+    "嘿嘿嘿嘿嘿",
+    "我就爛 <:030:685800596912996393>",
+    "嗷嗷嗷嗷嗷",
+    "嗷？",
+    "修但幾勒",
+    "話",
+    "ouo",
+    "噁",
+    "Nani",
+    "<:100:731097439020253224>",
+    "我想要那個 donut <:103:737846127117991986>",
+    "給我那個 donut 好嘛 <:102:737843533611794463>"
+  ],
+
+  "help": [
+    [".bzz", "抽籤！", "False"],
+    [".tdbzz", "當日運勢", "False"],
+    [".choose (選項...)", "協助選擇障礙者做決定", "False"],
+    [".poll | vote <標題> (選項...) ", "發起投票", "False"],
+    [".roll <最大值> (字句) ({} | %)", "抽...數字？", "False"],
+    [".point", "查看沒什麼用的點數", "False"],
+    [".help", "就你現在在看的這個 ._.", "False"]
+  ]
 }
