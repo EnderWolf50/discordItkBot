@@ -10,8 +10,8 @@ class Pins(Cog_Ext):
     async def pins(self, ctx):
         msg = await ctx.fetch_message(random.choice(await ctx.channel.pins()).id)
         msgContent = msg.content
-        msgAuthor = msg.author.id
-        await ctx.send(f"<@{msgAuthor}>：{msgContent}")
+        msgAuthor = msg.author.nick
+        await ctx.send(f"{msgAuthor}：{msgContent}")
 
 
 def setup(bot):
