@@ -24,7 +24,7 @@ class Pins(Cog_Ext):
             for pin in (await ctx.channel.pins()):
                 if pin.author.id == user.id:
                     pinList.append(pin)
-            msg = await ctx.fetch_message(random.choice(pin).id)
+            msg = await ctx.fetch_message(random.choice(pinList).id)
             msgContent = msg.content
             msgAuthor = msg.author.display_name
             if len(msg.attachments) == 0:
