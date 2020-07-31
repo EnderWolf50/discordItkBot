@@ -7,16 +7,31 @@ import random
 
 class Pins(Cog_Ext):
     @commands.command(aliases=['pin'])
-    async def pins(self, ctx):
-        await ctx.message.delete(delay=3)
-        msg = await ctx.fetch_message(random.choice(await ctx.channel.pins()).id)
-        msgContent = msg.content
-        msgAuthor = msg.author.display_name
-        if len(msg.attachments) == 0:
-            await ctx.send(f"{msgAuthor}：{msgContent}")
+    async def pins(self, ctx, user: discord.Member = None):
+        if user == None:
+            await ctx.message.delete(delay=3)
+            msg = await ctx.fetch_message(random.choice(await ctx.channel.pins()).id)
+            msgContent = msg.content
+            msgAuthor = msg.author.display_name
+            if len(msg.attachments) == 0:
+                await ctx.send(f"{msgAuthor}：{msgContent}")
+            else:
+                for attachment in msg.attachments:
+                    await ctx.send(f"{attachment.url}")
         else:
-            for attachment in msg.attachments:
-                await ctx.send(f"{attachment.url}")
+            await ctx.message.delete(delay=3)
+            pinList = []
+            for pin in (await ctx.channel.pins()):
+                if pin.author.id == user.id:
+                    pinList.append(pin)
+            msg = await ctx.fetch_message(random.choice(pin).id)
+            msgContent = msg.content
+            msgAuthor = msg.author.display_name
+            if len(msg.attachments) == 0:
+                await ctx.send(f"{msgAuthor}：{msgContent}")
+            else:
+                for attachment in msg.attachments:
+                    await ctx.send(f"{attachment.url}")
 
 
 def setup(bot):
