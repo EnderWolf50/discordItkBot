@@ -6,7 +6,7 @@ import random
 
 
 class Choose(Cog_Ext):
-    @commands.command()
+    @commands.command(aliases=['ch'])
     async def choose(self, ctx, *, arg):
         list = arg.split(" ")
         await ctx.author.send(random.choice(list))

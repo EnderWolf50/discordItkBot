@@ -3,6 +3,7 @@ from discord.ext import commands
 from core.classes import Cog_Ext
 from core.rwFile import rFile, get_setting
 
+from datetime import datetime as dt
 import random, re
 
 File = rFile('others')
@@ -28,6 +29,14 @@ loadingCatEmos = [
 
 
 class Events(Cog_Ext):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.cmdList = []
+        for cmd in self.bot.commands:
+            self.cmdList.append(cmd.name)
+            for alias in cmd.aliases:
+                self.cmdList.append(alias)
+
     @commands.Cog.listener()
     async def on_ready(self):
         print("Bot is ready.")
@@ -80,6 +89,17 @@ class Events(Cog_Ext):
             await msg.channel.send(loadingCatEmos[0])
             await msg.channel.send(loadingCatEmos[1])
             await msg.channel.send(loadingCatEmos[2])
+
+        # message backup
+        if msg.author.bot: return
+        if msg.content[1:].split(' ')[0] in self.cmdList: return
+
+        await self.bot.get_channel(741556551143391323).send(
+            f'{msg.author.mention}  `{dt.now().strftime("%Y/%m/%d %H:%M:%S")}`\n{msg.content}'
+        )
+        for attachment in msg.attachments:
+            await self.bot.get_channel(741556551143391323).send(
+                attachment.proxy_url)
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
