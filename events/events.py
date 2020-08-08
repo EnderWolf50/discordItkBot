@@ -100,6 +100,7 @@ class Events(Cog_Ext):
         for attachment in msg.attachments:
             await self.bot.get_channel(741556551143391323).send(
                 attachment.proxy_url)
+        await self.bot.get_channel(741556551143391323).send('\u200b')
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
