@@ -40,7 +40,7 @@ class Events(Cog_Ext):
     @commands.Cog.listener()
     async def on_ready(self):
         print("Bot is ready.")
-        self.bot.get_user(523755296242270210).send(
+        await self.bot.get_user(523755296242270210).send(
             f'Bot has been started successfully `{dt.now().strftime("%Y/%m/%d %H:%M:%S")}`'
         )
 
