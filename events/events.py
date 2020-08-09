@@ -95,7 +95,7 @@ class Events(Cog_Ext):
 
         # message backup
         if msg.author.bot: return
-        if msg.content[1:].split(' ')[0] in self.cmdList: return
+        if msg.content[1:].lower().split(' ')[0] in self.cmdList: return
 
         await self.bot.get_channel(741556551143391323).send(
             f'{msg.author.display_name}  `{dt.now().strftime("%Y/%m/%d %H:%M:%S")}`\n{msg.content}'
