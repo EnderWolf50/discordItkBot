@@ -19,9 +19,11 @@ class Repeat(Cog_Ext):
             global Repeat_cmd_status
             Repeat_cmd_status = not Repeat_cmd_status
             if Repeat_cmd_status == True:
-                await ctx.send(">> 複讀功能**啟用** <:emoji_150:689498513838440471>")
+                await ctx.author.send(
+                    ">> 複讀功能**啟用** <:emoji_150:689498513838440471>")
             else:
-                await ctx.send(">> 複讀功能**關閉** <:emoji_26:685774183971815516>")
+                await ctx.author.send(
+                    ">> 複讀功能**關閉** <:emoji_26:685774183971815516>")
 
     @commands.command()
     async def editr(self, ctx):
@@ -30,9 +32,11 @@ class Repeat(Cog_Ext):
             global Edit_repeat
             Edit_repeat = not Edit_repeat
             if Edit_repeat == True:
-                await ctx.send(">> 編輯歷程**啟用** <:emoji_150:689498513838440471>")
+                await ctx.author.send(
+                    ">> 編輯歷程**啟用** <:emoji_150:689498513838440471>")
             else:
-                await ctx.send(">> 編輯歷程**關閉** <:emoji_26:685774183971815516>")
+                await ctx.author.send(
+                    ">> 編輯歷程**關閉** <:emoji_26:685774183971815516>")
 
     @commands.command()
     async def cnd(self, ctx):
