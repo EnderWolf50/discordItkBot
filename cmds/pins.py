@@ -10,11 +10,12 @@ class Pins(Cog_Ext):
     async def pins(self, ctx, user: discord.Member = None):
         if user == None:
             await ctx.message.delete(delay=3)
-            msg = await ctx.fetch_message(random.choice(await ctx.channel.pins()).id)
+            msg = await ctx.fetch_message(
+                random.choice(await ctx.channel.pins()).id)
             msgContent = msg.content
             msgAuthor = msg.author.display_name
             if len(msg.attachments) == 0:
-                await ctx.send(f"{msgAuthor}：{msgContent}")
+                await ctx.send(f"{msgAuthor}：\n{msgContent}")
             else:
                 for attachment in msg.attachments:
                     await ctx.send(f"{attachment.url}")
@@ -28,7 +29,7 @@ class Pins(Cog_Ext):
             msgContent = msg.content
             msgAuthor = msg.author.display_name
             if len(msg.attachments) == 0:
-                await ctx.send(f"{msgAuthor}：{msgContent}")
+                await ctx.send(f"{msgAuthor}：\n{msgContent}")
             else:
                 for attachment in msg.attachments:
                     await ctx.send(f"{attachment.url}")
