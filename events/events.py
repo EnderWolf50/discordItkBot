@@ -95,6 +95,7 @@ class Events(Cog_Ext):
             await msg.channel.send(loadingCatEmos[2])
 
         # message backup
+        if msg.channel.type == discord.ChannelType.private: return
         if msg.author.bot: return
         if msg.content[1:].lower().split(' ')[0] in self.cmdList: return
 

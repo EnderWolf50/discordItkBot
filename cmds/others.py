@@ -17,6 +17,16 @@ class Others(Cog_Ext):
         for i in range(times):
             await ctx.send(f"test message {i + 1}")
 
+    @commands.command(aliases=["dmd"])
+    async def dm_delete(self, ctx):
+        if ctx.channel.type != discord.ChannelType.private: return
+
+        msgList = await ctx.channel.history(limit=None).flatten()
+
+        for msg in msgList:
+            if msg.author == self.bot.user:
+                await msg.delete()
+
 
 def setup(bot):
     bot.add_cog(Others(bot))
