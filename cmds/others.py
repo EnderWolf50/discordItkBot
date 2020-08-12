@@ -19,7 +19,6 @@ class Others(Cog_Ext):
 
     @commands.command(aliases=["dmd"])
     async def dm_delete(self, ctx):
-        await ctx.message.delete()
         if ctx.channel.type != discord.ChannelType.private: return
 
         msgList = await ctx.channel.history(limit=None).flatten()
