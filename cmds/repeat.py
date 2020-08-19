@@ -86,7 +86,7 @@ class Repeat(Cog_Ext):
             Edit_record[f'{before.id}'] = 0
         Edit_record[f'{before.id}'] += 1
         await self.bot.get_channel(745569697013039105).send(
-            f'{before.author.display_name}  `{msg.edited_at.strftime("%Y/%m/%d %H:%M:%S")}` `{Edit_record[f"{before.id}"]}`\n{before.content} → {after.content}'
+            f'{before.author.display_name}  `{before.edited_at.strftime("%Y/%m/%d %H:%M:%S")}` `{Edit_record[f"{before.id}"]}`\n{before.content} → {after.content}'
         )
 
 
