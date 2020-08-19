@@ -14,6 +14,7 @@ Edit_repeat = False
 class Repeat(Cog_Ext):
     @commands.command()
     async def repeat(self, ctx):
+        await ctx.message.delete()
         if ctx.author == self.bot.get_user(
                 Owner) or ctx.author == self.bot.get_user(Traveler):
             global Repeat_cmd_status
@@ -27,6 +28,7 @@ class Repeat(Cog_Ext):
 
     @commands.command()
     async def editr(self, ctx):
+        await ctx.message.delete()
         if ctx.author == self.bot.get_user(
                 Owner) or ctx.author == self.bot.get_user(Traveler):
             global Edit_repeat
@@ -40,10 +42,15 @@ class Repeat(Cog_Ext):
 
     @commands.command()
     async def cnd(self, ctx):
+        await ctx.message.delete()
         if ctx.author == self.bot.get_user(
                 Owner) or ctx.author == self.bot.get_user(Traveler):
             global Cannot_delete
             Cannot_delete = not Cannot_delete
+            if Cannot_delete:
+                await ctx.author.send("CanNotDelete Mode: On")
+            else:
+                await ctx.author.send("CanNotDelete Mode: Off")
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg):
