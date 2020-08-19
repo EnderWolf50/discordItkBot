@@ -3,12 +3,15 @@ from discord.ext import commands
 from core.classes import Cog_Ext
 from core.rwFile import get_setting
 
+from datetime import datetime as dt
+
 Owner = get_setting("Owner")
 Traveler = get_setting("Traveler")
 
 Repeat_cmd_status = False
 Cannot_delete = False
 Edit_repeat = False
+Edit_record = {}
 
 
 class Repeat(Cog_Ext):
@@ -78,8 +81,12 @@ class Repeat(Cog_Ext):
                 await before.channel.send(before.author.mention + "：" +
                                           before.content + " → " +
                                           after.content)
+        # edit backup
+        if str(before.id) not in Edit_record.keys():
+            Edit_record[f'{before.id}'] = 0
+        Edit_record[f'{before.id}'] += 1
         await self.bot.get_channel(745569697013039105).send(
-            f'{before.author.display_name}  `{dt.now().strftime("%Y/%m/%d %H:%M:%S")}`\n{before.content} → {after.content}'
+            f'{before.author.display_name}  `{dt.now().strftime("%Y/%m/%d %H:%M:%S")}` `{Edit_record[f"{before.id}"]}`\n{before.content} → {after.content}'
         )
 
 
