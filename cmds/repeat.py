@@ -78,6 +78,9 @@ class Repeat(Cog_Ext):
                 await before.channel.send(before.author.mention + "：" +
                                           before.content + " → " +
                                           after.content)
+        await self.bot.get_channel(745569697013039105).send(
+            f'{before.author.display_name}  `{dt.now().strftime("%Y/%m/%d %H:%M:%S")}`\n{before.content} → {after.content}'
+        )
 
 
 def setup(bot):
