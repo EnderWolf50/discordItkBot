@@ -47,42 +47,41 @@ class Events(Cog_Ext):
 
     @commands.Cog.listener()
     async def on_message(self, msg):
-        if msg.author.bot: return
         if msg.channel == self.bot.get_channel(675956755112394753): return
+        if msg.author.bot:
+            # IDK
+            if re.search(r"(窩不知道|我不知道|idk)", msg.content.lower()):
+                File = rFile("others")["IDK_url"]
 
-        # IDK
-        if re.search(r"(窩不知道|我不知道|idk)", msg.content.lower()):
-            File = rFile("others")["IDK_url"]
+                Picture = str(random.choices(idk,
+                                             weights=idk_weights)).strip("[]'")
 
-            Picture = str(random.choices(idk,
-                                         weights=idk_weights)).strip("[]'")
-
-            if Picture == "https://i.imgur.com/x1qmYCT.gif":
-                await msg.channel.send(Picture, delete_after=18.68)
-            else:
-                await msg.channel.send(Picture, delete_after=5)
-
-        # loading cat
-        elif re.search(r"(loading cat|ldc|ldcat|\b痾\b|\b痾...\b)",
-                       msg.content.lower()):
-            await msg.channel.send(loadingCatEmos[0])
-            await msg.channel.send(loadingCatEmos[1])
-            await msg.channel.send(loadingCatEmos[2])
-        # mention
-        elif self.bot.user in msg.mentions and len(msg.mentions) == 1:
-            await msg.channel.send(random.choice(mentionReact))
-        # reaction
-        if "ㄐㄐ" in msg.content:
-            await msg.add_reaction("\N{AUBERGINE}")
-        if "雞雞" in msg.content:
-            await msg.add_reaction("<:emoji_101:713997954201157723>")
-        if "尻尻" in msg.content:
-            await msg.add_reaction("<a:emoji_103:713998749680009250>")
-        # 撒嬌
-        if re.search(r"(撒嬌|donut|bakery)", msg.author.display_name.lower()):
-            await msg.add_reaction(random.choice(actCute))
-        if re.search(r"(撒嬌|donut|bakery)", msg.content.lower()):
-            await msg.channel.send(random.choice(actCute))
+                if Picture == "https://i.imgur.com/x1qmYCT.gif":
+                    await msg.channel.send(Picture, delete_after=18.68)
+                else:
+                    await msg.channel.send(Picture, delete_after=5)
+            # loading cat
+            elif re.search(r"(ldc|ldcat|\b痾\b|\b痾...\b)", msg.content.lower()):
+                await msg.channel.send(loadingCatEmos[0])
+                await msg.channel.send(loadingCatEmos[1])
+                await msg.channel.send(loadingCatEmos[2])
+            # mention
+            elif self.bot.user in msg.mentions and len(msg.mentions) == 1:
+                await msg.channel.send(random.choice(mentionReact))
+            # 撒嬌
+            if re.search(r"(撒嬌|donut|bakery)",
+                         msg.author.display_name.lower()):
+                await msg.add_reaction(random.choice(actCute))
+            if re.search(r"(撒嬌|donut|bakery)", msg.content.lower()):
+                await msg.channel.send(random.choice(actCute))
+        else:
+            # reaction
+            if "ㄐㄐ" in msg.content:
+                await msg.add_reaction("\N{AUBERGINE}")
+            if "雞雞" in msg.content:
+                await msg.add_reaction("<:emoji_101:713997954201157723>")
+            if "尻尻" in msg.content:
+                await msg.add_reaction("<a:emoji_103:713998749680009250>")
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg):

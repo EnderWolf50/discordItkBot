@@ -82,6 +82,7 @@ class Repeat(Cog_Ext):
                                           before.content + " → " +
                                           after.content)
         # edit backup
+        if before.author.bot: return
         if str(before.id) not in Edit_record.keys():
             Edit_record[f'{before.id}'] = 0
         Edit_record[f'{before.id}'] += 1
