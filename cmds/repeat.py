@@ -74,6 +74,7 @@ class Repeat(Cog_Ext):
 
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
+        if before.guild.id == 725295821456801842: return
         if before.author != self.bot.user:
             if Edit_repeat == True:
                 await before.channel.send(before.author.mention + "：" +
