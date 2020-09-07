@@ -73,6 +73,10 @@ class Events(Cog_Ext):
             await msg.channel.send(loadingCatEmos[0])
             await msg.channel.send(loadingCatEmos[1])
             await msg.channel.send(loadingCatEmos[2])
+        # 好耶
+        elif msg.content == "好耶":
+            pic = discord.File("./images/yeah.jpg")
+            await msg.channel.send(file=pic, delete_after=5)
         # mention
         elif self.bot.user in msg.mentions and len(msg.mentions) == 1:
             await msg.channel.send(random.choice(mentionReact))
@@ -92,10 +96,6 @@ class Events(Cog_Ext):
             await msg.channel.send(loadingCatEmos[0])
             await msg.channel.send(loadingCatEmos[1])
             await msg.channel.send(loadingCatEmos[2])
-
-        elif msg.content == "好耶":
-            pic = discord.File("./images/yeah.jpg")
-            await msg.channel.send(file=pic)
 
         # message backup
         if msg.channel.type == discord.ChannelType.private: return
