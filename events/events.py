@@ -15,6 +15,11 @@ mentionReact = File["Mention_react"]
 
 Owner = get_setting("Owner")
 
+yeahlist = [
+    "./images/yeah.jpg", "./images/noyeah.jpg", "./images/yeahsanxiao.jpg",
+    "./images/yeahstarburst.jpg"
+]
+
 actCute = [
     "<:102:737843533611794463>", "<:103:737846127117991986>",
     "<:104:737849572314972181>", "<:105:741919410746425416>",
@@ -75,7 +80,7 @@ class Events(Cog_Ext):
             await msg.channel.send(loadingCatEmos[2])
         # 好耶
         elif msg.content == "好耶":
-            pic = discord.File("./images/yeah.jpg")
+            pic = discord.File(random.choice(yeahlist))
             await msg.channel.send(file=pic, delete_after=5)
         # mention
         elif self.bot.user in msg.mentions and len(msg.mentions) == 1:
