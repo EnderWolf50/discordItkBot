@@ -94,7 +94,7 @@ class Events(Cog_Ext):
             await msg.channel.send(loadingCatEmos[2])
 
         elif msg.content == "好耶":
-            pic = discord.File("../images/yeah.jpg")
+            pic = discord.File("./images/yeah.jpg")
             await msg.channel.send(file=pic)
 
         # message backup
