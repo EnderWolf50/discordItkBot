@@ -13,9 +13,9 @@ administrators = [
     get_setting("Juxta")
 ]
 
-host = os.environ["host"]
-port = os.environ["port"]
-password = os.environ["password"]
+host = "redis-14240.c56.east-us.azure.cloud.redislabs.com"
+port = "14240"
+password = "9VjAHfbDg6tNCBrntJhPfaM7WOxf0ZV9"
 
 subscriberList = {}
 channel = 675956755112394753
