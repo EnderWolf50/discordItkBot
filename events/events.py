@@ -93,6 +93,10 @@ class Events(Cog_Ext):
             await msg.channel.send(loadingCatEmos[1])
             await msg.channel.send(loadingCatEmos[2])
 
+        elif msg.content == "好耶":
+            pic = discord.File("../images/yeah.jpg")
+            await msg.channel.send(file=pic)
+
         # message backup
         if msg.channel.type == discord.ChannelType.private: return
         if msg.author.bot: return
