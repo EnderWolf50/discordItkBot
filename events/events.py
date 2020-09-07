@@ -79,9 +79,9 @@ class Events(Cog_Ext):
             await msg.channel.send(loadingCatEmos[1])
             await msg.channel.send(loadingCatEmos[2])
         # 好耶
-        elif msg.content == "好耶":
+        elif "好耶" in msg.content:
             pic = discord.File(random.choice(yeahlist))
-            await msg.channel.send(file=pic, delete_after=5)
+            await msg.channel.send(file=pic, delete_after=15)
         # mention
         elif self.bot.user in msg.mentions and len(msg.mentions) == 1:
             await msg.channel.send(random.choice(mentionReact))
