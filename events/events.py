@@ -89,7 +89,11 @@ class Events(Cog_Ext):
         if re.search(r"(撒嬌|donut|bakery)", msg.author.display_name.lower()):
             await msg.add_reaction(random.choice(actCute))
         if re.search(r"(撒嬌|donut|bakery)", msg.content.lower()):
-            await msg.channel.send(random.choice(actCute))
+            send_emo = random.randint(0, 4)
+            if send_emo != 4:
+                await msg.channel.send(random.choice(actCute))
+            else:
+                await msg.channel.send(f"還敢撒嬌阿 {msg.author.mention}")
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg):
