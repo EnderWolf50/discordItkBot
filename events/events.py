@@ -17,7 +17,7 @@ Owner = get_setting("Owner")
 
 yeahlist = [
     "./images/yeah.jpg", "./images/noyeah.jpg", "./images/yeahsanxiao.jpg",
-    "./images/yeahstarburst.jpg"
+    "./images/yeahstarburst.jpg", "./images/yeah_man.jpg"
 ]
 
 actCute = [
