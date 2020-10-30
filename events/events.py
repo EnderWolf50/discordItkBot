@@ -61,7 +61,7 @@ class Events(Cog_Ext):
         if "尻尻" in msg.content:
             await msg.add_reaction("<a:emoji_103:713998749680009250>")
         if msg.author.id == 429992095374114826:
-            await msg.add_reaction(random.choice([':ticket:', ':tickets:']))
+            await msg.add_reaction(random.choice(['🎫', '🎟️']))
 
         if msg.author.bot: return
         # IDK
