@@ -33,6 +33,8 @@ loadingCatEmos = [
     "<:ldc_11:725343129087115374><:ldc_12:725343128818548737><:ldc_13:725343128822743041><:ldc_14:725343128994840657><:ldc_15:725343129003360346>"
 ]
 
+voted_messages = []
+
 
 class Events(Cog_Ext):
     def __init__(self, *args, **kwargs):
@@ -131,7 +133,8 @@ class Events(Cog_Ext):
             await reaction.message.remove_reaction(reaction, user)
         if str(reaction.emoji) == "\N{ADMISSION TICKETS}" or str(
                 reaction.emoji) == "\N{TICKET}":
-            if reaction.count == 3:
+            if reaction.count == 3 and reaction.message.id not in voted_messages:
+                voted_messages.append(reaction.message.id)
                 await reaction.message.channel.send(
                     f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
 
