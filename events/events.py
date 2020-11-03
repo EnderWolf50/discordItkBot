@@ -143,7 +143,7 @@ class Events(Cog_Ext):
 
 .　　 。　　               　　　 ඞ 。 . 　     　 • 　　　   　•
 
-　. 　ﾟ　.        {user.mention}  was An Impostor.　            。   　.
+　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
 
 　   　'　　          　  0 Impostor remains      　 　　   。
 
