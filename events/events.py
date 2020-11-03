@@ -133,6 +133,7 @@ class Events(Cog_Ext):
             await reaction.message.remove_reaction(reaction, user)
         if str(reaction.emoji) == "\N{ADMISSION TICKETS}" or str(
                 reaction.emoji) == "\N{TICKET}":
+            print(True)
             if reaction.count == 3 and reaction.message.id not in voted_messages:
                 voted_messages.append(reaction.message.id)
                 await reaction.message.channel.send(
@@ -142,11 +143,12 @@ class Events(Cog_Ext):
 
 .　　 。　　               　　　 ඞ 。 . 　     　 • 　　　   　•
 
-　. 　ﾟ　.        <@{reaction.message.author.id}>  was An Impostor.　            。   　.
+　. 　ﾟ　.        {user.mention}  was An Impostor.　            。   　.
 
 　   　'　　          　  0 Impostor remains      　 　　   。
 
-　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
+　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''',
+                    delete_after=7)
 
     @commands.Cog.listener()
     async def on_reaction_remove(self, reaction, user):
