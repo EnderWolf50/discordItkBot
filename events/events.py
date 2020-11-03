@@ -127,8 +127,23 @@ class Events(Cog_Ext):
                 await reaction.message.add_reaction("\N{THUMBS DOWN SIGN}")
             elif reaction.count >= 2:
                 await reaction.message.add_reaction("\N{THUMBS DOWN SIGN}")
-        elif "ldcat" in reaction.message.content:
+        if "ldcat" in reaction.message.content:
             await reaction.message.remove_reaction(reaction, user)
+        if str(reaction.emoji) == "\N{ADMISSION TICKETS}" or str(
+                reaction.emoji) == "\N{TICKET}":
+            if reaction.count == 3:
+                await reaction.message.channel.send(
+                    f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+
+　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
+
+.　　 。　　               　　　 ඞ 。 . 　     　 • 　　　   　•
+
+　. 　ﾟ　.        <@{reaction.message.author.id}>  was An Impostor.　            。   　.
+
+　   　'　　          　  0 Impostor remains      　 　　   。
+
+　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
 
     @commands.Cog.listener()
     async def on_reaction_remove(self, reaction, user):
