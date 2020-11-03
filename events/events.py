@@ -131,9 +131,7 @@ class Events(Cog_Ext):
                 await reaction.message.add_reaction("\N{THUMBS DOWN SIGN}")
         if "ldcat" in reaction.message.content:
             await reaction.message.remove_reaction(reaction, user)
-        if str(reaction.emoji) == "\N{ADMISSION TICKETS}" or str(
-                reaction.emoji) == "\N{TICKET}":
-            print(True)
+        if reaction.emoji in ['🎫', '🎟️']:
             if reaction.count == 3 and reaction.message.id not in voted_messages:
                 voted_messages.append(reaction.message.id)
                 await reaction.message.channel.send(
