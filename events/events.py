@@ -147,7 +147,7 @@ class Events(Cog_Ext):
 
 　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
                 await asyncio.sleep(0.7)
-                msg.edit(f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+                await msg.edit(f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
 
 　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
 
@@ -159,7 +159,7 @@ class Events(Cog_Ext):
 
 　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
                 await asyncio.sleep(0.7)
-                msg.edit(f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+                await msg.edit(f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
 
 　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
 
