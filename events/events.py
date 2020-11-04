@@ -143,9 +143,10 @@ class Events(Cog_Ext):
         if reaction.emoji in ['🎫', '🎟️']:
             if reaction.count == 3 and reaction.message.id not in voted_messages:
                 voted_messages.append(reaction.message.id)
-                emojis = random.shuffle(au_emojis.copy())
+                emojis = au_emojis.copy()
                 for i in range(3):
-                    await reaction.message.add_reaction(emojis.pop())
+                    await reaction.message.add_reaction(
+                        random.shuffle(emojis).pop())
                     await asyncio.sleep(0.5)
                 msg = await reaction.message.channel.send(
                     f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
