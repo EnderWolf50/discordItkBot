@@ -135,7 +135,7 @@ class Events(Cog_Ext):
             if reaction.count == 3 and reaction.message.id not in voted_messages:
                 voted_messages.append(reaction.message.id)
                 msg = await reaction.message.channel.send(
-                    content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+                    f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
 
 　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
 
@@ -147,7 +147,7 @@ class Events(Cog_Ext):
 
 　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
                 await asyncio.sleep(0.7)
-                await msg.edit(f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+                await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
 
 　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
 
@@ -159,7 +159,7 @@ class Events(Cog_Ext):
 
 　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
                 await asyncio.sleep(0.7)
-                await msg.edit(f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+                await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
 
 　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
 
