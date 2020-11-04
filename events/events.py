@@ -4,7 +4,7 @@ from core.classes import Cog_Ext
 from core.rwFile import rFile, get_setting
 
 from datetime import datetime as dt
-import random, re
+import random, re, asyncio
 
 File = rFile('others')
 
@@ -139,14 +139,27 @@ class Events(Cog_Ext):
 
 　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
 
-.　　 。　　           　　 ඞ      。 . 　     　 • 　　　   　•
+.　　 。　　      ඞ         　　　  。 . 　     　 • 　　　   　•
 
 　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
 
 　   　'　　          　  0 Impostor remains      　 　　   。
 
 　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
-                msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+                await asyncio.sleep(0.3)
+                await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+
+　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
+
+.　　 。　　             ඞ  　　　  。 . 　     　 • 　　　   　•
+
+　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
+
+　   　'　　          　  0 Impostor remains      　 　　   。
+
+　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
+                await asyncio.sleep(0.3)
+                await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
 
 　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
 
@@ -157,18 +170,31 @@ class Events(Cog_Ext):
 　   　'　　          　  0 Impostor remains      　 　　   。
 
 　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
-                msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+                await asyncio.sleep(0.3)
+                await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
 
 　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
 
-.　　 。　　               　　     　 ඞ      　 • 　　　   　•
+.　　 。　　               　　　  。 . 　ඞ     　 • 　　　   　•
+
+　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
+
+　   　'　　          　  0 Impostor remains      　 　　   。
+
+　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
+                await asyncio.sleep(0.3)
+                await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+
+　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
+
+.　　 。　　               　　　  。 . 　     　 • ඞ　　　   　•
 
 　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
 
 　   　'　　          　  0 Impostor remains      　 　　   。
 
 　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''',
-                         delete_after=7)
+                               delete_after=7)
 
     @commands.Cog.listener()
     async def on_reaction_remove(self, reaction, user):
