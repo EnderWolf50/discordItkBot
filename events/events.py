@@ -146,7 +146,7 @@ class Events(Cog_Ext):
 　   　'　　          　  0 Impostor remains      　 　　   。
 
 　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
-                await asyncio.sleep(0.3)
+                await asyncio.sleep(0.7)
                 await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
 
 　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
@@ -158,7 +158,7 @@ class Events(Cog_Ext):
 　   　'　　          　  0 Impostor remains      　 　　   。
 
 　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
-                await asyncio.sleep(0.3)
+                await asyncio.sleep(0.7)
                 await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
 
 　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
@@ -170,7 +170,7 @@ class Events(Cog_Ext):
 　   　'　　          　  0 Impostor remains      　 　　   。
 
 　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
-                await asyncio.sleep(0.3)
+                await asyncio.sleep(0.7)
                 await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
 
 　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
@@ -182,12 +182,12 @@ class Events(Cog_Ext):
 　   　'　　          　  0 Impostor remains      　 　　   。
 
 　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
-                await asyncio.sleep(0.3)
+                await asyncio.sleep(0.7)
                 await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
 
 　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
 
-.　　 。　　               　　　  。 . 　     　 • ඞ　　　   　•
+.　　 。　　               　　　  。 . 　     　  • ඞ　　　   　•
 
 　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
 
