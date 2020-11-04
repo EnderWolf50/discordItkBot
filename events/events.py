@@ -146,9 +146,9 @@ class Events(Cog_Ext):
                 emojis = au_emojis.copy()
                 for i in range(3):
                     random.shuffle(emojis)
-                    await reaction.message.add_reaction(
-                        emojis.pop())
+                    await reaction.message.add_reaction(emojis.pop())
                     await asyncio.sleep(0.5)
+                await reaction.message.clear_reactions()
                 msg = await reaction.message.channel.send(
                     f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
 
