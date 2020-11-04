@@ -145,8 +145,9 @@ class Events(Cog_Ext):
                 voted_messages.append(reaction.message.id)
                 emojis = au_emojis.copy()
                 for i in range(3):
+                    random.shuffle(emojis)
                     await reaction.message.add_reaction(
-                        random.shuffle(emojis).pop())
+                        emojis.pop())
                     await asyncio.sleep(0.5)
                 msg = await reaction.message.channel.send(
                     f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
