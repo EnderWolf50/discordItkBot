@@ -135,7 +135,31 @@ class Events(Cog_Ext):
             if reaction.count == 3 and reaction.message.id not in voted_messages:
                 voted_messages.append(reaction.message.id)
                 msg = await reaction.message.channel.send(
-                    f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+                    content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+
+　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
+
+.　　 。　　               　　　  。 . 　   　    • 　　　  　 　•
+
+　. 　ﾟ　.        {reaction.message.author.mention}   was An Impostor.　            。   　.
+
+　   　'　　          　  0 Impostor remains      　 　　   。
+
+　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
+                await asyncio.sleep(0.7)
+                msg.edit(f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+
+　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
+
+.　　 。　　ඞ               　　　  。 . 　     　 • 　　　   　•
+
+　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
+
+　   　'　　          　  0 Impostor remains      　 　　   。
+
+　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
+                await asyncio.sleep(0.7)
+                msg.edit(f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
 
 　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
 
@@ -187,9 +211,33 @@ class Events(Cog_Ext):
 
 　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
 
-.　　 。　　               　　　  。 . 　     　  • ඞ　　　   　•
+.　　 。　　               　　　  。 . 　   　    ඞ 　　　   　.•
 
-　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
+　. 　ﾟ　.        {reaction.message.author.mention}   was An Impostor.　            。   　.
+
+　   　'　　          　  0 Impostor remains      　 　　   。
+
+　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
+                await asyncio.sleep(0.7)
+                await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+
+　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
+
+.　　 。　　               　　　  。 . 　   　    • 　　　  ඞ 　•
+
+　. 　ﾟ　.        {reaction.message.author.mention}   was An Impostor.　            。   　.
+
+　   　'　　          　  0 Impostor remains      　 　　   。
+
+　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
+                await asyncio.sleep(0.7)
+                await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+
+　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
+
+.　　 。　　               　　　  。 . 　   　    • 　　　  　 　•
+
+　. 　ﾟ　.        {reaction.message.author.mention}   was An Impostor.　            。   　.
 
 　   　'　　          　  0 Impostor remains      　 　　   。
 
