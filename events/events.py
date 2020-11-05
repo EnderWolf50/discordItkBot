@@ -235,7 +235,7 @@ class Events(Cog_Ext):
                         content=au_msg.format(reaction.message.author.mention))
                     await asyncio.sleep(1)
 
-                await msg.edit(content=au_msg[:-1].format(
+                await msg.edit(content=au_msg[-1].format(
                     reaction.message.author.mention),
                                delete_after=7)
 
