@@ -231,11 +231,12 @@ class Events(Cog_Ext):
                 msg = await reaction.message.channel.send(
                     au_messages[0].format(reaction.message.author.mention))
                 for au_msg in au_messages[1:-1]:
+                    await asyncio.sleep(1)
                     await msg.edit(
                         content=au_msg.format(reaction.message.author.mention))
-                    await asyncio.sleep(1)
 
-                await msg.edit(content=au_msg[-1].format(
+                await asyncio.sleep(1)
+                await msg.edit(content=au_messages[-1].format(
                     reaction.message.author.mention),
                                delete_after=7)
 
