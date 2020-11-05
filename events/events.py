@@ -44,6 +44,80 @@ au_emojis = [
     '<:AU_blue:773465851709358111>', '<:AU_black:773465851634122752>'
 ]
 
+au_messages = [
+    f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+
+　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
+
+.　　 。　　               　　　 　 。 . 　     　 • 　　　   　•
+
+　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
+
+　   　'　　          　  0 Impostor remains      　 　　   。
+
+　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''', f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+
+　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
+
+.　　 。　ඞ　               　　　  。 . 　     　 • 　　　   　•
+
+　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
+
+　   　'　　          　  0 Impostor remains      　 　　   。
+
+　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''', f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+
+　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
+
+.　　 。　　           ඞ    　　　  。 . 　     　 • 　　　   　•
+
+　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
+
+　   　'　　          　  0 Impostor remains      　 　　   。
+
+　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''', f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+
+　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
+
+.　　 。　　               　　　 ඞ 。 . 　     　 • 　　　   　•
+
+　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
+
+　   　'　　          　  0 Impostor remains      　 　　   。
+
+　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''', f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+
+　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
+
+.　　 。　　               　　　 　 。 . 　 ඞ     • 　　　   　•
+
+　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
+
+　   　'　　          　  0 Impostor remains      　 　　   。
+
+　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''', f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+
+　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
+
+.　　 。　　              　　　　   。 . 　     　 • 　　ඞ   　•
+
+　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
+
+　   　'　　          　  0 Impostor remains      　 　　   。
+
+　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''', f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
+
+　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
+
+.　　 。　　               　　　 　 。 . 　     　 • 　　　   　•
+
+　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
+
+　   　'　　          　  0 Impostor remains      　 　　   。
+
+　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .'''
+]
+
 
 class Events(Cog_Ext):
     def __init__(self, *args, **kwargs):
@@ -143,122 +217,22 @@ class Events(Cog_Ext):
         if reaction.emoji in ['🎫', '🎟️']:
             if reaction.count == 3 and reaction.message.id not in voted_messages:
                 voted_messages.append(reaction.message.id)
+
                 emojis = au_emojis.copy()
                 for i in range(3):
                     random.shuffle(emojis)
                     await reaction.message.add_reaction(emojis.pop())
                     await asyncio.sleep(0.5)
+
                 await asyncio.sleep(2)
                 await reaction.message.clear_reactions()
-                msg = await reaction.message.channel.send(
-                    f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
 
-　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
+                msg = await reaction.message.channel.send(au_messages[0])
+                for au_msg in au_messages[1:-1]:
+                    await msg.edit(content=au_msg)
+                    await asyncio.sleep(1)
 
-.　　 。　　               　　　  。 . 　   　    • 　　　  　 　•
-
-　. 　ﾟ　.        {reaction.message.author.mention}   was An Impostor.　            。   　.
-
-　   　'　　          　  0 Impostor remains      　 　　   。
-
-　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
-                await asyncio.sleep(1)
-                await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
-
-　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
-
-.　　 。　　ඞ               　　　  。 . 　     　 • 　　　   　•
-
-　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
-
-　   　'　　          　  0 Impostor remains      　 　　   。
-
-　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
-                await asyncio.sleep(1)
-                await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
-
-　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
-
-.　　 。　　      ඞ         　　　  。 . 　     　 • 　　　   　•
-
-　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
-
-　   　'　　          　  0 Impostor remains      　 　　   。
-
-　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
-                await asyncio.sleep(1)
-                await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
-
-　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
-
-.　　 。　　             ඞ  　　　  。 . 　     　 • 　　　   　•
-
-　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
-
-　   　'　　          　  0 Impostor remains      　 　　   。
-
-　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
-                await asyncio.sleep(1)
-                await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
-
-　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
-
-.　　 。　　               　　　 ඞ 。 . 　     　 • 　　　   　•
-
-　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
-
-　   　'　　          　  0 Impostor remains      　 　　   。
-
-　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
-                await asyncio.sleep(1)
-                await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
-
-　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
-
-.　　 。　　               　　　  。 . 　ඞ     　 • 　　　   　•
-
-　. 　ﾟ　.        {reaction.message.author.mention}  was An Impostor.　            。   　.
-
-　   　'　　          　  0 Impostor remains      　 　　   。
-
-　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
-                await asyncio.sleep(1)
-                await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
-
-　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
-
-.　　 。　　               　　　  。 . 　   　    ඞ 　　　   　.•
-
-　. 　ﾟ　.        {reaction.message.author.mention}   was An Impostor.　            。   　.
-
-　   　'　　          　  0 Impostor remains      　 　　   。
-
-　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
-                await asyncio.sleep(1)
-                await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
-
-　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
-
-.　　 。　　               　　　  。 . 　   　    • 　　　  ඞ 　•
-
-　. 　ﾟ　.        {reaction.message.author.mention}   was An Impostor.　            。   　.
-
-　   　'　　          　  0 Impostor remains      　 　　   。
-
-　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''')
-                await asyncio.sleep(1)
-                await msg.edit(content=f'''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
-
-　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
-
-.　　 。　　               　　　  。 . 　   　    • 　　　  　 　•
-
-　. 　ﾟ　.        {reaction.message.author.mention}   was An Impostor.　            。   　.
-
-　   　'　　          　  0 Impostor remains      　 　　   。
-
-　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''',
-                               delete_after=7)
+                await msg.edit(content=au_msg[:-1], delete_after=7)
 
     @commands.Cog.listener()
     async def on_reaction_remove(self, reaction, user):
