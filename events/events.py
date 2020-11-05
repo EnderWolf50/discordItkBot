@@ -217,6 +217,7 @@ class Events(Cog_Ext):
         if reaction.emoji in ['🎫', '🎟️']:
             if reaction.count == 3 and reaction.message.id not in voted_messages:
                 voted_messages.append(reaction.message.id)
+                await reaction.message.clear_reactions()
 
                 emojis = au_emojis.copy()
                 for i in range(3):
