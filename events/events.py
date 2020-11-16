@@ -138,19 +138,6 @@ class Events(Cog_Ext):
     @commands.Cog.listener()
     async def on_message(self, msg):
         if msg.channel == self.bot.get_channel(675956755112394753): return
-        # Ero Shiba
-        if msg.author.id == 591657649762861111:
-            async for h_msg in msg.channel.history(limit=10):
-                if h_msg.author.id == 343008920748425217 and msg.created_at - h_msg.created_at <= dt.timedelta(
-                        seconds=5):
-                    send_pic = True
-                for a in h_msg.attachments:
-                    if a.filename == "play_big_two.jpg":
-                        send_pic = False
-                        break
-            if send_pic == True:
-                Pic = discord.File('./images/play_big_two.jpg')
-                await msg.channel.send(file=Pic)
         # reaction
         if "ㄐㄐ" in msg.content:
             await msg.add_reaction("\N{AUBERGINE}")
@@ -192,6 +179,24 @@ class Events(Cog_Ext):
                 await msg.channel.send(random.choice(actCute))
             else:
                 await msg.channel.send(f"還敢撒嬌阿 {msg.author.mention}")
+        # PBT
+        PBT = 1 if msg.author.id == 591657649762861111 else 2 if msg.author.id == 343008920748425217 else 0
+        if PBT:
+            async for h_msg in msg.channel.history(limit=10):
+                if h_msg.author.id == 343008920748425217 and PBT == 1 and msg.created_at - h_msg.created_at <= dt.timedelta(
+                        seconds=5):
+                    send_pic = True
+                elif h_msg.author.id == 591657649762861111 and PBT == 2 and msg.created_at - h_msg.created_at <= dt.timedelta(
+                        seconds=5):
+                    send_pic = True
+
+                for a in h_msg.attachments:
+                    if a.filename == "play_big_two.jpg":
+                        send_pic = False
+                        break
+            if send_pic == True:
+                Pic = discord.File('./images/play_big_two.jpg')
+                await msg.channel.send(file=Pic)
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg):
