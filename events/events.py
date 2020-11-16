@@ -17,7 +17,7 @@ Owner = get_setting("Owner")
 
 yeahlist = [
     "./images/yeah.jpg", "./images/noyeah.jpg", "./images/yeahsanxiao.jpg",
-    "./images/yeahstarburst.jpg", "./images/yeah_man.jpg"
+    "./images/yeahstarburst.jpg"
 ]
 
 actCute = [
@@ -138,6 +138,17 @@ class Events(Cog_Ext):
     @commands.Cog.listener()
     async def on_message(self, msg):
         if msg.channel == self.bot.get_channel(675956755112394753): return
+        if msg.author.id == 591657649762861111:
+            async for h_msg in msg.channel.history(limit=30):
+                if h_msg.author.id == 343008920748425217 and h_msg.created_at - msg.created_at <= dt.timedelta(
+                        seconds=5):
+                    send_pic = True
+                if h_msg.attachments.filename == "play_big_two.jpg":
+                    send_pic = False
+                    break
+            if send_pic == True:
+                Pic = discord.File('./images/play_big_two.jpg')
+                await msg.channel.send(file=Pic)
         # reaction
         if "ㄐㄐ" in msg.content:
             await msg.add_reaction("\N{AUBERGINE}")
@@ -151,8 +162,6 @@ class Events(Cog_Ext):
         if msg.author.bot: return
         # IDK
         if re.search(r"(窩不知道|我不知道|idk)", msg.content.lower()):
-            File = rFile("others")["IDK_url"]
-
             Picture = str(random.choices(idk,
                                          weights=idk_weights)).strip("[]'")
 
