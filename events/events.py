@@ -181,11 +181,11 @@ class Events(Cog_Ext):
             else:
                 await msg.channel.send(f"還敢撒嬌阿 {msg.author.mention}")
         # PBT
-        PBT = 1 if msg.author.id == 591657649762861111 else 2 if msg.author.id == 343008920748425217 else 0
+        PBT = 1 if msg.author.id == 591657649762861111 else 2 if msg.author.id == 429992095374114826 else 0
         if PBT:
             send_pic = 0
             async for h_msg in msg.channel.history(limit=10):
-                if h_msg.author.id == 343008920748425217 and PBT == 1 and msg.created_at - h_msg.created_at <= timedelta(
+                if h_msg.author.id == 429992095374114826 and PBT == 1 and msg.created_at - h_msg.created_at <= timedelta(
                         seconds=5):
                     send_pic = 1
                 elif h_msg.author.id == 591657649762861111 and PBT == 2 and msg.created_at - h_msg.created_at <= timedelta(
