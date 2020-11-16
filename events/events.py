@@ -181,15 +181,15 @@ class Events(Cog_Ext):
             else:
                 await msg.channel.send(f"還敢撒嬌阿 {msg.author.mention}")
         # PBT
-        PBT = 1 if msg.author.id == 591657649762861111 else 2 if msg.author.id == 429992095374114826 else 0
+        PBT = 1 if msg.author.id == 591657649762861111 else 2 if msg.author.id == 343008920748425217 else 0
         if PBT:
             send_pic = 0
-            async for h_msg in msg.channel.history(limit=10):
-                if h_msg.author.id == 429992095374114826 and PBT == 1 and msg.created_at - h_msg.created_at <= timedelta(
-                        seconds=5):
+            async for h_msg in msg.channel.history(limit=10,
+                                                   after=msg.created_at -
+                                                   timedelta(seconds=5)):
+                if h_msg.author.id == 343008920748425217 and PBT == 1:
                     send_pic = 1
-                elif h_msg.author.id == 591657649762861111 and PBT == 2 and msg.created_at - h_msg.created_at <= timedelta(
-                        seconds=5):
+                elif h_msg.author.id == 591657649762861111 and PBT == 2:
                     send_pic = 1
 
                 for a in h_msg.attachments:
@@ -199,7 +199,7 @@ class Events(Cog_Ext):
                 if send_pic == 2: break
             if send_pic == 1:
                 Pic = discord.File('./images/play_big_two.jpg')
-                await msg.channel.send(file=Pic, delete_after=3)
+                await msg.channel.send(file=Pic, delete_after=5)
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg):
