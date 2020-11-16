@@ -138,14 +138,16 @@ class Events(Cog_Ext):
     @commands.Cog.listener()
     async def on_message(self, msg):
         if msg.channel == self.bot.get_channel(675956755112394753): return
+        # Ero Shiba
         if msg.author.id == 591657649762861111:
-            async for h_msg in msg.channel.history(limit=30):
-                if h_msg.author.id == 343008920748425217 and h_msg.created_at - msg.created_at <= dt.timedelta(
+            async for h_msg in msg.channel.history(limit=10):
+                if h_msg.author.id == 343008920748425217 and msg.created_at - h_msg.created_at <= dt.timedelta(
                         seconds=5):
                     send_pic = True
-                if h_msg.attachments.filename == "play_big_two.jpg":
-                    send_pic = False
-                    break
+                for a in h_msg.attachments:
+                    if a.filename == "play_big_two.jpg":
+                        send_pic = False
+                        break
             if send_pic == True:
                 Pic = discord.File('./images/play_big_two.jpg')
                 await msg.channel.send(file=Pic)
