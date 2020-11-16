@@ -4,6 +4,7 @@ from core.classes import Cog_Ext
 from core.rwFile import rFile, get_setting
 
 from datetime import datetime as dt
+from datetime import timedelta
 import random, re, asyncio
 
 File = rFile('others')
@@ -182,19 +183,21 @@ class Events(Cog_Ext):
         # PBT
         PBT = 1 if msg.author.id == 591657649762861111 else 2 if msg.author.id == 343008920748425217 else 0
         if PBT:
+            send_pic = 0
             async for h_msg in msg.channel.history(limit=10):
-                if h_msg.author.id == 343008920748425217 and PBT == 1 and msg.created_at - h_msg.created_at <= dt.timedelta(
+                if h_msg.author.id == 343008920748425217 and PBT == 1 and msg.created_at - h_msg.created_at <= timedelta(
                         seconds=5):
-                    send_pic = True
-                elif h_msg.author.id == 591657649762861111 and PBT == 2 and msg.created_at - h_msg.created_at <= dt.timedelta(
+                    send_pic = 1
+                elif h_msg.author.id == 591657649762861111 and PBT == 2 and msg.created_at - h_msg.created_at <= timedelta(
                         seconds=5):
-                    send_pic = True
+                    send_pic = 1
 
                 for a in h_msg.attachments:
                     if a.filename == "play_big_two.jpg":
-                        send_pic = False
+                        send_pic = 2
                         break
-            if send_pic == True:
+                if send_pic == 2: break
+            if send_pic == 1:
                 Pic = discord.File('./images/play_big_two.jpg')
                 await msg.channel.send(file=Pic, delete_after=3)
 
