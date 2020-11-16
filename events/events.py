@@ -196,7 +196,7 @@ class Events(Cog_Ext):
                         break
             if send_pic == True:
                 Pic = discord.File('./images/play_big_two.jpg')
-                await msg.channel.send(file=Pic)
+                await msg.channel.send(file=Pic, delete_after=3)
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg):
