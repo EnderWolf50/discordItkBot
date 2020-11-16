@@ -146,8 +146,6 @@ class Events(Cog_Ext):
             await msg.add_reaction("<:emoji_101:713997954201157723>")
         if "尻尻" in msg.content:
             await msg.add_reaction("<a:emoji_103:713998749680009250>")
-        if msg.author.id == 429992095374114826:
-            await msg.add_reaction(random.choice(['🎫', '🎟️']))
 
         if msg.author.bot: return
         # IDK
@@ -169,7 +167,7 @@ class Events(Cog_Ext):
             pic = discord.File(random.choice(yeahlist))
             await msg.channel.send(file=pic, delete_after=15)
         # mention
-        elif self.bot.user in msg.mentions and len(msg.mentions) == 1:
+        elif self.bot.user in msg.mentions:
             await msg.channel.send(random.choice(mentionReact))
         # 撒嬌
         if re.search(r"(撒嬌|donut|bakery)", msg.author.display_name.lower()):
@@ -180,6 +178,9 @@ class Events(Cog_Ext):
                 await msg.channel.send(random.choice(actCute))
             else:
                 await msg.channel.send(f"還敢撒嬌阿 {msg.author.mention}")
+        # HUA_HUA sus
+        if msg.author.id == 429992095374114826:
+            await msg.add_reaction(random.choice(['🎫', '🎟️']))
         # PBT
         PBT = 1 if msg.author.id == 591657649762861111 else 2 if msg.author.id == 343008920748425217 else 0
         if PBT:
