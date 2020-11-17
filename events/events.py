@@ -185,9 +185,9 @@ class Events(Cog_Ext):
         PBT = 1 if msg.author.id == 591657649762861111 else 2 if msg.author.id == 343008920748425217 else 0
         if PBT:
             send_pic = 0
-            async for h_msg in msg.channel.history(limit=10,
+            async for h_msg in msg.channel.history(limit=20,
                                                    after=msg.created_at -
-                                                   timedelta(seconds=5)):
+                                                   timedelta(seconds=10)):
                 if h_msg.author.id == 343008920748425217 and PBT == 1:
                     send_pic = 1
                 elif h_msg.author.id == 591657649762861111 and PBT == 2:
