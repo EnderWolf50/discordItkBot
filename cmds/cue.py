@@ -12,7 +12,7 @@ class Cue(Cog_Ext):
     async def Cue(self, ctx):
         word = random.choice(words_list)
         await ctx.send(
-            f'<@!429992095374114826> 語錄 {words_list.index(word)+1}: {word}')
+            f'<@!429992095374114826> 語錄 {words_list.index(word)+1} - {word}')
 
     @commands.command()
     async def Cue_add(self, ctx, *, word):
@@ -20,10 +20,10 @@ class Cue(Cog_Ext):
         await self.bot.get_channel(725295821456801845).send(words_list)
 
     @commands.command()
-    async def Cue_del(self, ctx, num):
+    async def Cue_del(self, ctx, num: int):
         word_temp = words_list[num - 1]
         del words_list[num - 1]
-        await ctx.send(f'語錄 {num}: {word_temp}')
+        await ctx.send(f'已成功刪除語錄 {num} - {word_temp}')
         await self.bot.get_channel(725295821456801845).send(words_list)
 
     @commands.command()
