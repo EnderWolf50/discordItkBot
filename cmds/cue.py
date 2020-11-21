@@ -24,6 +24,7 @@ class Cue(Cog_Ext):
         word_temp = words_list[num - 1]
         del words_list[num - 1]
         await ctx.send(f'語錄 {num}: {word_temp}')
+        await self.bot.get_channel(725295821456801845).send(words_list)
 
     @commands.command()
     async def Cue_list(self, ctx):
