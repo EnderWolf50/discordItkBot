@@ -13,6 +13,9 @@ words_list = [
 prev_msg = None
 curr_msg = None
 
+prev_list = None
+curr_list = None
+
 
 class Cue(Cog_Ext):
     @commands.command()
@@ -59,7 +62,14 @@ class Cue(Cog_Ext):
         msg_temp = ''
         for i in range(len(words_list)):
             msg_temp += f'{i+1}. {words_list[i]}\n'
-        await ctx.send(msg_temp)
+
+        global prev_list
+        if prev_list:
+            await prev_list.delete()
+            del prev_list
+
+        curr_list = await ctx.send(msg_temp)
+        prev_list = curr_list
 
 
 def setup(bot):
