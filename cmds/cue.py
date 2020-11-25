@@ -30,12 +30,14 @@ class Cue(Cog_Ext):
         words_list.append(word)
         await ctx.send(f'已成功增加語錄 {len(words_list)} - {word}')
 
-        curr_msg = await self.bot.get_channel(725295821456801845).send(
-            words_list)
         global prev_msg
         if prev_msg:
             await prev_msg.delete()
-            prev_msg = curr_msg
+            del prev_msg
+
+        curr_msg = await self.bot.get_channel(725295821456801845).send(
+            words_list)
+        prev_msg = curr_msg
 
     @commands.command()
     async def Cue_del(self, ctx, num: int):
@@ -43,12 +45,14 @@ class Cue(Cog_Ext):
         del words_list[num - 1]
         await ctx.send(f'已成功刪除語錄 {num} - {word_temp}')
 
-        curr_msg = await self.bot.get_channel(725295821456801845).send(
-            words_list)
         global prev_msg
         if prev_msg:
             await prev_msg.delete()
-            prev_msg = curr_msg
+            del prev_msg
+
+        curr_msg = await self.bot.get_channel(725295821456801845).send(
+            words_list)
+        prev_msg = curr_msg
 
     @commands.command()
     async def Cue_list(self, ctx):
