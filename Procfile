@@ -1,1 +1,1 @@
-worker: python main_Heroku.py
+worker: python main.py

@@ -1,8 +1,10 @@
 import discord, os
 from discord.ext import commands
-from core.rwFile import get_setting
 
-TOKEN = get_setting("TOKEN")
+from dotenv import load_dotenv
+
+load_dotenv()
+TOKEN = os.getenv("TOKEN")
 
 bot = commands.Bot(command_prefix=".", case_insensitive=True)
 bot.remove_command("help")
