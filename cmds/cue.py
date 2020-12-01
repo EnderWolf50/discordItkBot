@@ -24,7 +24,7 @@ class Cue(Cog_Ext):
     async def Cue(self, ctx, member: discord.Member = None, pos: int = None):
         member_cue_list = []
         if member:
-            member_cue_list = coll.find_one({'_id': member.id})
+            member_cue_list = coll.find_one({'_id': member.id})['list']
         if member_cue_list:
             if pos:
                 await ctx.send(
