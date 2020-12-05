@@ -6,7 +6,9 @@ from dotenv import load_dotenv
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
 
-bot = commands.Bot(command_prefix=".", case_insensitive=True)
+bot = commands.Bot(command_prefix=".",
+                   case_insensitive=True,
+                   intents=discord.Intents.all())
 bot.remove_command("help")
 
 for Filename in os.listdir("./cmds"):
