@@ -12,9 +12,6 @@ client = pymongo.MongoClient(
 db = client['discord_669934356172636199']
 coll = db['cue_list']
 
-prev_msg = None
-curr_msg = None
-
 prev_list = None
 curr_list = None
 
@@ -22,10 +19,11 @@ curr_list = None
 class Cue(Cog_Ext):
     @commands.command(aliases=['c'])
     async def cue(self, ctx, member: discord.Member = None, pos: int = None):
-        member_cue_list = []
+        member_cue = None
         if member:
-            member_cue_list = coll.find_one({'_id': member.id})['list']
-        if member_cue_list:
+            member_cue = coll.find_one({'_id': member.id})
+        if member_cue:
+            member_cue_list = member_cue['list']
             if pos:
                 await ctx.send(
                     f'{member.mention} 語錄 {pos} - {member_cue_list[pos - 1]}')
@@ -45,6 +43,7 @@ class Cue(Cog_Ext):
         await ctx.send(
             f'{random_member.mention} 語錄 {random_pos} - {random_word}')
         await ctx.message.delete()
+        return
 
     @commands.command()
     async def cue_add(self, ctx, member: discord.Member, *, word):
