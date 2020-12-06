@@ -98,8 +98,11 @@ class Cue(Cog_Ext):
 
     @commands.command()
     async def cue_list(self, ctx, member: discord.Member = None):
+        member_cue = None
         if member:
-            member_cue_list = coll.find_one({'_id': member.id})['list']
+            member_cue = coll.find_one({'_id': member.id})
+        if member_cue:
+            member_cue_list = member_cue['list']
 
             msg = f'{member.display_name}\n'
             for i, w in enumerate(member_cue_list, 1):
