@@ -72,7 +72,7 @@ class Cue(Cog_Ext):
             await ctx.message.delete()
             return
         if len(member_cue_list) - 1 == 0:
-            coll.remove_one({'_id': member.id}))
+            coll.delete_one({'_id': member.id})
             await ctx.send(
             f'已刪除 {member.nick} 語錄 {pos} - {member_cue_list[pos - 1]} <:shiba_smile:783351681013907466>',
             delete_after=7)
