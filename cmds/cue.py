@@ -48,20 +48,20 @@ class Cue(Cog_Ext):
 
     @commands.command()
     async def cue_add(self, ctx, member: discord.Member, *, word):
-        async for h in ctx.history(limit=None,
-                                   after=datetime.now() - timedelta(days=1),
-                                   oldest_first=True):
-            member_cue_list = coll.find_one({'_id': member.id})['list']
-            if word not in member_cue_list:
-                coll.update_one({'_id': member.id}, {'$push': {
-                    'list': word
-                }},
-                                upsert=True)
-                await ctx.send(
-                    f'已新增 {member.nick} 語錄 {len(member_cue_list) + 1} - {word} <:shiba_smile:783351681013907466>',
-                    delete_after=7)
-                await ctx.message.delete()
-                return
+        member_cue_list = []
+        member_cue = coll.find_one({'_id': member.id})
+        if member_cue:
+             member_cue_list = member_cue['list']
+        if word not in member_cue_list:
+            coll.update_one({'_id': member.id}, {'$push': {
+                'list': word
+            }},
+                            upsert=True)
+            await ctx.send(
+                f'已新增 {member.nick} 語錄 {len(member_cue_list) + 1} - {word} <:shiba_smile:783351681013907466>',
+                delete_after=7)
+            await ctx.message.delete()
+            return
 
     @commands.command(aliases=['cue_del', 'cue_remove'])
     async def cue_delete(self, ctx, member: discord.Member, pos: int):
