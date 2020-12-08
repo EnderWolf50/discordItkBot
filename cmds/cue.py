@@ -26,12 +26,13 @@ class Cue(Cog_Ext):
             member_cue_list = member_cue['list']
             if pos:
                 await ctx.send(
-                    f'{member.mention} 語錄 {pos} - {member_cue_list[pos - 1]}')
+                    f'{member.display_name} 語錄 {pos} - {member_cue_list[pos - 1]}'
+                )
                 await ctx.message.delete()
                 return
             word = random.choice(member_cue_list)
             await ctx.send(
-                f'{member.mention} 語錄 {member_cue_list.index(word) + 1} - {word}'
+                f'{member.display_name} 語錄 {member_cue_list.index(word) + 1} - {word}'
             )
             await ctx.message.delete()
             return
@@ -41,7 +42,8 @@ class Cue(Cog_Ext):
         random_pos = random.randint(0, len(cue_list[random_cue_id]) - 1)
         random_word = cue_list[random_cue_id][random_pos]
         await ctx.send(
-            f'{random_member.mention} 語錄 {random_pos + 1} - {random_word}')
+            f'{random_member.display_name} 語錄 {random_pos + 1} - {random_word}'
+        )
         await ctx.message.delete()
         return
 
@@ -50,7 +52,7 @@ class Cue(Cog_Ext):
         member_cue_list = []
         member_cue = coll.find_one({'_id': member.id})
         if member_cue:
-             member_cue_list = member_cue['list']
+            member_cue_list = member_cue['list']
         if word not in member_cue_list:
             coll.update_one({'_id': member.id}, {'$push': {
                 'list': word
@@ -69,20 +71,22 @@ class Cue(Cog_Ext):
         if member_cue:
             member_cue_list = member_cue['list']
         else:
-            await ctx.send(f'{member.display_name} 沒有語錄喔 <:shiba_without_ears:783350991885959208>',
-                           delete_after=7)
+            await ctx.send(
+                f'{member.display_name} 沒有語錄喔 <:shiba_without_ears:783350991885959208>',
+                delete_after=7)
             await ctx.message.delete()
             return
         if len(member_cue_list) - 1 <= 0:
             coll.delete_one({'_id': member.id})
             await ctx.send(
-            f'已刪除 {member.display_name} 語錄 {pos} - {member_cue_list[pos - 1]} <:shiba_smile:783351681013907466>',
-            delete_after=7)
+                f'已刪除 {member.display_name} 語錄 {pos} - {member_cue_list[pos - 1]} <:shiba_smile:783351681013907466>',
+                delete_after=7)
             await ctx.message.delete()
             return
         if pos > len(member_cue_list):
-            await ctx.send(f'{member.display_name} 沒有那麼多語錄可以刪啦 <:shiba_without_ears:783350991885959208>',
-                           delete_after=7)
+            await ctx.send(
+                f'{member.display_name} 沒有那麼多語錄可以刪啦 <:shiba_without_ears:783350991885959208>',
+                delete_after=7)
             await ctx.message.delete()
             return
         member_cue_list = member_cue['list']
