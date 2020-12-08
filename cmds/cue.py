@@ -43,7 +43,7 @@ class Cue(Cog_Ext):
         random_pos = random.randint(0, len(cue_list[random_cue_id]) - 1)
         random_word = cue_list[random_cue_id][random_pos]
         await ctx.send(
-            f'{random_member.mention} 語錄 {random_pos} - {random_word}')
+            f'{random_member.mention} 語錄 {random_pos + 1} - {random_word}')
         await ctx.message.delete()
 
     @commands.command()
