@@ -12,9 +12,6 @@ client = pymongo.MongoClient(
 db = client['discord_669934356172636199']
 coll = db['cue_list']
 
-prev_msg = None
-curr_msg = None
-
 prev_list = None
 curr_list = None
 
@@ -22,10 +19,11 @@ curr_list = None
 class Cue(Cog_Ext):
     @commands.command(aliases=['c'])
     async def cue(self, ctx, member: discord.Member = None, pos: int = None):
-        member_cue_list = []
+        member_cue = None
         if member:
-            member_cue_list = coll.find_one({'_id': member.id})['list']
-        if member_cue_list:
+            member_cue = coll.find_one({'_id': member.id})
+        if member_cue:
+            member_cue_list = member_cue['list']
             if pos:
                 await ctx.send(
                     f'{member.mention} 語錄 {pos} - {member_cue_list[pos - 1]}')
@@ -45,48 +43,68 @@ class Cue(Cog_Ext):
         await ctx.send(
             f'{random_member.mention} 語錄 {random_pos + 1} - {random_word}')
         await ctx.message.delete()
+        return
 
     @commands.command()
     async def cue_add(self, ctx, member: discord.Member, *, word):
-        async for h in ctx.history(limit=None,
-                                   after=datetime.now() - timedelta(days=1),
-                                   oldest_first=True):
-            member_cue_list = coll.find_one({'_id': member.id})['list']
-            if word not in member_cue_list:
-                coll.update_one({'_id': member.id}, {'$push': {
-                    'list': word
-                }},
-                                upsert=True)
-                await ctx.send(
-                    f'已新增 {member.nick} 語錄 {len(member_cue_list) + 1} - {word} <:shiba_smile:783351681013907466>',
-                    delete_after=7)
-                await ctx.message.delete()
-                return
+        member_cue_list = []
+        member_cue = coll.find_one({'_id': member.id})
+        if member_cue:
+             member_cue_list = member_cue['list']
+        if word not in member_cue_list:
+            coll.update_one({'_id': member.id}, {'$push': {
+                'list': word
+            }},
+                            upsert=True)
+            await ctx.send(
+                f'已新增 {member.display_name} 語錄 {len(member_cue_list) + 1} - {word} <:shiba_smile:783351681013907466>',
+                delete_after=7)
+            await ctx.message.delete()
+            return
 
     @commands.command(aliases=['cue_del', 'cue_remove'])
     async def cue_delete(self, ctx, member: discord.Member, pos: int):
-        member_cue_list = coll.find_one({'_id': member.id})['list']
-        if pos > len(member_cue_list):
-            await ctx.send('沒得刪了，先不要 <:shiba_without_ears:783350991885959208>',
+        member_cue_list = []
+        member_cue = coll.find_one({'_id': member.id})
+        if member_cue:
+            member_cue_list = member_cue['list']
+        else:
+            await ctx.send(f'{member.display_name} 沒有語錄喔 <:shiba_without_ears:783350991885959208>',
                            delete_after=7)
             await ctx.message.delete()
             return
+        if len(member_cue_list) - 1 <= 0:
+            coll.delete_one({'_id': member.id})
+            await ctx.send(
+            f'已刪除 {member.display_name} 語錄 {pos} - {member_cue_list[pos - 1]} <:shiba_smile:783351681013907466>',
+            delete_after=7)
+            await ctx.message.delete()
+            return
+        if pos > len(member_cue_list):
+            await ctx.send(f'{member.display_name} 沒有那麼多語錄可以刪啦 <:shiba_without_ears:783350991885959208>',
+                           delete_after=7)
+            await ctx.message.delete()
+            return
+        member_cue_list = member_cue['list']
         coll.update_one({'_id': member.id},
                         {'$pull': {
                             'list': member_cue_list[pos - 1]
                         }})
         await ctx.send(
-            f'已刪除 {member.nick} 語錄 {pos} - {member_cue_list[pos - 1]} <:shiba_smile:783351681013907466>',
+            f'已刪除 {member.display_name} 語錄 {pos} - {member_cue_list[pos - 1]} <:shiba_smile:783351681013907466>',
             delete_after=7)
         await ctx.message.delete()
         return
 
     @commands.command()
     async def cue_list(self, ctx, member: discord.Member = None):
+        member_cue = None
         if member:
-            member_cue_list = coll.find_one({'_id': member.id})['list']
+            member_cue = coll.find_one({'_id': member.id})
+        if member_cue:
+            member_cue_list = member_cue['list']
 
-            msg = f'{member.nick}\n'
+            msg = f'{member.display_name}\n'
             for i, w in enumerate(member_cue_list, 1):
                 msg += f'{i} - {w}\n'
             await ctx.send(msg)
@@ -100,7 +118,7 @@ class Cue(Cog_Ext):
         msg = ''
         for m, l in cue_list.items():
             cue_member = ctx.guild.get_member(m)
-            msg += f'{cue_member.nick}\n'
+            msg += f'{cue_member.display_name}\n'
             for i, w in enumerate(l, 1):
                 msg += f'{i} - {w}\n'
         prev_list = await ctx.send(msg)
