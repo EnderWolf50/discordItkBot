@@ -167,7 +167,7 @@ class Events(Cog_Ext):
             pic = discord.File(random.choice(yeahlist))
             await msg.channel.send(file=pic, delete_after=10)
         # 很嗆是吧
-        elif re.search(r"很?嗆{1}(欸|喔|是吧)?", msg.content.lower()):
+        elif re.search(r"很嗆(?:是吧|[喔欸])?|嗆[喔欸]", msg.content.lower()):
             pic = discord.File('./images/flaming.jpg')
             await msg.channel.send(file=pic, delete_after=6)
         # mention
