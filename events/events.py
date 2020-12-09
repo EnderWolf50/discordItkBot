@@ -165,7 +165,11 @@ class Events(Cog_Ext):
         # 好耶
         elif "好耶" in msg.content:
             pic = discord.File(random.choice(yeahlist))
-            await msg.channel.send(file=pic, delete_after=15)
+            await msg.channel.send(file=pic, delete_after=10)
+        # 很嗆是吧
+        elif {"很嗆", "嗆喔"} in msg.content:
+            pic = discord.File('./images/flaming.jpg')
+            await msg.channel.send(file=pic, delete_after=6)
         # mention
         elif self.bot.user in msg.mentions:
             await msg.channel.send(random.choice(mentionReact))
