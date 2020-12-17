@@ -42,12 +42,12 @@ class Cue(Cog_Ext):
         random_pos = random.randint(0, len(cue_list[random_cue_id]) - 1)
         random_word = cue_list[random_cue_id][random_pos]
         await ctx.send(
-            f'{random_member.display_name} 語錄 {random_pos + 1} - {random_word}'
+            f'{random_member.display_name} 語錄 {random_pos + 1} - {random_word}',
         )
         await ctx.message.delete()
         return
 
-    @commands.command()
+    @commands.command(aliases=['c_a'])
     async def cue_add(self, ctx, member: discord.Member, *, word):
         member_cue_list = []
         member_cue = coll.find_one({'_id': member.id})
@@ -63,8 +63,13 @@ class Cue(Cog_Ext):
                 delete_after=7)
             await ctx.message.delete()
             return
+        await ctx.send(
+            '加過了啦 <:i11_chiwawa:783346447319171075>',
+            delete_after=7)
+        await ctx.message.delete()
+        return
 
-    @commands.command(aliases=['cue_del', 'cue_remove'])
+    @commands.command(aliases=['cue_del', 'cue_remove', 'c_d', 'c_r'])
     async def cue_delete(self, ctx, member: discord.Member, pos: int):
         member_cue_list = []
         member_cue = coll.find_one({'_id': member.id})
@@ -100,7 +105,7 @@ class Cue(Cog_Ext):
         await ctx.message.delete()
         return
 
-    @commands.command()
+    @commands.command(aliases=['c_l'])
     async def cue_list(self, ctx, member: discord.Member = None):
         member_cue = None
         if member:
