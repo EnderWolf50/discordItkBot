@@ -172,7 +172,7 @@ class Events(Cog_Ext):
             await msg.channel.send(file=pic, delete_after=6)
         # 珍妮佛羅培茲
         elif re.search(r"哇|珍妮佛|羅培茲|wow|jennifer|lopez", msg.content.lower()):
-            pic = discord.File('./images/wow_jennifer.jpg')
+            pic = discord.File('./images/wow_Jennifer.jpg')
             await msg.channel.send(file=pic, delete_after=6)
         # mention
         elif self.bot.user in msg.mentions:
