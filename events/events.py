@@ -170,6 +170,10 @@ class Events(Cog_Ext):
         elif re.search(r"很嗆(?:是吧|[喔欸])?|嗆[喔欸]", msg.content.lower()):
             pic = discord.File('./images/flaming.jpg')
             await msg.channel.send(file=pic, delete_after=6)
+        # 珍妮佛羅培茲
+        elif re.search(r"哇|珍妮佛|羅培茲|wow|jennifer|lopez", msg.content.lower()):
+            pic = discord.File('./images/wow_jennifer.jpg')
+            await msg.channel.send(file=pic, delete_after=6)
         # mention
         elif self.bot.user in msg.mentions:
             await msg.channel.send(random.choice(mentionReact))
