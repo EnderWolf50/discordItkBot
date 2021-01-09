@@ -46,77 +46,41 @@ au_emojis = [
 ]
 
 au_messages = [
-    '''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
-
-　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
-
-.　　 。　　               　　　 　 。 . 　     　 • 　　　   　•
+    '''.　　 。　　               　　　 　 。 . 　     　 • 　　　   　•
 
 　. 　ﾟ　.        {}  was An Impostor.　            。   　.
 
-　   　'　　          　  0 Impostor remains      　 　　   。
-
-　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''', '''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
-
-　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
-
+　   　'　　          　  0 Impostor remains      　 　　   。''', '''
 .　　 。　ඞ　               　　　  。 . 　     　 • 　　　   　•
 
 　. 　ﾟ　.        {}  was An Impostor.　            。   　.
 
-　   　'　　          　  0 Impostor remains      　 　　   。
-
-　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''', '''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
-
-　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
-
+　   　'　　          　  0 Impostor remains      　 　　   。''', '''
 .　　 。　　           ඞ    　　　  。 . 　     　 • 　　　   　•
 
 　. 　ﾟ　.        {}  was An Impostor.　            。   　.
 
-　   　'　　          　  0 Impostor remains      　 　　   。
-
-　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''', '''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
-
-　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
-
+　   　'　　          　  0 Impostor remains      　 　　   。''', '''
 .　　 。　　               　　　 ඞ 。 . 　     　 • 　　　   　•
 
 　. 　ﾟ　.        {}  was An Impostor.　            。   　.
 
-　   　'　　          　  0 Impostor remains      　 　　   。
-
-　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''', '''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
-
-　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
-
+　   　'　　          　  0 Impostor remains      　 　　   。''', '''
 .　　 。　　               　　　 　 。 . 　 ඞ     • 　　　   　•
 
 　. 　ﾟ　.        {}  was An Impostor.　            。   　.
 
-　   　'　　          　  0 Impostor remains      　 　　   。
-
-　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''', '''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
-
-　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
-
+　   　'　　          　  0 Impostor remains      　 　　   。''', '''
 .　　 。　　              　　　　   。 . 　     　 • 　　ඞ   　•
 
 　. 　ﾟ　.        {}  was An Impostor.　            。   　.
 
-　   　'　　          　  0 Impostor remains      　 　　   。
-
-　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .''', '''. 　　　　　。　　　　　　•　　　 　ﾟ　　。 　　.
-
-　　　.　　　 　　　　.　　　　　　　。　　　 。　. 　
-
+　   　'　　          　  0 Impostor remains      　 　　   。.''', '''
 .　　 。　　               　　　 　 。 . 　     　 • 　　　   　•
 
 　. 　ﾟ　.        {}  was An Impostor.　            。   　.
 
-　   　'　　          　  0 Impostor remains      　 　　   。
-
-　　ﾟ　　　　　.　　　　　. ,　　　　　　　　.　 .'''
+　   　'　　          　  0 Impostor remains      　 　　   。'''
 ]
 
 
@@ -207,8 +171,12 @@ class Events(Cog_Ext):
                         break
                 if send_pic == 2: break
             if send_pic == 1:
-                Pic = discord.File('./images/play_big_two.jpg')
-                await msg.channel.send(file=Pic, delete_after=10)
+                Pic = random.choice([
+                    'play_big_two.jpg', 'play_big_two_1.gif',
+                    'play_big_two_2.gif'
+                ])
+                await msg.channel.send(file=discord.File(f'./images/{Pic}'),
+                                       delete_after=10)
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg):
