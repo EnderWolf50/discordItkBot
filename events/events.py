@@ -120,7 +120,7 @@ class Events(Cog_Ext):
             if Picture == "https://i.imgur.com/x1qmYCT.gif":
                 await msg.channel.send(Picture, delete_after=18.68)
             else:
-                await msg.channel.send(Picture, delete_after=5)
+                await msg.channel.send(Picture, delete_after=7)
         # loading cat
         elif re.search(r"(ldc|ldcat|\b痾\b|\b痾...\b)", msg.content.lower()):
             await msg.channel.send(loadingCatEmos[0])
@@ -133,11 +133,11 @@ class Events(Cog_Ext):
         # 很嗆是吧
         elif re.search(r"很嗆(?:是吧|[喔欸])?|嗆[喔欸]", msg.content.lower()):
             pic = discord.File('./images/flaming.jpg')
-            await msg.channel.send(file=pic, delete_after=6)
+            await msg.channel.send(file=pic, delete_after=7)
         # 珍妮佛羅培茲
-        elif re.search(r"哇|珍妮佛|羅培茲|wow|jennifer|lopez", msg.content.lower()):
+        elif re.search(r"嘿[！!]?雪莉|哇", msg.content.lower()):
             pic = discord.File('./images/wow_Jennifer.jpg')
-            await msg.channel.send(file=pic, delete_after=6)
+            await msg.channel.send(file=pic, delete_after=7)
         # mention
         elif self.bot.user in msg.mentions:
             await msg.channel.send(random.choice(mentionReact))
