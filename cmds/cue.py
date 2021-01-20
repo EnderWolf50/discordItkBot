@@ -63,9 +63,8 @@ class Cue(Cog_Ext):
                 delete_after=7)
             await ctx.message.delete()
             return
-        await ctx.send(
-            '加過了啦 <:i11_chiwawa:783346447319171075>',
-            delete_after=7)
+        await ctx.send('加過了啦 <:i11_chiwawa:783346447319171075>',
+                       delete_after=7)
         await ctx.message.delete()
         return
 

@@ -5,7 +5,7 @@ from core.rwFile import rFile, get_setting
 
 from datetime import datetime as dt
 from datetime import timedelta
-import random, re, asyncio
+import os, random, re, asyncio, pymongo
 
 File = rFile('others')
 
@@ -15,6 +15,13 @@ idk_weights = list(File['IDK_url'].values())
 mentionReact = File["Mention_react"]
 
 Owner = get_setting("Owner")
+
+client = pymongo.MongoClient(
+    f"mongodb+srv://Kerati:{os.getenv('MONGO_PASSWORD')}@kerati.o6ymg.mongodb.net/Kerati?retryWrites=true&w=majority"
+)
+
+db = client['discord_669934356172636199']
+coll = db['emoji_counter']
 
 yeahlist = [
     "./images/yeah.jpg", "./images/noyeah.jpg", "./images/yeahsanxiao.jpg",
@@ -88,10 +95,40 @@ class Events(Cog_Ext):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.cmdList = []
+        self.mongo_emojis = []
+        self.guild_emojis = []
         for cmd in self.bot.commands:
             self.cmdList.append(cmd.name)
             for alias in cmd.aliases:
                 self.cmdList.append(alias)
+
+    @commands.command(aliases=['er_r'])
+    async def emo_record_reset(self, ctx):
+        await ctx.message.delete()
+        self.guild_emojis = [
+            g_emo.id for g_emo in (
+                await self.bot.fetch_guild(669934356172636199)).emojis
+        ]
+        for db_emo in self.mongo_emojis:
+            if db_emo not in self.guild_emojis:
+                coll.delete_one({'_id': db_emo})
+                continue
+            coll.update_one({
+                '_id': db_emo,
+            }, {
+                '$set': {
+                    'name': self.bot.get_emoji(db_emo).name,
+                    'count': 0,
+                }
+            })
+        for g_emo in self.guild_emojis:
+            if g_emo not in self.mongo_emojis:
+                coll.insert_one({
+                    '_id': g_emo,
+                    'name': self.bot.get_emoji(g_emo).name,
+                    'count': 0,
+                })
+        self.mongo_emojis = [db_emo['_id'] for db_emo in coll.find()]
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -99,10 +136,34 @@ class Events(Cog_Ext):
         await self.bot.get_user(523755296242270210).send(
             f'Bot has been started successfully `{dt.now().strftime("%Y/%m/%d %H:%M:%S")}`'
         )
+        self.mongo_emojis = [db_emo['_id'] for db_emo in coll.find()]
+        self.guild_emojis = [
+            g_emo.id for g_emo in (
+                await self.bot.fetch_guild(669934356172636199)).emojis
+        ]
+
+        for db_emo in self.mongo_emojis:
+            if db_emo not in self.guild_emojis:
+                coll.delete_one({'_id': db_emo})
+        for g_emo in self.guild_emojis:
+            if g_emo not in self.mongo_emojis:
+                coll.insert_one({
+                    '_id': g_emo,
+                    'name': self.bot.get_emoji(g_emo).name,
+                    'count': 0,
+                })
 
     @commands.Cog.listener()
     async def on_message(self, msg):
-        if msg.channel == self.bot.get_channel(675956755112394753): return
+        if msg.channel.type not in {
+                discord.ChannelType.text, discord.ChannelType.group
+        } or msg.guild.id != 669934356172636199:
+            return
+        msg_emojis = list(set(re.findall(r'<a?:.*?:(\d*)>', msg.content)))
+        for m_emo in msg_emojis:
+            coll.update_one({'_id': int(m_emo)}, {'$inc': {'count': 1}})
+
+        if msg.channel.id == 675956755112394753: return
         # reaction
         if "ㄐㄐ" in msg.content:
             await msg.add_reaction("\N{AUBERGINE}")
