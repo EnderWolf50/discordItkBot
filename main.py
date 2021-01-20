@@ -8,7 +8,8 @@ TOKEN = os.getenv("TOKEN")
 
 bot = commands.Bot(command_prefix=".",
                    case_insensitive=True,
-                   intents=discord.Intents.all())
+                   intents=discord.Intents.all(),
+                   owner_id=523755296242270210)
 bot.remove_command("help")
 
 for Filename in os.listdir("./cmds"):

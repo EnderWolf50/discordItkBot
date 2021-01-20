@@ -16,13 +16,6 @@ mentionReact = File["Mention_react"]
 
 Owner = get_setting("Owner")
 
-client = pymongo.MongoClient(
-    f"mongodb+srv://Kerati:{os.getenv('MONGO_PASSWORD')}@kerati.o6ymg.mongodb.net/Kerati?retryWrites=true&w=majority"
-)
-
-db = client['discord_669934356172636199']
-coll = db['emoji_counter']
-
 yeahlist = [
     "./images/yeah.jpg", "./images/noyeah.jpg", "./images/yeahsanxiao.jpg",
     "./images/yeahstarburst.jpg"
