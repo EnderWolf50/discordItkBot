@@ -114,7 +114,7 @@ class Emo_count(Cog_Ext):
                 embed.description += f"<{'a' if emo['animated'] else ''}:{emo['name']}:{emo['id']}>`{emo['count']:^3d}`次　"
                 if i % 5 == 0:
                     embed.description += '\n\n'
-            await ctx.send(embed=embed, delete_after=30)
+            await ctx.send(embed=embed, delete_after=60)
         elif isinstance(emo_id[1], str):
             index = next((i for (i, e) in enumerate(emo_rank)
                           if e['id'] == int(emo_id[1])), None)
@@ -125,7 +125,7 @@ class Emo_count(Cog_Ext):
 
                     排名：{index + 1}''')
                 embed.set_thumbnail(url=self.bot.get_emoji(int(emo_id[1])).url)
-                await ctx.send(embed=embed)
+                await ctx.send(embed=embed, delete_after=60)
 
 
 def setup(bot):
