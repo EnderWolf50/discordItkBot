@@ -53,8 +53,8 @@ class Events(Cog_Ext):
             for alias in cmd.aliases:
                 self.cmdList.append(alias)
 
-    @commands.command(aliases=['er_r'])
-    async def emo_record_reset(self, ctx):
+    @commands.command(aliases=['ecr'])
+    async def emo_counter_reset(self, ctx):
         await ctx.message.delete()
         self.guild_emojis = [
             g_emo.id for g_emo in (
