@@ -7,7 +7,7 @@ import random
 
 class Roll(Cog_Ext):
     @commands.command()
-    async def roll(self, ctx, num: int = 100, *, args="{}"):
+    async def roll(self, ctx, num: int, *, args="{}"):
         if num <= 0:
             await ctx.send("ㄐㄐ")
             await ctx.send("雞雞")
