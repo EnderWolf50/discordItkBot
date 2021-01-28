@@ -12,8 +12,7 @@ client = pymongo.MongoClient(
 db = client['discord_669934356172636199']
 coll = db['cue_list']
 
-prev_list = None
-curr_list = None
+prev_list = []
 
 
 class Cue(Cog_Ext):
@@ -106,6 +105,9 @@ class Cue(Cog_Ext):
 
     @commands.command(aliases=['c_l'])
     async def cue_list(self, ctx, member: discord.Member = None):
+        if len(prev_list) >= 1:
+            for pl in prev_list:
+                await pl.delete()
         member_cue = None
         if member:
             member_cue = coll.find_one({'_id': member.id})
@@ -116,15 +118,11 @@ class Cue(Cog_Ext):
             for i, w in enumerate(member_cue_list, 1):
                 msg += f'{i} - {w}\n'
                 if len(msg) >= 1970:
-                    await ctx.send(msg)
+                    prev_list.append(await ctx.send(msg))
                     msg = ''
-            await ctx.send(msg)
+            prev_list.append(await ctx.send(msg))
             await ctx.message.delete()
             return
-        global prev_list
-        global curr_list
-        if prev_list:
-            await prev_list.delete()
         cue_list = {doc['_id']: doc['list'] for doc in coll.find()}
         msg = ''
         for m, l in cue_list.items():
@@ -133,9 +131,9 @@ class Cue(Cog_Ext):
             for i, w in enumerate(l, 1):
                 msg += f'{i} - {w}\n'
                 if len(msg) >= 1970:
-                    await ctx.send(msg)
+                    prev_list.append(await ctx.send(msg))
                     msg = ''
-        prev_list = await ctx.send(msg)
+        prev_list.append(await ctx.send(msg))
         await ctx.message.delete()
 
 
