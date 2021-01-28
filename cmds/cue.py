@@ -129,6 +129,9 @@ class Cue(Cog_Ext):
             msg += f'{cue_member.display_name}\n'
             for i, w in enumerate(l, 1):
                 msg += f'{i} - {w}\n'
+            if len(msg) >= 1970:
+                await ctx.send(msg)
+                msg = ''
         prev_list = await ctx.send(msg)
         await ctx.message.delete()
 
