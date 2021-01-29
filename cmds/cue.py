@@ -108,6 +108,7 @@ class Cue(Cog_Ext):
         if len(prev_list) >= 1:
             for pl in prev_list:
                 await pl.delete()
+        prev_list = []
         member_cue = None
         if member:
             member_cue = coll.find_one({'_id': member.id})
