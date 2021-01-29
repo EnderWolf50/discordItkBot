@@ -105,6 +105,7 @@ class Cue(Cog_Ext):
 
     @commands.command(aliases=['c_l'])
     async def cue_list(self, ctx, member: discord.Member = None):
+        global prev_list
         if len(prev_list) >= 1:
             for pl in prev_list:
                 await pl.delete()
