@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
 
-import random, os, pymongo
+import random, os, pymongo, math
 from datetime import datetime, timedelta
 
 client = pymongo.MongoClient(
@@ -13,6 +13,8 @@ db = client['discord_669934356172636199']
 coll = db['cue_list']
 
 prev_list = []
+
+curr_embed = None
 
 
 class Cue(Cog_Ext):
@@ -46,7 +48,7 @@ class Cue(Cog_Ext):
         await ctx.message.delete()
         return
 
-    @commands.command(aliases=['c_a'])
+    @commands.command(aliases=['c_a', 'ca'])
     async def cue_add(self, ctx, member: discord.Member, *, word):
         member_cue_list = []
         member_cue = coll.find_one({'_id': member.id})
@@ -67,7 +69,8 @@ class Cue(Cog_Ext):
         await ctx.message.delete()
         return
 
-    @commands.command(aliases=['cue_del', 'cue_remove', 'c_d', 'c_r'])
+    @commands.command(
+        aliases=['cue_del', 'cue_remove', 'c_d', 'c_r', 'cd', 'cr'])
     async def cue_delete(self, ctx, member: discord.Member, pos: int):
         member_cue_list = []
         member_cue = coll.find_one({'_id': member.id})
@@ -103,40 +106,65 @@ class Cue(Cog_Ext):
         await ctx.message.delete()
         return
 
-    @commands.command(aliases=['c_l'])
+    @commands.command(aliases=['c_l', 'cl'])
     async def cue_list(self, ctx, member: discord.Member = None):
-        global prev_list
-        if len(prev_list) >= 1:
-            for pl in prev_list:
-                await pl.delete()
-        prev_list = []
+        global curr_embed
         member_cue = None
+        await ctx.message.delete()
+        if curr_embed:
+            await curr_embed[0].delete()
+
         if member:
             member_cue = coll.find_one({'_id': member.id})
         if member_cue:
             member_cue_list = member_cue['list']
 
-            msg = f'{member.display_name}\n'
-            for i, w in enumerate(member_cue_list, 1):
-                msg += f'{i} - {w}\n'
-                if len(msg) >= 1970:
-                    prev_list.append(await ctx.send(msg))
-                    msg = ''
-            prev_list.append(await ctx.send(msg))
-            await ctx.message.delete()
-            return
-        cue_list = {doc['_id']: doc['list'] for doc in coll.find()}
-        msg = ''
-        for m, l in cue_list.items():
-            cue_member = ctx.guild.get_member(m)
-            msg += f'{cue_member.display_name}\n'
-            for i, w in enumerate(l, 1):
-                msg += f'{i} - {w}\n'
-                if len(msg) >= 1970:
-                    prev_list.append(await ctx.send(msg))
-                    msg = ''
-        prev_list.append(await ctx.send(msg))
-        await ctx.message.delete()
+            embed = discord.Embed()
+            embed.set_author(name=f'{member.display_name} 錯字大全')
+            embed.set_thumbnail(url=member.avatar_url)
+
+            for i, w in enumerate(member_cue_list[:21], 1):
+                embed.add_field(name=i, value=w, inline=True)
+
+            curr_embed = [await ctx.send(embed=embed), 0, member.id]
+            await curr_embed[0].add_reaction("⬅")
+            await curr_embed[0].add_reaction("➡")
+
+    @commands.Cog.listener()
+    async def on_reaction_add(self, reaction, user):
+        member_cue = None
+        if user.bot: return
+        if reaction.message != curr_embed[0]: return
+        await reaction.remove(user)
+
+        member_cue = coll.find_one({'_id': curr_embed[2]})
+        if not member_cue: return
+        total_page = math.ceil(len(member_cue['list']) / 21) - 1
+
+        if str(reaction.emoji) == "⬅":
+            if curr_embed[1] == 0: return
+            curr_embed[1] -= 1
+        elif str(reaction.emoji) == "➡":
+            if curr_embed[1] == total_page: return
+            curr_embed[1] += 1
+
+        member = (await reaction.message.guild.fetch_member(curr_embed[2]))
+        embed = discord.Embed()
+        embed.set_author(name=f'{member.display_name} 錯字大全')
+        embed.set_thumbnail(url=member.avatar_url)
+
+        for i, w in enumerate(
+                member_cue['list'][curr_embed[1] * 21:curr_embed[1] * 21 + 21],
+                curr_embed[1] * 21 + 1):
+            embed.add_field(name=i, value=w, inline=True)
+        await reaction.message.edit(embed=embed)
+
+    @commands.Cog.listener()
+    async def on_message_delete(self, msg):
+        global curr_embed
+        if not curr_embed: return
+        if msg == curr_embed[0]:
+            curr_embed = None
 
 
 def setup(bot):

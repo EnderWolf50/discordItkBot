@@ -123,9 +123,9 @@ class Events(Cog_Ext):
         await self.bot.get_channel(741556551143391323).send(
             f'{msg.author.display_name}  `{msg.created_at.strftime("%Y/%m/%d %H:%M:%S")}`\n{msg.content}'
         )
-        # for attachment in msg.attachments:
-        #     await self.bot.get_channel(741556551143391323).send(
-        #         attachment.proxy_url)
+        for attachment in msg.attachments:
+            await self.bot.get_channel(741556551143391323).send(
+                attachment.proxy_url)
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
