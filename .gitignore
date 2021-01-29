@@ -4,6 +4,4 @@ temp.*
 sub.*
 \.env
 
-record.json
-result.json
 tempCodeRunnerFile.python
