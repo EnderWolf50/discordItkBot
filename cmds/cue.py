@@ -142,11 +142,9 @@ class Cue(Cog_Ext):
         total_page = math.ceil(len(member_cue['list']) / 21) - 1
 
         if str(reaction.emoji) == "<:L_arrow:805002492848767017>":
-            if curr_embed[1] == 0: return
-            curr_embed[1] -= 1
+            if curr_embed[1] != 0: curr_embed[1] -= 1
         elif str(reaction.emoji) == "<:R_arrow:805002492525805589>":
-            if curr_embed[1] == total_page: return
-            curr_embed[1] += 1
+            if curr_embed[1] != total_page: curr_embed[1] += 1
 
         member = (await reaction.message.guild.fetch_member(curr_embed[2]))
         embed = discord.Embed()
