@@ -12,8 +12,6 @@ client = pymongo.MongoClient(
 db = client['discord_669934356172636199']
 coll = db['cue_list']
 
-prev_list = []
-
 curr_embed = None
 
 
@@ -107,28 +105,28 @@ class Cue(Cog_Ext):
         return
 
     @commands.command(aliases=['c_l', 'cl'])
-    async def cue_list(self, ctx, member: discord.Member = None):
+    async def cue_list(self, ctx, member: discord.Member):
         global curr_embed
-        member_cue = None
-        await ctx.message.delete()
         if curr_embed:
             await curr_embed[0].delete()
+        await ctx.message.delete()
 
-        if member:
-            member_cue = coll.find_one({'_id': member.id})
-        if member_cue:
-            member_cue_list = member_cue['list']
+        member_cue = None
+        member_cue = coll.find_one({'_id': member.id})
+        if not member_cue: return
+        total_page = math.ceil(len(member_cue['list']) / 21) - 1
 
-            embed = discord.Embed()
-            embed.set_author(name=f'{member.display_name} 錯字大全')
-            embed.set_thumbnail(url=member.avatar_url)
+        embed = discord.Embed()
+        embed.set_author(name=f'{member.display_name} 錯字大全')
+        embed.set_thumbnail(url=member.avatar_url)
+        embed.set_footer(text=f'頁 1 / {total_page + 1}')
 
-            for i, w in enumerate(member_cue_list[:21], 1):
-                embed.add_field(name=i, value=w, inline=True)
+        for i, w in enumerate(member_cue['list'][:21], 1):
+            embed.add_field(name=i, value=w, inline=True)
 
-            curr_embed = [await ctx.send(embed=embed), 0, member.id]
-            await curr_embed[0].add_reaction("<:L_arrow:805002492848767017>")
-            await curr_embed[0].add_reaction("<:R_arrow:805002492525805589>")
+        curr_embed = [await ctx.send(embed=embed), 0, member.id]
+        await curr_embed[0].add_reaction("<:L_arrow:805002492848767017>")
+        await curr_embed[0].add_reaction("<:R_arrow:805002492525805589>")
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
@@ -147,9 +145,9 @@ class Cue(Cog_Ext):
             if curr_embed[1] != total_page: curr_embed[1] += 1
 
         member = (await reaction.message.guild.fetch_member(curr_embed[2]))
-        embed = discord.Embed()
-        embed.set_author(name=f'{member.display_name} 錯字大全')
-        embed.set_thumbnail(url=member.avatar_url)
+        embed = reaction.message.embeds[0]
+        embed.clear_fields()
+        embed.set_footer(text=f'頁 {curr_embed[1] + 1} / {total_page + 1}')
 
         for i, w in enumerate(
                 member_cue['list'][curr_embed[1] * 21:curr_embed[1] * 21 + 21],
