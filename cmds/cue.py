@@ -132,11 +132,11 @@ class Cue(Cog_Ext):
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
-        member_cue = None
         if user.bot: return
         if reaction.message != curr_embed[0]: return
-        await reaction.remove(user)
+        await reaction.clear()
 
+        member_cue = None
         member_cue = coll.find_one({'_id': curr_embed[2]})
         if not member_cue: return
         total_page = math.ceil(len(member_cue['list']) / 21) - 1
@@ -158,6 +158,8 @@ class Cue(Cog_Ext):
                 curr_embed[1] * 21 + 1):
             embed.add_field(name=i, value=w, inline=True)
         await reaction.message.edit(embed=embed)
+        await reaction.message.add_reaction("<:L_arrow:805002492848767017>")
+        await reaction.message.add_reaction("<:R_arrow:805002492525805589>")
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg):
