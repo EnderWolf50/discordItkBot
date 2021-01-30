@@ -134,7 +134,7 @@ class Cue(Cog_Ext):
     async def on_reaction_add(self, reaction, user):
         if user.bot: return
         if reaction.message != curr_embed[0]: return
-        await reaction.clear()
+        await reaction.message.clear_reactions()
 
         member_cue = None
         member_cue = coll.find_one({'_id': curr_embed[2]})
