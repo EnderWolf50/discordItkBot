@@ -127,8 +127,8 @@ class Cue(Cog_Ext):
                 embed.add_field(name=i, value=w, inline=True)
 
             curr_embed = [await ctx.send(embed=embed), 0, member.id]
-            await curr_embed[0].add_reaction("⬅")
-            await curr_embed[0].add_reaction("➡")
+            await curr_embed[0].add_reaction("<:L_arrow:805002492848767017>")
+            await curr_embed[0].add_reaction("<:R_arrow:805002492525805589>")
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
@@ -141,10 +141,10 @@ class Cue(Cog_Ext):
         if not member_cue: return
         total_page = math.ceil(len(member_cue['list']) / 21) - 1
 
-        if str(reaction.emoji) == "⬅":
+        if str(reaction.emoji) == "<:L_arrow:805002492848767017>":
             if curr_embed[1] == 0: return
             curr_embed[1] -= 1
-        elif str(reaction.emoji) == "➡":
+        elif str(reaction.emoji) == "<:R_arrow:805002492525805589>":
             if curr_embed[1] == total_page: return
             curr_embed[1] += 1
 
