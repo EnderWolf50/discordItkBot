@@ -44,7 +44,7 @@ class Basic(Cog_Ext):
         embed.set_footer(text="那個...窩不知道")
         for command, description, inline in rFile("others")["help"]:
             embed.add_field(name=command, value=description, inline=inline)
-        await ctx.send(embed=embed)
+        await ctx.send(embed=embed, delete_after=30)
 
     @commands.command()
     async def ping(self, ctx):

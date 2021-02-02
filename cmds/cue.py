@@ -131,7 +131,7 @@ class Cue(Cog_Ext):
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
         if user.bot: return
-        if reaction.message != curr_embed[0]: return
+        if not curr_embed or reaction.message != curr_embed[0]: return
         await reaction.message.clear_reactions()
 
         member_cue = None
