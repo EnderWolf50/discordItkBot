@@ -45,17 +45,26 @@ class ImgSearch(Cog_Ext):
                                              and lst_arg_isfloat) else 52.0
 
         for attachment in ctx.message.attachments:
+            similar_enough_ctr = 0
             res = sn.from_url(url=attachment.url)
             for r in res:
                 if r.similarity < min_similarity: continue
+                similar_enough_ctr += 1
                 await ctx.send(embed=self.embed_gen(r), delete_after=180)
+            if similar_enough_ctr == 0:
+                await ctx.send(content='沒有結果 <:021:685800580958126081>',
+                               delete_after=7)
             ctr += 1
             if ctr == 6: return
         for arg in args[:-1] if lst_arg_isfloat else args:
+            similar_enough_ctr = 0
             res = sn.from_url(url=arg)
             for r in res:
                 if r.similarity < min_similarity: continue
                 await ctx.send(embed=self.embed_gen(r), delete_after=180)
+            if similar_enough_ctr == 0:
+                await ctx.send(content='沒有結果 <:021:685800580958126081>',
+                               delete_after=7)
             ctr += 1
             if ctr == 6: return
 

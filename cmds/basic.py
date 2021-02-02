@@ -36,7 +36,7 @@ class Basic(Cog_Ext):
     async def help(self, ctx):
         await ctx.message.delete()
         color = random.randint(0, 0xffffff)
-        embed = discord.Embed(title="Command Help", color=color)
+        embed = discord.Embed(title="看看是哪個小可憐忘記指令怎麼打啦？", color=color)
         embed.set_author(
             name="Itk Bot",
             icon_url=
