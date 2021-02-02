@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
 
-import os, asyncio
+import os
 from saucenao_api import SauceNao
 
 sn = SauceNao(api_key=os.getenv('SAUCE_NAO_KEY'), numres=3)
