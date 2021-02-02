@@ -1,7 +1,7 @@
 __pycache__/
 .vscode/
-temp.*
-sub.*
 \.env
 
-tempCodeRunnerFile.python
+sub.*
+temp.*
+tempCodeRunnerFile.*

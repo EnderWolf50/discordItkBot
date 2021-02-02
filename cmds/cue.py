@@ -12,7 +12,7 @@ client = pymongo.MongoClient(
 db = client['discord_669934356172636199']
 coll = db['cue_list']
 
-curr_embed = None
+curr_embed = []
 
 
 class Cue(Cog_Ext):
