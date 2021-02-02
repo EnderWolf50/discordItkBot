@@ -98,11 +98,14 @@ class ImgSearch(Cog_Ext):
     @commands.command(aliases=['img_search', 'is'])
     async def Image_search(self, ctx, *args):
         await ctx.message.delete(delay=15)
-        ctr = 0
         res_embed_list = []
         lst_arg_isfloat = self.isfloat(args[-1]) if args else True
         min_similarity = float(args[-1]) if (args
                                              and lst_arg_isfloat) else 52.0
+        if not ctx.message.attachments and not (args[:-1]
+                                                if lst_arg_isfloat else args):
+            return
+
         queue = [a.url for a in ctx.message.attachments
                  ] + [a for a in (args[:-1] if lst_arg_isfloat else args)]
 
