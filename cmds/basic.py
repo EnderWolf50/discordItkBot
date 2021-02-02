@@ -35,8 +35,7 @@ class Basic(Cog_Ext):
     @commands.command()
     async def help(self, ctx):
         await ctx.message.delete()
-        color = random.randint(0, 0xffffff)
-        embed = discord.Embed(title="看看是哪個小可憐忘記指令怎麼打啦？", color=color)
+        embed = discord.Embed(title="看看是哪個小可憐忘記指令怎麼打啦？", color=0xFCD992)
         embed.set_author(
             name="Itk Bot",
             icon_url=

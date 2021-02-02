@@ -17,7 +17,7 @@ class ImgSearch(Cog_Ext):
             return False
 
     def embed_gen(self, data):
-        embed = discord.Embed()
+        embed = discord.Embed(title='搜尋結果', color=0xFCD992)
         if data.thumbnail:
             embed.set_thumbnail(url=data.thumbnail)
         if data.similarity:
