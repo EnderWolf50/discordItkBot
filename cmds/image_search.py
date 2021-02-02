@@ -17,6 +17,7 @@ class ImgSearch(Cog_Ext):
             return False
 
     def embed_gen(self, data):
+        print(data.raw)
         embed = discord.Embed(title='搜尋結果', color=0xFCD992)
         if data.thumbnail:
             embed.set_thumbnail(url=data.thumbnail)
@@ -30,9 +31,10 @@ class ImgSearch(Cog_Ext):
         if data.author:
             embed.add_field(name='作者', value=data.author, inline=False)
         if 'source' in data.raw['data'].keys():
-            embed.add_field(name='來源',
-                            value=data.raw['data']['source'],
-                            inline=False)
+            if data.raw['data']['source']:
+                embed.add_field(name='來源',
+                                value=data.raw['data']['source'],
+                                inline=False)
         return embed
 
     # @commands.cooldown(1, 30)
