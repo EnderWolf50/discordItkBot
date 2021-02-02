@@ -40,7 +40,7 @@ class ImgSearch(Cog_Ext):
     async def Image_search(self, ctx, *args):
         await ctx.message.delete(delay=10)
         ctr = 0
-        lst_arg_isfloat = self.isfloat(args[-1])
+        lst_arg_isfloat = self.isfloat(args[-1]) if args else True
         min_similarity = float(args[-1]) if (args
                                              and lst_arg_isfloat) else 52.0
 
