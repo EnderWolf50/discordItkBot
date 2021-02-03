@@ -7,8 +7,8 @@ from saucenao_api import SauceNao
 from saucenao_api.errors import LongLimitReachedError
 
 KEYS = [os.getenv('SAUCE_NAO_KEY_1'), os.getenv('SAUCE_NAO_KEY_2')]
-SN1 = SauceNao(api_key=KEYS[0], numres=3)
-SN2 = SauceNao(api_key=KEYS[1], numres=3)
+SN1 = SauceNao(api_key=KEYS[0], dbmask=1666715746400, numres=3)
+SN2 = SauceNao(api_key=KEYS[1], dbmask=1666715746400, numres=3)
 IMG_RE = re.compile(
     r'(https?:\/\/[^\s]*(\?format=\w*&name=\d*x\d*|(\.png|\.jpg|\.jpeg)))')
 
@@ -153,13 +153,15 @@ class ImgSearch(Cog_Ext):
                     res_embed_list.append(self.embed_gen(i, r, ctr))
                 if not similar_ctr:
                     res_embed_list.append(self.no_result_embed_gen(i, q, ctr))
-                if not sn1_limit and res.long_remaining == 0: sn1_limit = True
+
+                if not sn1_limit and res.long_remaining == 0:
+                    sn1_limit = True
                 elif not sn2_limit and res.long_remaining == 0:
                     sn2_limit = True
 
             msg = await ctx.send(content=f'<@{ctx.author.id}>',
                                  embed=res_embed_list[0],
-                                 delete_after=300)
+                                 delete_after=240)
             res_list[msg] = [ctx.author, res_embed_list]
             for i in range(len(res_embed_list)):
                 await msg.add_reaction(list(reaction_emos.keys())[i])
