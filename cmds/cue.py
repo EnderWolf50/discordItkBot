@@ -124,7 +124,7 @@ class Cue(Cog_Ext):
         for i, w in enumerate(member_cue['list'][:-22:-1], 1):
             embed.add_field(name=i, value=w, inline=True)
 
-        curr_embed = [await ctx.send(embed=embed), 0, member.id]
+        curr_embed = [await ctx.send(embed=embed), total_page, member.id]
         await curr_embed[0].add_reaction("<:first_page:806497548343705610>")
         await curr_embed[0].add_reaction("<:prev_page:805002492848767017>")
         await curr_embed[0].add_reaction("<:next_page:805002492525805589>")
@@ -147,9 +147,9 @@ class Cue(Cog_Ext):
         elif str(reaction.emoji) == "<:next_page:805002492525805589>":
             if curr_embed[1] != total_page: curr_embed[1] += 1
         elif str(reaction.emoji) == "<:first_page:806497548343705610>":
-            curr_embed[1] == 0
+            curr_embed[1] = 0
         elif str(reaction.emoji) == "<:last_page:806497548558532649>":
-            curr_embed[1] == total_page
+            curr_embed[1] = total_page
 
         member = (await reaction.message.guild.fetch_member(curr_embed[2]))
         embed = reaction.message.embeds[0]
@@ -161,8 +161,6 @@ class Cue(Cog_Ext):
                 curr_embed[1] * 21 + 1):
             embed.add_field(name=i, value=w, inline=True)
         await reaction.message.edit(embed=embed)
-        await reaction.message.add_reaction("<:prev_page:805002492848767017>")
-        await reaction.message.add_reaction("<:next_page:805002492525805589>")
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg):
