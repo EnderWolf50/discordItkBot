@@ -121,7 +121,10 @@ class ImgSearch(Cog_Ext):
                 a for a in (args[:-1] if lst_arg_isfloat else args)
                 if re.match(IMG_RE, a)
             ]
-        if not queue: return
+        if not queue:
+            await ctx.send('你是不是沒有放上要找的圖<:thonk:781092810572562432>',
+                           delete_after=10)
+            return
 
         for i, q in enumerate(queue[:6], 1):
             similar_ctr = 0
