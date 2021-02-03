@@ -5,7 +5,9 @@ from core.classes import Cog_Ext
 import os
 from saucenao_api import SauceNao
 
-sn = SauceNao(api_key=os.getenv('SAUCE_NAO_KEY'), numres=3)
+KEYS = [os.getenv('SAUCE_NAO_KEY_1'), os.getenv('SAUCE_NAO_ENV_2')]
+SN1 = SauceNao(api_key=KEYS[0], numres=3)
+SN2 = SauceNao(api_key=KEYS[1], numres=3)
 reaction_emos = {
     "1\N{COMBINING ENCLOSING KEYCAP}": 0,
     "2\N{COMBINING ENCLOSING KEYCAP}": 1,
@@ -44,6 +46,7 @@ reaction_emos = {
     "\N{REGIONAL INDICATOR SYMBOL LETTER Z}": 34
 }
 
+ctr = 0
 res_list = {}
 
 
@@ -58,7 +61,7 @@ class ImgSearch(Cog_Ext):
     def embed_gen(self, i, res, remaining):
         embed = discord.Embed(title='搜尋結果', color=0xFCD992)
         embed.set_footer(
-            text=f'第 {i} 張圖  |  24h 內流量: {200 - remaining} / 200',
+            text=f'第 {i} 張圖  |  24h 內流量: {400 - remaining} / 400',
             icon_url=
             'https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128'
         )
@@ -83,7 +86,7 @@ class ImgSearch(Cog_Ext):
     def no_result_embed_gen(self, i, url, remaining):
         embed = discord.Embed(title='搜尋結果', color=0xDB4A30)
         embed.set_footer(
-            text=f'第 {i} 張圖  |  24h 內流量: {200 - remaining} / 200',
+            text=f'第 {i} 張圖  |  24h 內流量: {400 - remaining} / 400',
             icon_url=
             'https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128'
         )
@@ -111,14 +114,14 @@ class ImgSearch(Cog_Ext):
 
         for i, q in enumerate(queue[:6], 1):
             similar_ctr = 0
-            res = sn.from_url(url=q)
+            ctr += 1
+            res = SN1.from_url(url=q) if ctr % 2 == 0 else SN2.from_url(url=q)
             for r in res:
                 if r.similarity < min_similarity: continue
                 similar_ctr += 1
-                res_embed_list.append(self.embed_gen(i, r, res.long_remaining))
+                res_embed_list.append(self.embed_gen(i, r, ctr))
             if not similar_ctr:
-                res_embed_list.append(
-                    self.no_result_embed_gen(i, q, res.long_remaining))
+                res_embed_list.append(self.no_result_embed_gen(i, q, ctr))
 
         msg = await ctx.send(embed=res_embed_list[0], delete_after=180)
         res_list[msg] = [ctx.author, res_embed_list]
