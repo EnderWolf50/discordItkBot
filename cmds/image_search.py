@@ -96,7 +96,8 @@ class ImgSearch(Cog_Ext):
 
     @commands.command(aliases=['img_search', 'is'])
     async def Image_search(self, ctx, *args):
-        await ctx.message.delete(delay=15)
+        if ctx.channel.type != discord.ChannelType.private:
+            await ctx.message.delete(delay=15)
         res_embed_list = []
         lst_arg_isfloat = self.isfloat(args[-1]) if args else True
         min_similarity = float(args[-1]) if (args

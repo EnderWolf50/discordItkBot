@@ -119,30 +119,37 @@ class Cue(Cog_Ext):
         embed = discord.Embed()
         embed.set_author(name=f'{member.display_name} 錯字大全')
         embed.set_thumbnail(url=member.avatar_url)
-        embed.set_footer(text=f'頁 1 / {total_page + 1}')
+        embed.set_footer(text=f'頁 {total_page + 1} / {total_page + 1}')
 
-        for i, w in enumerate(member_cue['list'][:21], 1):
+        for i, w in enumerate(member_cue['list'][:-22:-1], 1):
             embed.add_field(name=i, value=w, inline=True)
 
         curr_embed = [await ctx.send(embed=embed), 0, member.id]
-        await curr_embed[0].add_reaction("<:L_arrow:805002492848767017>")
-        await curr_embed[0].add_reaction("<:R_arrow:805002492525805589>")
+        await curr_embed[0].add_reaction("<:first_page:806497548343705610>")
+        await curr_embed[0].add_reaction("<:prev_page:805002492848767017>")
+        await curr_embed[0].add_reaction("<:next_page:805002492525805589>")
+        await curr_embed[0].add_reaction("<:last_page:806497548558532649>")
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
         if user.bot: return
         if not curr_embed or reaction.message != curr_embed[0]: return
-        await reaction.message.clear_reactions()
+        # await reaction.message.clear_reactions()
+        await reaction.remove(user)
 
         member_cue = None
         member_cue = coll.find_one({'_id': curr_embed[2]})
         if not member_cue: return
         total_page = math.ceil(len(member_cue['list']) / 21) - 1
 
-        if str(reaction.emoji) == "<:L_arrow:805002492848767017>":
+        if str(reaction.emoji) == "<:prev_page:805002492848767017>":
             if curr_embed[1] != 0: curr_embed[1] -= 1
-        elif str(reaction.emoji) == "<:R_arrow:805002492525805589>":
+        elif str(reaction.emoji) == "<:next_page:805002492525805589>":
             if curr_embed[1] != total_page: curr_embed[1] += 1
+        elif str(reaction.emoji) == "<:first_page:806497548343705610>":
+            curr_embed[1] == 0
+        elif str(reaction.emoji) == "<:last_page:806497548558532649>":
+            curr_embed[1] == total_page
 
         member = (await reaction.message.guild.fetch_member(curr_embed[2]))
         embed = reaction.message.embeds[0]
@@ -154,8 +161,8 @@ class Cue(Cog_Ext):
                 curr_embed[1] * 21 + 1):
             embed.add_field(name=i, value=w, inline=True)
         await reaction.message.edit(embed=embed)
-        await reaction.message.add_reaction("<:L_arrow:805002492848767017>")
-        await reaction.message.add_reaction("<:R_arrow:805002492525805589>")
+        await reaction.message.add_reaction("<:prev_page:805002492848767017>")
+        await reaction.message.add_reaction("<:next_page:805002492525805589>")
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg):
