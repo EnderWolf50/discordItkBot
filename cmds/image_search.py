@@ -2,10 +2,10 @@ import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
 
-import os
+import os, re
 from saucenao_api import SauceNao
 
-KEYS = [os.getenv('SAUCE_NAO_KEY_1'), os.getenv('SAUCE_NAO_ENV_2')]
+KEYS = [os.getenv('SAUCE_NAO_KEY_1'), os.getenv('SAUCE_NAO_KEY_2')]
 SN1 = SauceNao(api_key=KEYS[0], numres=3)
 SN2 = SauceNao(api_key=KEYS[1], numres=3)
 reaction_emos = {
@@ -99,18 +99,25 @@ class ImgSearch(Cog_Ext):
 
     @commands.command(aliases=['img_search', 'is'])
     async def Image_search(self, ctx, *args):
+        global ctr
         if ctx.channel.type != discord.ChannelType.private:
             await ctx.message.delete(delay=15)
         res_embed_list = []
         lst_arg_isfloat = self.isfloat(args[-1]) if args else True
         min_similarity = float(args[-1]) if (args
                                              and lst_arg_isfloat) else 52.0
-        if not ctx.message.attachments and not (args[:-1]
-                                                if lst_arg_isfloat else args):
-            return
-
-        queue = [a.url for a in ctx.message.attachments
-                 ] + [a for a in (args[:-1] if lst_arg_isfloat else args)]
+        queue = []
+        if ctx.message.reference:
+            ref_msg = await ctx.channel.fetch_message(
+                ctx.message.reference.message_id)
+            queue += [a.url for a in ref_msg.attachments] + [
+                a for a in re.findall(r'https?:\/\/[^\s]*', ref_msg.content)
+            ]
+        if ctx.message.attachments:
+            queue += [a.url for a in ctx.message.attachments]
+        if (args[:-1] if lst_arg_isfloat else args):
+            queue += [a for a in (args[:-1] if lst_arg_isfloat else args)]
+        if not queue: return
 
         for i, q in enumerate(queue[:6], 1):
             similar_ctr = 0
