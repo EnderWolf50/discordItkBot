@@ -61,7 +61,7 @@ class ImgSearch(Cog_Ext):
     def embed_gen(self, i, res, remaining):
         embed = discord.Embed(title='搜尋結果', color=0xFCD992)
         embed.set_footer(
-            text=f'第 {i} 張圖  |  24h 內流量: {400 - remaining} / 400',
+            text=f'第 {i} 張圖  |  24h 內流量: {200 - remaining} / 200',
             icon_url=
             'https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128'
         )
@@ -86,7 +86,7 @@ class ImgSearch(Cog_Ext):
     def no_result_embed_gen(self, i, url, remaining):
         embed = discord.Embed(title='搜尋結果', color=0xDB4A30)
         embed.set_footer(
-            text=f'第 {i} 張圖  |  24h 內流量: {400 - remaining} / 400',
+            text=f'第 {i} 張圖  |  24h 內流量: {200 - remaining} / 200',
             icon_url=
             'https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128'
         )
@@ -119,9 +119,10 @@ class ImgSearch(Cog_Ext):
             for r in res:
                 if r.similarity < min_similarity: continue
                 similar_ctr += 1
-                res_embed_list.append(self.embed_gen(i, r, ctr))
+                res_embed_list.append(self.embed_gen(i, r, res.long_remaining))
             if not similar_ctr:
-                res_embed_list.append(self.no_result_embed_gen(i, q, ctr))
+                res_embed_list.append(
+                    self.no_result_embed_gen(i, q, res.long_remaining))
 
         msg = await ctx.send(embed=res_embed_list[0], delete_after=180)
         res_list[msg] = [ctx.author, res_embed_list]
