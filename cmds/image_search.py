@@ -8,6 +8,9 @@ from saucenao_api import SauceNao
 KEYS = [os.getenv('SAUCE_NAO_KEY_1'), os.getenv('SAUCE_NAO_KEY_2')]
 SN1 = SauceNao(api_key=KEYS[0], numres=3)
 SN2 = SauceNao(api_key=KEYS[1], numres=3)
+IMG_RE = re.compile(
+    r'(https?:\/\/[^\s]*(\?format=\w*&name=\d*x\d*|(\.png|\.jpg|\.jpeg)))')
+
 reaction_emos = {
     "1\N{COMBINING ENCLOSING KEYCAP}": 0,
     "2\N{COMBINING ENCLOSING KEYCAP}": 1,
@@ -45,7 +48,6 @@ reaction_emos = {
     "\N{REGIONAL INDICATOR SYMBOL LETTER Y}": 33,
     "\N{REGIONAL INDICATOR SYMBOL LETTER Z}": 34
 }
-
 ctr = 0
 res_list = {}
 
@@ -110,15 +112,14 @@ class ImgSearch(Cog_Ext):
         if ctx.message.reference:
             ref_msg = await ctx.channel.fetch_message(
                 ctx.message.reference.message_id)
-            queue += [a.url for a in ref_msg.attachments] + [
-                a for a in re.findall(r'https?:\/\/[^\s]*', ref_msg.content)
-            ]
+            queue += [a.url for a in ref_msg.attachments
+                      ] + [a[0] for a in re.findall(IMG_RE, ref_msg.content)]
         if ctx.message.attachments:
             queue += [a.url for a in ctx.message.attachments]
         if (args[:-1] if lst_arg_isfloat else args):
             queue += [
                 a for a in (args[:-1] if lst_arg_isfloat else args)
-                if re.match(r'https?:\/\/[^\s]*', a)
+                if re.match(IMG_RE, a)
             ]
         if not queue: return
 
