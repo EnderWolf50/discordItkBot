@@ -131,7 +131,7 @@ class ImgSearch(Cog_Ext):
                 res_embed_list.append(
                     self.no_result_embed_gen(i, q, res.long_remaining))
 
-        msg = await ctx.send(embed=res_embed_list[0], delete_after=180)
+        msg = await ctx.send(embed=res_embed_list[0], delete_after=300)
         res_list[msg] = [ctx.author, res_embed_list]
         for i in range(len(res_embed_list)):
             await msg.add_reaction(list(reaction_emos.keys())[i])
