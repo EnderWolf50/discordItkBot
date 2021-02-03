@@ -116,7 +116,10 @@ class ImgSearch(Cog_Ext):
         if ctx.message.attachments:
             queue += [a.url for a in ctx.message.attachments]
         if (args[:-1] if lst_arg_isfloat else args):
-            queue += [a for a in (args[:-1] if lst_arg_isfloat else args)]
+            queue += [
+                a for a in (args[:-1] if lst_arg_isfloat else args)
+                if re.match(r'https?:\/\/[^\s]*', a)
+            ]
         if not queue: return
 
         for i, q in enumerate(queue[:6], 1):
