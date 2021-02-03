@@ -106,7 +106,8 @@ class Events(Cog_Ext):
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg):
-        if msg.guild.id == 725295821456801842: return
+        if msg.channel.type != discord.ChannelType.private and discord.ChannelType.msg.guild.id == 725295821456801842:
+            return
         # infinity loading cat
         if re.search(
                 rf'({loadingCatEmos[0]}|{loadingCatEmos[1]}|{loadingCatEmos[2]})',
