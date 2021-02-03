@@ -4,6 +4,7 @@ from core.classes import Cog_Ext
 
 import os, re
 from saucenao_api import SauceNao
+from saucenao_api.errors import LongLimitReachedError
 
 KEYS = [os.getenv('SAUCE_NAO_KEY_1'), os.getenv('SAUCE_NAO_KEY_2')]
 SN1 = SauceNao(api_key=KEYS[0], numres=3)
@@ -48,6 +49,9 @@ reaction_emos = {
     "\N{REGIONAL INDICATOR SYMBOL LETTER Y}": 33,
     "\N{REGIONAL INDICATOR SYMBOL LETTER Z}": 34
 }
+
+sn1_limit = False
+sn2_limit = False
 ctr = 0
 res_list = {}
 
@@ -101,47 +105,69 @@ class ImgSearch(Cog_Ext):
 
     @commands.command(aliases=['img_search', 'is'])
     async def Image_search(self, ctx, *args):
-        global ctr
-        if ctx.channel.type != discord.ChannelType.private:
-            await ctx.message.delete(delay=15)
-        res_embed_list = []
-        lst_arg_isfloat = self.isfloat(args[-1]) if args else True
-        min_similarity = float(args[-1]) if (args
-                                             and lst_arg_isfloat) else 52.0
-        queue = []
-        if ctx.message.reference:
-            ref_msg = await ctx.channel.fetch_message(
-                ctx.message.reference.message_id)
-            queue += [a.url for a in ref_msg.attachments
-                      ] + [a[0] for a in re.findall(IMG_RE, ref_msg.content)]
-        if ctx.message.attachments:
-            queue += [a.url for a in ctx.message.attachments]
-        if (args[:-1] if lst_arg_isfloat else args):
-            queue += [
-                a for a in (args[:-1] if lst_arg_isfloat else args)
-                if re.match(IMG_RE, a)
-            ]
-        if not queue:
-            await ctx.send('你是不是沒有放上要找的圖<:thonk:781092810572562432>',
-                           delete_after=10)
-            return
+        global sn1_limit
+        global sn2_limit
+        try:
+            global ctr
+            if ctx.channel.type != discord.ChannelType.private:
+                await ctx.message.delete(delay=15)
+            if sn2_limit:
+                await ctx.send(
+                    f'<@{ctx.author.id}> 我爬...不動...了... <:cat_no_energy:806544770746023977>',
+                    delete_after=7)
+                return
+            res_embed_list = []
+            lst_arg_isfloat = self.isfloat(args[-1]) if args else True
+            min_similarity = float(args[-1]) if (args
+                                                 and lst_arg_isfloat) else 52.0
+            queue = []
+            if ctx.message.reference:
+                ref_msg = await ctx.channel.fetch_message(
+                    ctx.message.reference.message_id)
+                queue += [a.url for a in ref_msg.attachments] + [
+                    a[0] for a in re.findall(IMG_RE, ref_msg.content)
+                ]
+            if ctx.message.attachments:
+                queue += [a.url for a in ctx.message.attachments]
+            if (args[:-1] if lst_arg_isfloat else args):
+                queue += [
+                    a for a in (args[:-1] if lst_arg_isfloat else args)
+                    if re.match(IMG_RE, a)
+                ]
+            if not queue:
+                await ctx.send(
+                    f'<@{ctx.author.id}> 你是不是沒有放上要找的圖<:thonk:781092810572562432>',
+                    delete_after=10)
+                return
 
-        for i, q in enumerate(queue[:6], 1):
-            similar_ctr = 0
-            ctr += 1
-            res = SN1.from_url(url=q) if ctr % 2 == 0 else SN2.from_url(url=q)
-            for r in res:
-                if r.similarity < min_similarity: continue
-                similar_ctr += 1
-                res_embed_list.append(self.embed_gen(i, r, res.long_remaining))
-            if not similar_ctr:
-                res_embed_list.append(
-                    self.no_result_embed_gen(i, q, res.long_remaining))
+            for i, q in enumerate(queue[:6], 1):
+                if sn2_limit: break
+                similar_ctr = 0
 
-        msg = await ctx.send(embed=res_embed_list[0], delete_after=300)
-        res_list[msg] = [ctx.author, res_embed_list]
-        for i in range(len(res_embed_list)):
-            await msg.add_reaction(list(reaction_emos.keys())[i])
+                res = SN1.from_url(url=q) if not sn1_limit else SN2.from_url(
+                    url=q)
+                ctr = 200 - res.long_remaining if not sn1_limit else ctr + 1
+                for r in res:
+                    if r.similarity < min_similarity: continue
+                    similar_ctr += 1
+                    res_embed_list.append(
+                        self.embed_gen(i, r, res.long_remaining))
+                if not similar_ctr:
+                    res_embed_list.append(
+                        self.no_result_embed_gen(i, q, res.long_remaining))
+                if not sn1_limit and res.long_remaining == 0: sn1_limit = True
+                elif not sn2_limit and res.long_remaining == 0:
+                    sn2_limit = True
+
+            msg = await ctx.send(content=f'<@{ctx.author.id}>',
+                                 embed=res_embed_list[0],
+                                 delete_after=300)
+            res_list[msg] = [ctx.author, res_embed_list]
+            for i in range(len(res_embed_list)):
+                await msg.add_reaction(list(reaction_emos.keys())[i])
+        except LongLimitReachedError:
+            if not sn1_limit: sn1_limit = True
+            else: sn2_limit = True
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
@@ -149,12 +175,14 @@ class ImgSearch(Cog_Ext):
         if not res_list or reaction.message not in res_list.keys(): return
         await reaction.remove(user)
         if str(reaction.emoji) not in reaction_emos.keys(): return
-        if user != res_list[reaction.message][0]: return
+        # if user != res_list[reaction.message][0]: return
 
         if reaction_emos[str(reaction.emoji)] < len(
                 res_list[reaction.message][1]):
-            await reaction.message.edit(embed=res_list[reaction.message][1][
-                reaction_emos[str(reaction.emoji)]])
+            await reaction.message.edit(
+                content=reaction.message.content,
+                embed=res_list[reaction.message][1][reaction_emos[str(
+                    reaction.emoji)]])
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg):
