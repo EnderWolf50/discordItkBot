@@ -64,10 +64,10 @@ class ImgSearch(Cog_Ext):
         except:
             return False
 
-    def embed_gen(self, i, res, remaining):
+    def embed_gen(self, i, res, ctr):
         embed = discord.Embed(title='搜尋結果', color=0xFCD992)
         embed.set_footer(
-            text=f'第 {i} 張圖  |  24h 內流量: {200 - remaining} / 200',
+            text=f'第 {i} 張圖  |  24h 內流量: {ctr} / 400',
             icon_url=
             'https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128'
         )
@@ -89,10 +89,10 @@ class ImgSearch(Cog_Ext):
                                 inline=False)
         return embed
 
-    def no_result_embed_gen(self, i, url, remaining):
+    def no_result_embed_gen(self, i, url, ctr):
         embed = discord.Embed(title='搜尋結果', color=0xDB4A30)
         embed.set_footer(
-            text=f'第 {i} 張圖  |  24h 內流量: {200 - remaining} / 200',
+            text=f'第 {i} 張圖  |  24h 內流量: {ctr} / 400',
             icon_url=
             'https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128'
         )
@@ -150,11 +150,9 @@ class ImgSearch(Cog_Ext):
                 for r in res:
                     if r.similarity < min_similarity: continue
                     similar_ctr += 1
-                    res_embed_list.append(
-                        self.embed_gen(i, r, res.long_remaining))
+                    res_embed_list.append(self.embed_gen(i, r, ctr))
                 if not similar_ctr:
-                    res_embed_list.append(
-                        self.no_result_embed_gen(i, q, res.long_remaining))
+                    res_embed_list.append(self.no_result_embed_gen(i, q, ctr))
                 if not sn1_limit and res.long_remaining == 0: sn1_limit = True
                 elif not sn2_limit and res.long_remaining == 0:
                     sn2_limit = True
@@ -166,8 +164,12 @@ class ImgSearch(Cog_Ext):
             for i in range(len(res_embed_list)):
                 await msg.add_reaction(list(reaction_emos.keys())[i])
         except LongLimitReachedError:
-            if not sn1_limit: sn1_limit = True
-            else: sn2_limit = True
+            if not sn1_limit:
+                sn1_limit = True
+                ctr = 200
+            else:
+                sn2_limit = True
+                ctr = 400
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
