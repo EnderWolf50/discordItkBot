@@ -83,6 +83,10 @@ class Events(Cog_Ext):
         elif "好耶" in msg.content:
             pic = discord.File(random.choice(yeahlist))
             await msg.channel.send(file=pic, delete_after=10)
+        # 交朋友
+        elif "交朋友" in msg.content:
+            pic = discord.File("./images/make_friends.jpg")
+            await msg.channel.send(file=pic, delete_after=10)
         # 很嗆是吧
         elif re.search(r"很嗆(?:是吧|[喔欸])?|嗆[喔欸]", msg.content.lower()):
             pic = discord.File('./images/flaming.jpg')
