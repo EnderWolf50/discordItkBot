@@ -16,6 +16,8 @@ administrators = [
 ]
 
 
+# TODO: 改寫判斷
+# TODO: 嘗試以訊息 ID 刪除
 class Clean(Cog_Ext):
     @commands.command()
     async def clean(self, ctx, number: int = 1, ID: discord.Member = None):

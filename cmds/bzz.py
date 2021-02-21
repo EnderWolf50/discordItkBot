@@ -5,7 +5,6 @@ from core.classes import Cog_Ext
 import random, datetime
 from datetime import datetime as dt
 
-i11_emo = '<:i11_chiwawa:783346447319171075>'
 bzz_options = [
     "大凶",
     "小凶",
@@ -16,8 +15,7 @@ bzz_options = [
     "大吉",
     "吉掰",
     "大吉掰",
-    i11_emo,
-    i11_emo * 2 + "復" + i11_emo * 2,
+    '<:i11_chiwawa:783346447319171075>',
 ]
 
 
