@@ -2,21 +2,21 @@ import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
 
-import os, re, pymongo
+import re
 from operator import itemgetter
-
-client = pymongo.MongoClient(
-    f"mongodb+srv://Kerati:{os.getenv('MONGO_PASSWORD')}@kerati.o6ymg.mongodb.net/Kerati?retryWrites=true&w=majority"
-)
-
-db = client['discord_669934356172636199']
-coll = db['emoji_counter']
 
 
 class Emo_count(Cog_Ext):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.db = self.mongo_client['discord_669934356172636199']
+        self.collection = self.db['emoji_counter']
+
     @commands.Cog.listener()
     async def on_ready(self):
-        self.mongo_emojis = [db_emo['_id'] for db_emo in coll.find()]
+        self.mongo_emojis = [
+            db_emo['_id'] for db_emo in self.collection.find()
+        ]
         self.guild_emojis = [
             g_emo.id for g_emo in (
                 await self.bot.fetch_guild(669934356172636199)).emojis
@@ -24,11 +24,11 @@ class Emo_count(Cog_Ext):
 
         for db_emo in self.mongo_emojis:
             if db_emo not in self.guild_emojis:
-                coll.delete_one({'_id': db_emo})
+                self.collection.delete_one({'_id': db_emo})
         for g_emo in self.guild_emojis:
             if g_emo not in self.mongo_emojis:
                 emo = self.bot.get_emoji(g_emo)
-                coll.insert_one({
+                self.collection.insert_one({
                     '_id': g_emo,
                     'name': emo.name,
                     'animated': emo.animated,
@@ -43,7 +43,10 @@ class Emo_count(Cog_Ext):
             return
         msg_emojis = list(set(re.findall(r'<a?:.*?:(\d*)>', msg.content)))
         for m_emo in msg_emojis:
-            coll.update_one({'_id': int(m_emo)}, {'$inc': {'count': 1}})
+            self.collection.update_one({'_id': int(m_emo)},
+                                       {'$inc': {
+                                           'count': 1
+                                       }})
 
     @commands.command(aliases=['ecc'])
     async def emo_counter_clear(self, ctx):
@@ -51,7 +54,7 @@ class Emo_count(Cog_Ext):
         if not (await self.bot.is_owner(ctx.author)): return
 
         for db_emo in self.mongo_emojis:
-            coll.delete_one({'_id': db_emo})
+            self.collection.delete_one({'_id': db_emo})
 
     @commands.command(aliases=['ecr'])
     async def emo_counter_reset(self, ctx):
@@ -64,9 +67,9 @@ class Emo_count(Cog_Ext):
         ]
         for db_emo in self.mongo_emojis:
             if db_emo not in self.guild_emojis:
-                coll.delete_one({'_id': db_emo})
+                self.collection.delete_one({'_id': db_emo})
                 continue
-            coll.update_one({
+            self.collection.update_one({
                 '_id': db_emo,
             }, {
                 '$set': {
@@ -77,13 +80,15 @@ class Emo_count(Cog_Ext):
         for g_emo in self.guild_emojis:
             if g_emo not in self.mongo_emojis:
                 emo = self.bot.get_emoji(g_emo)
-                coll.insert_one({
+                self.collection.insert_one({
                     '_id': g_emo,
                     'name': emo.name,
                     'animated': emo.animated,
                     'count': 0,
                 })
-        self.mongo_emojis = [db_emo['_id'] for db_emo in coll.find()]
+        self.mongo_emojis = [
+            db_emo['_id'] for db_emo in self.collection.find()
+        ]
 
     @commands.command(aliases=['er'])
     async def emo_rank(self, ctx, arg=None):
@@ -98,7 +103,7 @@ class Emo_count(Cog_Ext):
             'name': db_emo['name'],
             'animated': db_emo['animated'],
             'count': db_emo['count'],
-        } for db_emo in coll.find()]
+        } for db_emo in self.collection.find()]
 
         emo_rank = sorted(db_emo_list, key=itemgetter('count'), reverse=True)
 
