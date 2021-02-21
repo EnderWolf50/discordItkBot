@@ -1,37 +1,34 @@
 import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
-from core.rwFile import get_setting, rFile
+from core.rwFile import get_setting
 
 import random
 
 Owner = get_setting("Owner")
-from datetime import datetime as dt
 
 
 class Basic(Cog_Ext):
-    @commands.command()
-    async def load(self, ctx, folder, extension):
-        if ctx.author == self.bot.get_user(Owner):
-            self.bot.load_extension(f"{folder}.{extension}")
-            await ctx.message.delete()
-            await ctx.send(f"**{extension}** has been loaded!", delete_after=3)
+    @commands.command(aliases=['load'])
+    async def ext_load(self, ctx, folder, extension):
+        if not (await self.bot.is_owner(ctx.author)): return
+        self.bot.load_extension(f"{folder}.{extension}")
+        await ctx.message.delete()
+        await ctx.send(f"**{extension}** has been loaded!", delete_after=3)
 
-    @commands.command()
-    async def unload(self, ctx, folder, extension):
-        if ctx.author == self.bot.get_user(Owner):
-            self.bot.unload_extension(f"{folder}.{extension}")
-            await ctx.message.delete()
-            await ctx.send(f"**{extension}** has been unloaded!",
-                           delete_after=3)
+    @commands.command(aliases=['unload'])
+    async def ext_unload(self, ctx, folder, extension):
+        if not (await self.bot.is_owner(ctx.author)): return
+        self.bot.unload_extension(f"{folder}.{extension}")
+        await ctx.message.delete()
+        await ctx.send(f"**{extension}** has been unloaded!", delete_after=3)
 
-    @commands.command()
-    async def reload(self, ctx, folder, extension):
-        if ctx.author == self.bot.get_user(Owner):
-            self.bot.reload_extension(f"{folder}.{extension}")
-            await ctx.message.delete()
-            await ctx.send(f"**{extension}** has been reloaded!",
-                           delete_after=3)
+    @commands.command(aliases=['reload'])
+    async def ext_reload(self, ctx, folder, extension):
+        if not (await self.bot.is_owner(ctx.author)): return
+        self.bot.reload_extension(f"{folder}.{extension}")
+        await ctx.message.delete()
+        await ctx.send(f"**{extension}** has been reloaded!", delete_after=3)
 
     @commands.command()
     async def help(self, ctx):
@@ -50,10 +47,6 @@ class Basic(Cog_Ext):
     @commands.command()
     async def ping(self, ctx):
         await ctx.send(round(self.bot.latency * 1000))
-
-    @commands.command()
-    async def test(self, ctx):
-        print(dt.now())
 
 
 def setup(bot):

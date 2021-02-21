@@ -56,7 +56,7 @@ class Emo_count(Cog_Ext):
         for db_emo in self.mongo_emojis:
             self.collection.delete_one({'_id': db_emo})
 
-    @commands.command(aliases=['ecr'])
+    @commands.command(aliases=['ecr', 'err'])
     async def emo_counter_reset(self, ctx):
         await ctx.message.delete()
         if not (await self.bot.is_owner(ctx.author)): return
