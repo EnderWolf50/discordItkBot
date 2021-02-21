@@ -6,6 +6,7 @@ from core.rwFile import get_setting, rFile
 import random
 
 Owner = get_setting("Owner")
+from datetime import datetime as dt
 
 
 class Basic(Cog_Ext):
@@ -49,8 +50,6 @@ class Basic(Cog_Ext):
     @commands.command()
     async def ping(self, ctx):
         await ctx.send(round(self.bot.latency * 1000))
-
-    from datetime import datetime as dt
 
     @commands.command()
     async def test(self, ctx):
