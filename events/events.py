@@ -9,14 +9,21 @@ import os, random, re, asyncio, pymongo
 
 File = rFile('others')
 
-idk = list(File['IDK_url'].keys())
-idk_weights = list(File['IDK_url'].values())
-
 mentionReact = File["Mention_react"]
 
 Owner = get_setting("Owner")
 
-yeahlist = [
+idk_dict = {
+    "./images/idk_orig.jpg": 30,
+    "./images/idk_kailiu.jpg": 20,
+    "./images/idk_too.jpg": 15,
+    "./images/idk_flaming.jpg": 10,
+    "./images/idk_whatever.jpg": 10,
+    "./images/idk_ero.jpg": 10,
+    "./images/idk_gif.gif": 5,
+}
+
+yeah_list = [
     "./images/yeah.jpg", "./images/noyeah.jpg", "./images/yeahsanxiao.jpg",
     "./images/yeahstarburst.jpg"
 ]
@@ -67,34 +74,31 @@ class Events(Cog_Ext):
         if msg.author.bot: return
         # IDK
         if re.search(r"(窩不知道|我不知道|idk)", msg.content.lower()):
-            Picture = str(random.choices(idk,
-                                         weights=idk_weights)).strip("[]'")
+            pic = random.choices(list(idk_dict.keys()),
+                                 weights=list(idk_dict.values()))[0]
+            pic_file = discord.File(pic)
 
-            if Picture == "https://i.imgur.com/x1qmYCT.gif":
-                await msg.channel.send(Picture, delete_after=18.68)
+            if pic.endswith(".gif"):
+                await msg.channel.send(file=pic_file, delete_after=18.68)
             else:
-                await msg.channel.send(Picture, delete_after=7)
+                await msg.channel.send(file=pic_file, delete_after=7)
         # loading cat
-        elif re.search(r"(ldc|ldcat|\b痾\b|\b痾...\b)", msg.content.lower()):
+        elif re.search(r"(ldc|ldcat|\b痾\b)", msg.content.lower()):
             await msg.channel.send(loadingCatEmos[0])
             await msg.channel.send(loadingCatEmos[1])
             await msg.channel.send(loadingCatEmos[2])
         # 好耶
         elif "好耶" in msg.content:
-            pic = discord.File(random.choice(yeahlist))
-            await msg.channel.send(file=pic, delete_after=10)
+            pic_file = discord.File(random.choice(yeah_list))
+            await msg.channel.send(file=pic_file, delete_after=5)
         # 交朋友
         elif "交朋友" in msg.content:
-            pic = discord.File("./images/make_friends.jpg")
-            await msg.channel.send(file=pic, delete_after=10)
+            pic_file = discord.File("./images/make_friends.jpg")
+            await msg.channel.send(file=pic_file, delete_after=10)
         # 很嗆是吧
         elif re.search(r"很嗆(?:是吧|[喔欸])?|嗆[喔欸]", msg.content.lower()):
-            pic = discord.File('./images/flaming.jpg')
-            await msg.channel.send(file=pic, delete_after=7)
-        # 珍妮佛羅培茲
-        elif re.search(r"嘿[！!]?雪莉|哇", msg.content.lower()):
-            pic = discord.File('./images/wow_Jennifer.jpg')
-            await msg.channel.send(file=pic, delete_after=7)
+            pic_file = discord.File('./images/flaming.jpg')
+            await msg.channel.send(file=pic_file, delete_after=7)
         # mention
         elif self.bot.user in msg.mentions:
             await msg.channel.send(random.choice(mentionReact))

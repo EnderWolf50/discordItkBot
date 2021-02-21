@@ -50,6 +50,12 @@ class Basic(Cog_Ext):
     async def ping(self, ctx):
         await ctx.send(round(self.bot.latency * 1000))
 
+    from datetime import datetime as dt
+
+    @commands.command()
+    async def test(self, ctx):
+        print(dt.now())
+
 
 def setup(bot):
     bot.add_cog(Basic(bot))
