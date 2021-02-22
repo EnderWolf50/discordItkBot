@@ -161,13 +161,13 @@ class Events(Cog_Ext):
     @commands.Cog.listener()
     async def on_command_completion(self, ctx):
         logger.info(
-            f'{ctx.author.display_name} ({ctx.author.name}#{ctx.author.discriminator}) 執行指令 {ctx.content[1:]} 成功'
+            f'{ctx.author.display_name} ({ctx.author.name}#{ctx.author.discriminator}) 執行指令 {ctx.message.content[1:]} 成功'
         )
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, err):
         logger.error(
-            f'{ctx.author.display_name} ({ctx.author.name}#{ctx.author.discriminator}) 執行指令 {ctx.content[1:]} 失敗'
+            f'{ctx.author.display_name} ({ctx.author.name}#{ctx.author.discriminator}) 執行指令 {ctx.message.content[1:]} 失敗'
         )
 
 
