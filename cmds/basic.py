@@ -1,11 +1,8 @@
 import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
-from core.rwFile import get_setting
 
 import random
-
-Owner = get_setting("Owner")
 
 
 class Basic(Cog_Ext):

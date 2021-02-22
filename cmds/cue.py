@@ -2,15 +2,8 @@ import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
 
-import random, os, pymongo, math
+import random, math
 from datetime import datetime, timedelta
-
-client = pymongo.MongoClient(
-    f"mongodb+srv://Kerati:{os.getenv('MONGO_PASSWORD')}@kerati.o6ymg.mongodb.net/Kerati?retryWrites=true&w=majority"
-)
-
-db = client['discord_669934356172636199']
-coll = db['cue_list']
 
 curr_embed = []
 
@@ -127,7 +120,8 @@ class Cue(Cog_Ext):
         embed.set_thumbnail(url=member.avatar_url)
         embed.set_footer(text=f'頁 {total_page + 1} / {total_page + 1}')
 
-        for i, w in enumerate(member_cue['list'][total_page * 21:], 1):
+        for i, w in enumerate(member_cue['list'][total_page * 21:],
+                              total_page * 21 + 1):
             embed.add_field(name=i, value=w, inline=True)
 
         curr_embed = [await ctx.send(embed=embed), total_page, member.id]
