@@ -5,13 +5,15 @@ from core.rwFile import rFile, get_setting
 
 from datetime import datetime as dt
 from datetime import timedelta
-import os, random, re, asyncio, pymongo
+import os, random, re, asyncio, pymongo, logging
 
 File = rFile('others')
 
 mentionReact = File["Mention_react"]
 
 Owner = get_setting("Owner")
+
+logger = logging.getLogger(__name__)
 
 idk_dict = {
     "./images/idk_orig.jpg": 30,
@@ -155,6 +157,18 @@ class Events(Cog_Ext):
             elif reaction.count == 1:
                 await reaction.message.remove_reaction("\N{THUMBS DOWN SIGN}",
                                                        self.bot.user)
+
+    @commands.Cog.listener()
+    async def on_command_completion(self, ctx):
+        logger.info(
+            f'{ctx.author.display_name} ({ctx.author.name}#{ctx.author.discriminator}) 執行指令 {ctx.content[1:]} 成功'
+        )
+
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, err):
+        logger.error(
+            f'{ctx.author.display_name} ({ctx.author.name}#{ctx.author.discriminator}) 執行指令 {ctx.content[1:]} 失敗'
+        )
 
 
 def setup(bot):
