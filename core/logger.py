@@ -18,7 +18,7 @@ logger.addHandler(handler)
 
 sentry_logging = LoggingIntegration(level=logging.INFO,
                                     event_level=logging.ERROR)
-sentry_sdk.init(dsn=os.getenv('SENTRY_DSN'), integrations=[sentry_logging])
+sentry_sdk.init(dsn=os.getenv('SENTRY_DSN'), traces_sample_rate=1.0, integrations=[sentry_logging])
 
 
 def get_logger():
