@@ -14,6 +14,7 @@ class Emo_count(Cog_Ext):
         self.db = self.mongo_client['discord_669934356172636199']
         self.collection = self.db['emoji_counter']
 
+    @commands.Cog.listener()
     async def on_ready(self):
         self.mongo_emojis = [
             db_emo['_id'] for db_emo in self.collection.find()
@@ -36,6 +37,7 @@ class Emo_count(Cog_Ext):
                     'count': 0,
                 })
 
+    @commands.Cog.listener()
     async def on_message(self, msg):
         if msg.channel.type not in {
                 discord.ChannelType.text, discord.ChannelType.group
@@ -48,12 +50,14 @@ class Emo_count(Cog_Ext):
                                            'count': 1
                                        }})
 
+    @commands.Cog.listener()
     async def on_message_delete(self, msg):
         global emo_embed
         if not emo_embed: return
         if msg == emo_embed[0]:
             emo_embed = None
 
+    @commands.Cog.listener()
     async def on_guild_emojis_update(self, guild, before, after):
         if guild.id != 669934356172636199: return
 
