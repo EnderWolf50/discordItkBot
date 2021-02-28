@@ -3,6 +3,9 @@ from discord.ext import commands
 from core.classes import Cog_Ext
 
 import unicodedata
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Others(Cog_Ext):

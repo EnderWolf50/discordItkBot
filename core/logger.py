@@ -16,8 +16,8 @@ handler.setFormatter(logging.Formatter(fmt=LOGGING_FORMAT,
                                        datefmt=DATE_FORMAT))
 logger.addHandler(handler)
 
-sentry_logging = LoggingIntegration(level=logging.INFO,
-                                    event_level=logging.ERROR)
+sentry_logging = LoggingIntegration(level=logging.DEBUG,
+                                    event_level=logging.WARNING)
 sentry_sdk.init(dsn=os.getenv('SENTRY_DSN'), integrations=[sentry_logging])
 
 

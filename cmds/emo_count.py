@@ -2,8 +2,10 @@ import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
 
-import re
+import re, math
 from operator import itemgetter
+
+emo_embed = []
 
 
 class Emo_count(Cog_Ext):
@@ -12,7 +14,6 @@ class Emo_count(Cog_Ext):
         self.db = self.mongo_client['discord_669934356172636199']
         self.collection = self.db['emoji_counter']
 
-    @commands.Cog.listener()
     async def on_ready(self):
         self.mongo_emojis = [
             db_emo['_id'] for db_emo in self.collection.find()
@@ -35,7 +36,6 @@ class Emo_count(Cog_Ext):
                     'count': 0,
                 })
 
-    @commands.Cog.listener()
     async def on_message(self, msg):
         if msg.channel.type not in {
                 discord.ChannelType.text, discord.ChannelType.group
@@ -48,89 +48,108 @@ class Emo_count(Cog_Ext):
                                            'count': 1
                                        }})
 
-    @commands.command(aliases=['ecc'])
-    async def emo_counter_clear(self, ctx):
-        await ctx.message.delete()
-        if not (await self.bot.is_owner(ctx.author)): return
+    async def on_message_delete(self, msg):
+        global emo_embed
+        if not emo_embed: return
+        if msg == emo_embed[0]:
+            emo_embed = None
 
-        for db_emo in self.mongo_emojis:
-            self.collection.delete_one({'_id': db_emo})
+    async def on_guild_emojis_update(self, guild, before, after):
+        if guild.id != 669934356172636199: return
+
+        self.guild_emojis = self.mongo_emojis = [e.id for e in after]
+        if len(before) > len(after):
+            changed = [e for e in before if e not in after]
+            for c_emo in changed:
+                self.collection.delete_one({'_id': c_emo.id})
+        else:
+            changed = [e for e in after if e not in before]
+            for c_emo in changed:
+                self.collection.insert_one({
+                    '_id': c_emo.id,
+                    'name': c_emo.name,
+                    'animated': c_emo.animated,
+                    'count': 0,
+                })
 
     @commands.command(aliases=['ecr', 'err'])
     async def emo_counter_reset(self, ctx):
         await ctx.message.delete()
         if not (await self.bot.is_owner(ctx.author)): return
 
-        self.guild_emojis = [
-            g_emo.id for g_emo in (
-                await self.bot.fetch_guild(669934356172636199)).emojis
-        ]
-        for db_emo in self.mongo_emojis:
-            if db_emo not in self.guild_emojis:
-                self.collection.delete_one({'_id': db_emo})
-                continue
+        for m_emo in self.mongo_emojis:
             self.collection.update_one({
-                '_id': db_emo,
+                '_id': m_emo,
             }, {
                 '$set': {
-                    'name': self.bot.get_emoji(db_emo).name,
+                    'name': self.bot.get_emoji(m_emo).name,
                     'count': 0,
                 }
             })
-        for g_emo in self.guild_emojis:
-            if g_emo not in self.mongo_emojis:
-                emo = self.bot.get_emoji(g_emo)
-                self.collection.insert_one({
-                    '_id': g_emo,
-                    'name': emo.name,
-                    'animated': emo.animated,
-                    'count': 0,
-                })
-        self.mongo_emojis = [
-            db_emo['_id'] for db_emo in self.collection.find()
-        ]
 
     @commands.command(aliases=['er'])
     async def emo_rank(self, ctx, arg=None):
+        global emo_embed
+        if emo_embed:
+            await emo_embed[0].delete()
         await ctx.message.delete(delay=3)
-        if not arg: arg = 10
-        else:
-            emo_id = re.search(r'<a?:.*?:(\d*)>', arg)
-            if not emo_id:
-                arg = int(arg)
+
         db_emo_list = [{
             'id': db_emo['_id'],
             'name': db_emo['name'],
             'animated': db_emo['animated'],
             'count': db_emo['count'],
         } for db_emo in self.collection.find()]
-
         emo_rank = sorted(db_emo_list, key=itemgetter('count'), reverse=True)
+        total_page = math.ceil(len(emo_rank) / 12) - 1
 
-        if isinstance(arg, int):
-            if arg < 10:
-                arg = 10
-            elif arg > len(emo_rank):
-                arg = len(emo_rank)
+        embed = discord.Embed()
+        embed.set_author(name='表符使用率排名 1 ~ 12')
+        embed.set_footer(text=f'頁 1 / {total_page + 1}')
+        embed.set_thumbnail(url=ctx.guild.icon_url)
+        for i, w in enumerate(emo_rank[:12], 1):
+            embed.add_field(
+                name=i,
+                value=
+                f"<{'a' if w['animated'] else ''}:{w['name']}:{w['id']}> `{w['count']}`次",
+                inline=True)
+        emo_embed = [await ctx.send(embed=embed), 0, emo_rank]
+        await emo_embed[0].add_reaction("<:first_page:806497548343705610>")
+        await emo_embed[0].add_reaction("<:prev_page:805002492848767017>")
+        await emo_embed[0].add_reaction("<:next_page:805002492525805589>")
+        await emo_embed[0].add_reaction("<:last_page:806497548558532649>")
 
-            embed = discord.Embed(title=f'排名 {arg - 9} ~ {arg}',
-                                  description='')
-            for i, emo in enumerate(emo_rank[arg - 10:arg], start=1):
-                embed.description += f"<{'a' if emo['animated'] else ''}:{emo['name']}:{emo['id']}>`{emo['count']:^3d}`次　"
-                if i % 5 == 0:
-                    embed.description += '\n\n'
-            await ctx.send(embed=embed, delete_after=60)
-        elif isinstance(emo_id[1], str):
-            index = next((i for (i, e) in enumerate(emo_rank)
-                          if e['id'] == int(emo_id[1])), None)
-            if index:
-                embed = discord.Embed(description=f'''
-                    使用次數：{emo_rank[index]["count"]}
+    @commands.Cog.listener()
+    async def on_reaction_add(self, reaction, user):
+        if user.bot: return
+        if not emo_embed or reaction.message != emo_embed[0]: return
+        # await reaction.message.clear_reactions()
+        await reaction.remove(user)
 
+        total_page = math.ceil(len(emo_embed[2]) / 12) - 1
 
-                    排名：{index + 1}''')
-                embed.set_thumbnail(url=self.bot.get_emoji(int(emo_id[1])).url)
-                await ctx.send(embed=embed, delete_after=60)
+        if str(reaction.emoji) == "<:prev_page:805002492848767017>":
+            if emo_embed[1] != 0: emo_embed[1] -= 1
+        elif str(reaction.emoji) == "<:next_page:805002492525805589>":
+            if emo_embed[1] != total_page: emo_embed[1] += 1
+        elif str(reaction.emoji) == "<:first_page:806497548343705610>":
+            emo_embed[1] = 0
+        elif str(reaction.emoji) == "<:last_page:806497548558532649>":
+            emo_embed[1] = total_page
+
+        embed = reaction.message.embeds[0]
+        embed.clear_fields()
+        embed.set_footer(text=f'頁 {emo_embed[1] + 1} / {total_page + 1}')
+
+        for i, w in enumerate(
+                emo_embed[2][emo_embed[1] * 12:emo_embed[1] * 12 + 12],
+                emo_embed[1] * 12 + 1):
+            embed.add_field(
+                name=i,
+                value=
+                f"<{'a' if w['animated'] else ''}:{w['name']}:{w['id']}> `{w['count']}`次",
+                inline=True)
+        await reaction.message.edit(embed=embed)
 
 
 def setup(bot):

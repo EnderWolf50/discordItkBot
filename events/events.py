@@ -158,18 +158,6 @@ class Events(Cog_Ext):
                 await reaction.message.remove_reaction("\N{THUMBS DOWN SIGN}",
                                                        self.bot.user)
 
-    @commands.Cog.listener()
-    async def on_command_completion(self, ctx):
-        logger.info(
-            f'{ctx.author.display_name} ({ctx.author.name}#{ctx.author.discriminator}) 執行指令 {ctx.message.content[1:]} 成功'
-        )
-
-    @commands.Cog.listener()
-    async def on_command_error(self, ctx, err):
-        logger.error(
-            f'{ctx.author.display_name} ({ctx.author.name}#{ctx.author.discriminator}) 執行指令 {ctx.message.content[1:]} 失敗'
-        )
-
 
 def setup(bot):
     bot.add_cog(Events(bot))

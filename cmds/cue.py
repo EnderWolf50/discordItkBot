@@ -5,7 +5,7 @@ from core.classes import Cog_Ext
 import random, math
 from datetime import datetime, timedelta
 
-curr_embed = []
+cue_embed = []
 
 
 class Cue(Cog_Ext):
@@ -105,10 +105,10 @@ class Cue(Cog_Ext):
 
     @commands.command(aliases=['c_l', 'cl'])
     async def cue_list(self, ctx, member: discord.Member):
-        global curr_embed
-        if curr_embed:
-            await curr_embed[0].delete()
-        await ctx.message.delete()
+        global cue_embed
+        if cue_embed:
+            await cue_embed[0].delete()
+        await ctx.message.delete(delay=3)
 
         member_cue = None
         member_cue = self.collection.find_one({'_id': member.id})
@@ -124,50 +124,50 @@ class Cue(Cog_Ext):
                               total_page * 21 + 1):
             embed.add_field(name=i, value=w, inline=True)
 
-        curr_embed = [await ctx.send(embed=embed), total_page, member.id]
-        await curr_embed[0].add_reaction("<:first_page:806497548343705610>")
-        await curr_embed[0].add_reaction("<:prev_page:805002492848767017>")
-        await curr_embed[0].add_reaction("<:next_page:805002492525805589>")
-        await curr_embed[0].add_reaction("<:last_page:806497548558532649>")
+        cue_embed = [await ctx.send(embed=embed), total_page, member.id]
+        await cue_embed[0].add_reaction("<:first_page:806497548343705610>")
+        await cue_embed[0].add_reaction("<:prev_page:805002492848767017>")
+        await cue_embed[0].add_reaction("<:next_page:805002492525805589>")
+        await cue_embed[0].add_reaction("<:last_page:806497548558532649>")
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
         if user.bot: return
-        if not curr_embed or reaction.message != curr_embed[0]: return
+        if not cue_embed or reaction.message != cue_embed[0]: return
         # await reaction.message.clear_reactions()
         await reaction.remove(user)
 
         member_cue = None
-        member_cue = self.collection.find_one({'_id': curr_embed[2]})
+        member_cue = self.collection.find_one({'_id': cue_embed[2]})
         if not member_cue: return
         total_page = math.ceil(len(member_cue['list']) / 21) - 1
 
         if str(reaction.emoji) == "<:prev_page:805002492848767017>":
-            if curr_embed[1] != 0: curr_embed[1] -= 1
+            if cue_embed[1] != 0: cue_embed[1] -= 1
         elif str(reaction.emoji) == "<:next_page:805002492525805589>":
-            if curr_embed[1] != total_page: curr_embed[1] += 1
+            if cue_embed[1] != total_page: cue_embed[1] += 1
         elif str(reaction.emoji) == "<:first_page:806497548343705610>":
-            curr_embed[1] = 0
+            cue_embed[1] = 0
         elif str(reaction.emoji) == "<:last_page:806497548558532649>":
-            curr_embed[1] = total_page
+            cue_embed[1] = total_page
 
-        member = (await reaction.message.guild.fetch_member(curr_embed[2]))
+        member = (await reaction.message.guild.fetch_member(cue_embed[2]))
         embed = reaction.message.embeds[0]
         embed.clear_fields()
-        embed.set_footer(text=f'頁 {curr_embed[1] + 1} / {total_page + 1}')
+        embed.set_footer(text=f'頁 {cue_embed[1] + 1} / {total_page + 1}')
 
         for i, w in enumerate(
-                member_cue['list'][curr_embed[1] * 21:curr_embed[1] * 21 + 21],
-                curr_embed[1] * 21 + 1):
+                member_cue['list'][cue_embed[1] * 21:cue_embed[1] * 21 + 21],
+                cue_embed[1] * 21 + 1):
             embed.add_field(name=i, value=w, inline=True)
         await reaction.message.edit(embed=embed)
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg):
-        global curr_embed
-        if not curr_embed: return
-        if msg == curr_embed[0]:
-            curr_embed = None
+        global cue_embed
+        if not cue_embed: return
+        if msg == cue_embed[0]:
+            cue_embed = None
 
 
 def setup(bot):
