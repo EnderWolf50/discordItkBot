@@ -143,6 +143,8 @@ class Emo_count(Cog_Ext):
 
         embed = reaction.message.embeds[0]
         embed.clear_fields()
+        embed.set_author(
+            name=f'表符使用率排名 {emo_embed[1] * 12 + 1} ~ {emo_embed[1] * 12 + 12}')
         embed.set_footer(text=f'頁 {emo_embed[1] + 1} / {total_page + 1}')
 
         for i, w in enumerate(
