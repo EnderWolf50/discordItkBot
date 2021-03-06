@@ -72,6 +72,8 @@ class Events(Cog_Ext):
             await msg.add_reaction("<:emoji_101:713997954201157723>")
         if "尻尻" in msg.content:
             await msg.add_reaction("<a:emoji_103:713998749680009250>")
+        if "<:095:817629491442483217>" in msg.content:
+            await msg.channel.send("<:017:817629491442483217>")
 
         if msg.author.bot: return
         # IDK
