@@ -121,7 +121,7 @@ class _1A2B(Cog_Ext):
                                 await channel.send(
                                     f"恭喜 {msg.author.mention} 答對了！")
                                 await asyncio.sleep(5)
-                                await channel.purge(limit=150,
+                                await channel.purge(limit=0,
                                                     after=Start_time,
                                                     check=predicate)
                             else:
