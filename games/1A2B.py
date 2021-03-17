@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
+from typing import List
 
 import random
 import datetime
@@ -17,11 +18,12 @@ channel = ""
 Answer = ""
 Number = ""
 Number_Guessed = ""
+messages_during_the_game: List[discord.Message] = []
 
 
 class _1A2B(Cog_Ext):
-    @commands.command()
-    async def AB_S(self, ctx, num: int = 4):
+    @commands.command(aliases=['ab_s'])
+    async def ab_start(self, ctx, num: int = 4):
         global AB_G
         global channel
         global Answer
@@ -33,12 +35,11 @@ class _1A2B(Cog_Ext):
                 AB_G = True
                 channel = ctx.channel
                 Amount = num
-                Start_time = datetime.datetime.now() + datetime.timedelta(
-                    seconds=-5)
+                Start_time = ctx.message
                 Answer = random.sample('1234567890', Amount)
 
-    @commands.command()
-    async def AB_E(self, ctx):
+    @commands.command(aliases=['ab_e'])
+    async def ab_end(self, ctx):
         global AB_G
         global Answer
         global Number
@@ -50,7 +51,7 @@ class _1A2B(Cog_Ext):
             wait = False
             Playing = False
             Number = "".join(Answer)
-            End_Time = datetime.datetime.now() + datetime.timedelta(seconds= -5)
+            End_Time = datetime.datetime.now() + datetime.timedelta(seconds=-5)
 
             def predicate(msg: discord.Message) -> bool:
                 return msg.author == self.bot.get_user(710498084194484235) or (
@@ -81,7 +82,8 @@ class _1A2B(Cog_Ext):
                     wait = True
                     if Playing == False:
                         Playing = True
-                        await channel.send(f"請輸入 {Amount} 位不同數字：")
+                        messages_during_the_game.append(
+                            await channel.send(f"請輸入 {Amount} 位不同數字："))
                 else:
                     if msg.content.isdigit() == True and len(
                             msg.content) == Amount:
@@ -106,10 +108,11 @@ class _1A2B(Cog_Ext):
                                 AB_G = False
                                 wait = False
                                 Playing = False
-                                End_Time = datetime.datetime.now() + datetime.timedelta(seconds= 5)
+                                End_Time = datetime.datetime.now(
+                                ) + datetime.timedelta(seconds=5)
 
                                 def predicate(msg: discord.Message) -> bool:
-                                    return msg.author == self.bot.get_user(710498084194484235) or (len(msg.content) == Amount and msg.content.isdigit())
+                                    return msg in messages_during_the_game
 
                                 await asyncio.sleep(0.5)
                                 await channel.send(msg.author.mention +
@@ -118,16 +121,22 @@ class _1A2B(Cog_Ext):
                                 await channel.send(
                                     f"恭喜 {msg.author.mention} 答對了！")
                                 await asyncio.sleep(5)
-                                await channel.purge(after=Start_time, before=End_Time, check=predicate)
+                                await channel.purge(limit=150,
+                                                    after=Start_time,
+                                                    check=predicate)
                             else:
                                 wait = False
-                                await channel.send(msg.author.mention +
-                                                   f"（{msg.content}）" +
-                                                   f"：**{A}A{B}B**")
+                                messages_during_the_game.append(
+                                    await channel.send(msg.author.mention +
+                                                       f"（{msg.content}）" +
+                                                       f"：**{A}A{B}B**"))
                         else:
-                            await channel.send(msg.author.mention +
-                                               " 請勿輸入重複的數字！")
+                            messages_during_the_game.append(
+                                await channel.send(msg.author.mention +
+                                                   " 請勿輸入重複的數字！"))
                             Duplicate = False
+                        if msg.guild:
+                            messages_during_the_game.append(msg)
 
 
 def setup(bot):
