@@ -94,8 +94,10 @@ class Emo_count(Cog_Ext):
     @commands.command(aliases=['er'])
     async def emo_rank(self, ctx, arg=None):
         global emo_embed
-        if emo_embed:
-            await emo_embed[0].delete()
+        try:
+            if emo_embed: await emo_embed[0].delete()
+        except:
+            pass
         await ctx.message.delete(delay=3)
 
         db_emo_list = [{
