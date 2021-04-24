@@ -73,8 +73,7 @@ class Clean(Cog_Ext):
 
     @commands.command()
     async def purge(self, ctx, number: int, ID: discord.Member = None):
-        if ctx.author == self.bot.get_user(
-                Owner) or ctx.author == self.bot.get_user(Traveler):
+        if ctx.author.id in administrators:
             await ctx.message.delete()
 
             def predicate(msg: discord.Message) -> bool:
