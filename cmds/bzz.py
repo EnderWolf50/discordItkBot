@@ -5,6 +5,8 @@ from core.classes import Cog_Ext
 import random, datetime
 from datetime import datetime as dt
 
+from core.mongo import Mongo
+
 bzz_options = [
     "大凶",
     "小凶",
@@ -22,8 +24,8 @@ bzz_options = [
 class Bzz(Cog_Ext):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.db = self.mongo_client['discord_669934356172636199']
-        self.collection = self.db['tdbzz_record']
+        self._db = 'discord_669934356172636199'
+        self._coll = 'tdbzz_record'
 
     @commands.command()
     async def bzz(self, ctx):
@@ -35,16 +37,16 @@ class Bzz(Cog_Ext):
         record = {}
         bzz_msg = ''
         now = dt.now()
-        record = self.collection.find_one({'_id': now.strftime('%Y-%m-%d')})
+        record = Mongo.find(self._db, self._coll,
+                            {'_id': now.strftime('%Y-%m-%d')})
 
         if not record or str(ctx.author.id) not in record.keys():
             bzz_msg = random.choice(bzz_options)
-            self.collection.update_one(
-                {'_id': now.strftime('%Y-%m-%d')},
-                {'$set': {
-                    f'{ctx.author.id}': bzz_msg,
-                }},
-                upsert=True)
+            Mongo.update(self._db, self._coll,
+                         {'_id': now.strftime('%Y-%m-%d')},
+                         {'$set': {
+                             f'{ctx.author.id}': bzz_msg,
+                         }})
         else:
             bzz_msg = record[f'{ctx.author.id}']
 

@@ -5,20 +5,22 @@ from core.classes import Cog_Ext
 import random, math
 from datetime import datetime, timedelta
 
+from core.mongo import Mongo
+
 cue_embed = []
 
 
 class Cue(Cog_Ext):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.db = self.mongo_client['discord_669934356172636199']
-        self.collection = self.db['cue_list']
+        self._db = 'discord_669934356172636199'
+        self._coll = 'cue_list'
 
     @commands.command(aliases=['c'])
     async def cue(self, ctx, member: discord.Member = None, pos: int = None):
         member_cue = None
         if member:
-            member_cue = self.collection.find_one({'_id': member.id})
+            member_cue = Mongo.find(self._db, self._coll, {'_id': member.id})
         if member_cue:
             member_cue_list = member_cue['list']
             if pos:
@@ -33,7 +35,10 @@ class Cue(Cog_Ext):
             )
             await ctx.message.delete()
             return
-        cue_list = {doc['_id']: doc['list'] for doc in self.collection.find()}
+        cue_list = {
+            doc['_id']: doc['list']
+            for doc in Mongo.find(self._db, self._coll)
+        }
         random_cue_id = random.choice(list(cue_list.keys()))
         random_member = self.bot.get_user(random_cue_id)
         random_pos = random.randint(0, len(cue_list[random_cue_id]) - 1)
@@ -47,15 +52,14 @@ class Cue(Cog_Ext):
     @commands.command(aliases=['c_a', 'ca'])
     async def cue_add(self, ctx, member: discord.Member, *, word):
         member_cue_list = []
-        member_cue = self.collection.find_one({'_id': member.id})
+        member_cue = Mongo.find(self._db, self._coll, {'_id': member.id})
         if member_cue:
             member_cue_list = member_cue['list']
         if word not in member_cue_list:
-            self.collection.update_one({'_id': member.id},
-                                       {'$push': {
-                                           'list': word
-                                       }},
-                                       upsert=True)
+            Mongo.update(self._db, self._coll, {'_id': member.id},
+                         {'$push': {
+                             'list': word
+                         }})
             await ctx.send(
                 f'已新增 {member.display_name} 語錄 {len(member_cue_list) + 1} - {word} <:shiba_smile:783351681013907466>',
                 delete_after=7)
@@ -70,7 +74,7 @@ class Cue(Cog_Ext):
         aliases=['cue_del', 'cue_remove', 'c_d', 'c_r', 'cd', 'cr'])
     async def cue_delete(self, ctx, member: discord.Member, pos: int):
         member_cue_list = []
-        member_cue = self.collection.find_one({'_id': member.id})
+        member_cue = Mongo.find(self._db, self._coll, {'_id': member.id})
         if member_cue:
             member_cue_list = member_cue['list']
         else:
@@ -80,7 +84,7 @@ class Cue(Cog_Ext):
             await ctx.message.delete()
             return
         if len(member_cue_list) - 1 <= 0:
-            self.collection.delete_one({'_id': member.id})
+            Mongo.delete(self._db, self._coll, {'_id': member.id})
             await ctx.send(
                 f'已刪除 {member.display_name} 語錄 {pos} - {member_cue_list[pos - 1]} <:shiba_smile:783351681013907466>',
                 delete_after=7)
@@ -93,10 +97,10 @@ class Cue(Cog_Ext):
             await ctx.message.delete()
             return
         member_cue_list = member_cue['list']
-        self.collection.update_one(
-            {'_id': member.id}, {'$pull': {
-                'list': member_cue_list[pos - 1]
-            }})
+        Mongo.update(self._db, self._coll, {'_id': member.id},
+                     {'$pull': {
+                         'list': member_cue_list[pos - 1]
+                     }})
         await ctx.send(
             f'已刪除 {member.display_name} 語錄 {pos} - {member_cue_list[pos - 1]} <:shiba_smile:783351681013907466>',
             delete_after=7)
@@ -111,7 +115,7 @@ class Cue(Cog_Ext):
         await ctx.message.delete(delay=3)
 
         member_cue = None
-        member_cue = self.collection.find_one({'_id': member.id})
+        member_cue = Mongo.find(self._db, self._coll, {'_id': member.id})
         if not member_cue: return
         total_page = math.ceil(len(member_cue['list']) / 21) - 1
 
@@ -138,7 +142,7 @@ class Cue(Cog_Ext):
         await reaction.remove(user)
 
         member_cue = None
-        member_cue = self.collection.find_one({'_id': cue_embed[2]})
+        member_cue = Mongo.find(self._db, self._coll, {'_id': cue_embed[2]})
         if not member_cue: return
         total_page = math.ceil(len(member_cue['list']) / 21) - 1
 

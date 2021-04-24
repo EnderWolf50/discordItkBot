@@ -5,19 +5,21 @@ from core.classes import Cog_Ext
 import re, math
 from operator import itemgetter
 
+from core.mongo import Mongo
+
 emo_embed = []
 
 
 class Emo_count(Cog_Ext):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.db = self.mongo_client['discord_669934356172636199']
-        self.collection = self.db['emoji_counter']
+        self._db = 'discord_669934356172636199'
+        self._coll = 'emoji_counter'
 
     @commands.Cog.listener()
     async def on_ready(self):
         self.mongo_emojis = [
-            db_emo['_id'] for db_emo in self.collection.find()
+            db_emo['_id'] for db_emo in Mongo.find(self._db, self._coll)
         ]
         self.guild_emojis = [
             g_emo.id for g_emo in (
@@ -26,11 +28,11 @@ class Emo_count(Cog_Ext):
 
         for db_emo in self.mongo_emojis:
             if db_emo not in self.guild_emojis:
-                self.collection.delete_one({'_id': db_emo})
+                Mongo.delete(self._db, self._coll, {'_id': db_emo})
         for g_emo in self.guild_emojis:
             if g_emo not in self.mongo_emojis:
                 emo = self.bot.get_emoji(g_emo)
-                self.collection.insert_one({
+                Mongo.update(self._db, self._coll, {'_id': g_emo}, {
                     '_id': g_emo,
                     'name': emo.name,
                     'animated': emo.animated,
@@ -45,10 +47,10 @@ class Emo_count(Cog_Ext):
             return
         msg_emojis = list(set(re.findall(r'<a?:.*?:(\d*)>', msg.content)))
         for m_emo in msg_emojis:
-            self.collection.update_one({'_id': int(m_emo)},
-                                       {'$inc': {
-                                           'count': 1
-                                       }})
+            Mongo.update(self._db, self._coll, {'_id': int(m_emo)},
+                         {'$inc': {
+                             'count': 1
+                         }})
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg):
@@ -65,11 +67,11 @@ class Emo_count(Cog_Ext):
         if len(before) > len(after):
             changed = [e for e in before if e not in after]
             for c_emo in changed:
-                self.collection.delete_one({'_id': c_emo.id})
+                Mongo.delete(self._db, self._coll, {'_id': c_emo.id})
         else:
             changed = [e for e in after if e not in before]
             for c_emo in changed:
-                self.collection.insert_one({
+                Mongo.update(self._db, self._coll, {'_id': c_emo.id}, {
                     '_id': c_emo.id,
                     'name': c_emo.name,
                     'animated': c_emo.animated,
@@ -82,7 +84,7 @@ class Emo_count(Cog_Ext):
         if not (await self.bot.is_owner(ctx.author)): return
 
         for m_emo in self.mongo_emojis:
-            self.collection.update_one({
+            Mongo.update(self._db, self._coll, {
                 '_id': m_emo,
             }, {
                 '$set': {
@@ -105,7 +107,7 @@ class Emo_count(Cog_Ext):
             'name': db_emo['name'],
             'animated': db_emo['animated'],
             'count': db_emo['count'],
-        } for db_emo in self.collection.find()]
+        } for db_emo in Mongo.find(self._db, self._coll)]
         emo_rank = sorted(db_emo_list, key=itemgetter('count'), reverse=True)
         total_page = math.ceil(len(emo_rank) / 12) - 1
 

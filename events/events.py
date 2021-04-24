@@ -1,19 +1,23 @@
+import os
+import re
 import discord
 from discord.ext import commands
 from core.classes import Cog_Ext
 from core.rwFile import rFile, get_setting
 
+import random
+import asyncio
+import pymongo
 from datetime import datetime as dt
 from datetime import timedelta
-import os, random, re, asyncio, pymongo, logging
+from typing import List
+from googlesearch import lucky, get_random_user_agent
 
 File = rFile('others')
 
 mentionReact = File["Mention_react"]
 
 Owner = get_setting("Owner")
-
-logger = logging.getLogger(__name__)
 
 idk_dict = {
     "./images/idk_orig.jpg": 30,
@@ -115,6 +119,14 @@ class Events(Cog_Ext):
                 await msg.channel.send(random.choice(actCute))
             else:
                 await msg.channel.send(f"還敢撒嬌阿 {msg.author.mention}")
+        if msg.content.startswith("請問"):
+            search_terms: str = msg.content[3:] if msg.content[
+                2:] == "，" else msg.content[2:]
+            await msg.reply(
+                lucky(search_terms,
+                      lang="lang_zh-TW",
+                      stop=1,
+                      user_agent=get_random_user_agent()))
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg):
