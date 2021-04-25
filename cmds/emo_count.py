@@ -164,7 +164,8 @@ class Emo_count(Cog_Ext):
     @commands.command()
     async def test_db(self, ctx):
         import pprint
-        pprint.pprint(Mongo.find(self._db, self._coll))
+        for i in Mongo.find(self._db, self._coll):
+            pprint.pprint(i)
 
 
 def setup(bot):
