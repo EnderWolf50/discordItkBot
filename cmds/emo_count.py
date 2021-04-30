@@ -165,6 +165,12 @@ class Emo_count(Cog_Ext):
                 inline=True)
         await reaction.message.edit(embed=embed)
 
+    @commands.command()
+    async def test_db(self, ctx):
+        import pprint
+        for i in Mongo.find(self._db, self._coll):
+            pprint.pprint(i)
+
 
 def setup(bot):
     bot.add_cog(Emo_count(bot))
