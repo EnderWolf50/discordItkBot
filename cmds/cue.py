@@ -1,16 +1,14 @@
 import discord
 from discord.ext import commands
-from core.classes import Cog_Ext
+from core import CogInit, Mongo
 
 import random, math
 from datetime import datetime, timedelta
 
-from core.mongo import Mongo
-
 cue_embed = []
 
 
-class Cue(Cog_Ext):
+class Cue(CogInit):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._db = 'discord_669934356172636199'

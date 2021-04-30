@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from core.classes import Cog_Ext
+from core import CogInit
 
 import os, re
 from saucenao_api import SauceNao
@@ -56,7 +56,7 @@ ctr = 0
 res_list = {}
 
 
-class ImgSearch(Cog_Ext):
+class ImgSearch(CogInit):
     def isfloat(self, num):
         try:
             float(num)

@@ -1,11 +1,11 @@
 import discord
 from discord.ext import commands
-from core.classes import Cog_Ext
+from core import CogInit
 
 import random
 
 
-class Pins(Cog_Ext):
+class Pins(CogInit):
     @commands.command(aliases=['pin'])
     async def pins(self, ctx, user: discord.Member = None):
         if user == None:

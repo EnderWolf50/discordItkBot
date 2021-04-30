@@ -1,12 +1,11 @@
 import discord
 from discord.ext import commands
-from core.classes import Cog_Ext
-from core.rwFile import rFile
+from core import CogInit, rFile
 
 import random
 
 
-class Basic(Cog_Ext):
+class Basic(CogInit):
     @commands.command(aliases=['load'])
     async def ext_load(self, ctx, folder, extension):
         if not (await self.bot.is_owner(ctx.author)): return

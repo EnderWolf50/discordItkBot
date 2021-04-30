@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from core.classes import Cog_Ext
+from core import CogInit
 from typing import List
 
 import random
@@ -21,7 +21,7 @@ Number_Guessed = ""
 messages_during_the_game: List[discord.Message] = []
 
 
-class _1A2B(Cog_Ext):
+class _1A2B(CogInit):
     @commands.command(aliases=['ab_s'])
     async def ab_start(self, ctx, num: int = 4):
         global AB_G

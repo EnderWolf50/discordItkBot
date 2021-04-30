@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from core.classes import Cog_Ext
+from core import CogInit
 
 Num_Emoji = [
     "1\N{COMBINING ENCLOSING KEYCAP}", "2\N{COMBINING ENCLOSING KEYCAP}",
@@ -40,7 +40,7 @@ Emoji = [
 ]
 
 
-class Poll(Cog_Ext):
+class Poll(CogInit):
     @commands.command(aliases=["vote"])
     async def poll(self, ctx, title=None, *arg):
         if len(arg) <= 20:

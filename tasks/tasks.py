@@ -1,5 +1,5 @@
 import discord
-from core.classes import Cog_Ext
+from core import CogInit
 
 import datetime
 import asyncio
@@ -9,7 +9,7 @@ Left_three_hours_Complete = False
 Left_ten_seconds_Complete = False
 
 
-class Tasks(Cog_Ext):
+class Tasks(CogInit):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

@@ -1,11 +1,11 @@
 import discord
 from discord.ext import commands
-from core.classes import Cog_Ext
+from core import CogInit
 
 import random
 
 
-class Choose(Cog_Ext):
+class Choose(CogInit):
     @commands.command(aliases=['ch'])
     async def choose(self, ctx, *, arg):
         list = arg.split(" ")

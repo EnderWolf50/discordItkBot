@@ -2,7 +2,7 @@ import discord, os
 from discord.ext import commands
 
 from dotenv import load_dotenv
-from core.mongo import Mongo
+from core import Mongo
 
 load_dotenv()
 

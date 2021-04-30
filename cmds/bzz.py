@@ -1,11 +1,9 @@
 import discord
 from discord.ext import commands
-from core.classes import Cog_Ext
+from core import CogInit, Mongo
 
 import random, datetime
 from datetime import datetime as dt
-
-from core.mongo import Mongo
 
 bzz_options = [
     "大凶",
@@ -21,7 +19,7 @@ bzz_options = [
 ]
 
 
-class Bzz(Cog_Ext):
+class Bzz(CogInit):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._db = 'discord_669934356172636199'

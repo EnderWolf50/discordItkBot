@@ -1,11 +1,11 @@
 import discord
 from discord.ext import commands
-from core.classes import Cog_Ext
+from core import CogInit
 
 import random
 
 
-class Roll(Cog_Ext):
+class Roll(CogInit):
     @commands.command()
     async def roll(self, ctx, num: int, *, args="{}"):
         if num <= 0:

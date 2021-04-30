@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
-from core.classes import Cog_Ext
-from core.rwFile import get_setting
+from core import CogInit, get_setting
 
 import datetime
 
@@ -18,7 +17,7 @@ administrators = [
 
 # TODO: 改寫判斷
 # TODO: 嘗試以訊息 ID 刪除
-class Clean(Cog_Ext):
+class Clean(CogInit):
     @commands.command()
     async def clean(self, ctx, number: int = 1, ID: discord.Member = None):
         await ctx.message.delete()

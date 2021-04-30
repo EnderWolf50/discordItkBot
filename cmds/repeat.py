@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
-from core.classes import Cog_Ext
-from core.rwFile import get_setting
+from core import CogInit, get_setting
 
 Owner = get_setting("Owner")
 Traveler = get_setting("Traveler")
@@ -12,7 +11,7 @@ Edit_repeat = False
 Edit_record = {}
 
 
-class Repeat(Cog_Ext):
+class Repeat(CogInit):
     @commands.command()
     async def repeat(self, ctx):
         await ctx.message.delete()

@@ -2,8 +2,7 @@ import os
 import re
 import discord
 from discord.ext import commands
-from core.classes import Cog_Ext
-from core.rwFile import rFile, get_setting
+from core import CogInit,rFile, get_setting
 
 import random
 import asyncio
@@ -48,7 +47,7 @@ loadingCatEmos = [
 ]
 
 
-class Events(Cog_Ext):
+class Events(CogInit):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.cmdList = []
