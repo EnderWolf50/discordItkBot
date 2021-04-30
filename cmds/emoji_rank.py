@@ -238,4 +238,4 @@ class EmojiRank(CogInit):
 
 
 def setup(bot):
-    bot.add_cog(Emo_count(bot))
+    bot.add_cog(EmojiRank(bot))
