@@ -33,10 +33,12 @@ class Emo_count(Cog_Ext):
             if g_emo not in self.mongo_emojis:
                 emo = self.bot.get_emoji(g_emo)
                 Mongo.update(self._db, self._coll, {'_id': g_emo}, {
-                    '_id': g_emo,
-                    'name': emo.name,
-                    'animated': emo.animated,
-                    'count': 0,
+                    "$set": {
+                        '_id': g_emo,
+                        'name': emo.name,
+                        'animated': emo.animated,
+                        'count': 0,
+                    }
                 })
 
     @commands.Cog.listener()
@@ -72,10 +74,12 @@ class Emo_count(Cog_Ext):
             changed = [e for e in after if e not in before]
             for c_emo in changed:
                 Mongo.update(self._db, self._coll, {'_id': c_emo.id}, {
-                    '_id': c_emo.id,
-                    'name': c_emo.name,
-                    'animated': c_emo.animated,
-                    'count': 0,
+                    '$set': {
+                        '_id': c_emo.id,
+                        'name': c_emo.name,
+                        'animated': c_emo.animated,
+                        'count': 0,
+                    }
                 })
 
     @commands.command(aliases=['ecr', 'err'])
