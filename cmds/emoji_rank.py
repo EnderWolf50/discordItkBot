@@ -140,7 +140,8 @@ class EmojiRank(CogInit):
             self.rank_msg_details = []
 
     @commands.Cog.listener()
-    async def on_reaction_add(self, reaction, user):
+    async def on_reaction_add(self, reaction: discord.Reaction,
+                              user: discord.User):
         # 忽略來自機器人的 Emoji 添加事件
         if user.bot: return
         # 如果之前沒有列出排行，或事件訊息不是排行訊息，忽略
@@ -215,7 +216,7 @@ class EmojiRank(CogInit):
         await rank_message.add_reaction("<:last_page:806497548558532649>")
 
     @emoji.command()
-    async def reset(self, ctx) -> None:
+    async def reset(self, ctx: commands.Context) -> None:
         await ctx.message.delete()
         # 只有擁有者可執行
         if not (await self.bot.is_owner(ctx.author)): return
@@ -230,7 +231,7 @@ class EmojiRank(CogInit):
             }})
 
     @commands.command(aliases=['er'])
-    async def emo_rank(self, ctx, arg=None) -> None:
+    async def emo_rank(self, ctx: commands.Context) -> None:
         # 使舊指令可執行
         await ctx.invoke(self.bot.get_command("emoji rank"))
 
