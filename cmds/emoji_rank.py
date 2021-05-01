@@ -187,7 +187,7 @@ class EmojiRank(CogInit):
         try:
             if self.rank_msg_details and self.rank_msg_details[0] is not None:
                 await self.rank_msg_details[0].delete()
-        except commands.MessageNotFound:
+        except discord.NotFound:
             print("[Emoji rank] 找不到要刪除的訊息，已略過")
             pass  # 略過並繼續執行
 
