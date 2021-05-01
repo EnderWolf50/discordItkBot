@@ -58,7 +58,7 @@ class EmojiRank(CogInit):
         result = {emo['_id'] for emo in Mongo.find(self._db, self._coll)}
         return result
 
-    async def _get_rank_embed(self) -> discord.Embed:
+    async def _get_updated_rank_embed(self) -> discord.Embed:
         current_page = self.rank_msg_details[1]
         total_page = self.rank_msg_details[2]
         rank_data = self.rank_msg_details[3]
@@ -173,7 +173,7 @@ class EmojiRank(CogInit):
         elif str(reaction.emoji) == "<:last_page:806497548558532649>":
             details[1] = details[2]
 
-        embed = await self._get_rank_embed()
+        embed = await self._get_updated_rank_embed()
         await reaction.message.edit(embed=embed)
 
     @commands.group(name="emoji", aliases=["emo"])
@@ -207,7 +207,7 @@ class EmojiRank(CogInit):
         self.rank_msg_details = [None, 0, total_page, ranked_emo_list]
 
         # 取得要傳送的 Embed
-        embed = await self._get_rank_embed()
+        embed = await self._get_updated_rank_embed()
         # 傳送 Embed 並記錄至詳情
         rank_message = await ctx.send(embed=embed)
         self.rank_msg_details[0] = rank_message
