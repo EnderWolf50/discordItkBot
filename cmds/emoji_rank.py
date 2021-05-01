@@ -143,7 +143,7 @@ class EmojiRank(CogInit):
     async def on_reaction_add(self, reaction, user):
         if user != self.bot.user:
             await reaction.remove(user)
-        # 忽略來自機器人的 Emoji 增加事件
+        # 忽略來自機器人的 Emoji 添加事件
         if user.bot: return
         # 如果之前沒有列出排行，或事件訊息不是排行訊息，忽略
         if not self.rank_msg_details or reaction.message != self.rank_msg_details[
@@ -209,7 +209,7 @@ class EmojiRank(CogInit):
         rank_message = await ctx.send(embed=embed)
         self.rank_msg_details[0] = rank_message
 
-        # 添加回應
+        # 添加反應
         await rank_message.add_reaction("<:first_page:806497548343705610>")
         await rank_message.add_reaction("<:prev_page:805002492848767017>")
         await rank_message.add_reaction("<:next_page:805002492525805589>")
