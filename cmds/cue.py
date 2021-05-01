@@ -27,7 +27,7 @@ class Cue(CogInit):
         # Author
         embed.set_author(name=f"{member.display_name} 錯字大全")
         # Footer
-        embed.set_footer(text=f"頁 {total_page + 1} / {total_page + 1}")
+        embed.set_footer(text=f"頁 {current_page + 1} / {total_page + 1}")
         # Thumbnail
         embed.set_thumbnail(url=member.avatar_url)
         # Fields
