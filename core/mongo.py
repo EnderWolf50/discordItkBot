@@ -15,19 +15,16 @@ class Mongo:
         if coll is not None:
             self._coll = self._db[coll]
 
-    def _find(self, query: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def find(self, query: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         if query:
             return self._coll.find_one(query)
         return self._coll.find()
 
-    def _update(self,
-                query: Dict[str, Any],
-                data: Dict[str, Dict[str, Any]],
-                upsert: bool = True) -> None:
-        Mongo._coll.update_one(query, data, upsert=upsert)
+    def update(self,
+               query: Dict[str, Any],
+               data: Dict[str, Dict[str, Any]],
+               upsert: bool = True) -> None:
+        self._coll.update_one(query, data, upsert=upsert)
 
-    def _delete(self, query: Dict[str, Any]) -> None:
-        Mongo._coll.delete_one(query)
-
-
-Mongo.init()
+    def delete(self, query: Dict[str, Any]) -> None:
+        self._coll.delete_one(query)

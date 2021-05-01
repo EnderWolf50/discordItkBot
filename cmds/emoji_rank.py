@@ -8,7 +8,7 @@ from typing import Union
 class EmojiRank(CogInit):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.mongo = Mongo("discord_669934356172636199", "emoji_counter")
+        self.mongo = Mongo("discord_669934356172636199", "emoji_rank")
 
         self.rank_msg_details = []
 
