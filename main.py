@@ -2,11 +2,8 @@ import discord, os
 from discord.ext import commands
 
 from dotenv import load_dotenv
-from core import Mongo
 
 load_dotenv()
-
-Mongo.init()
 TOKEN = os.getenv("TOKEN")
 
 bot = commands.Bot(command_prefix=".",

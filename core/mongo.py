@@ -3,32 +3,31 @@ import pymongo
 from typing import Dict, Optional, Any
 
 
-class Mongo(object):
-    client: pymongo.MongoClient = None
+class Mongo:
+    def __init__(self,
+                 db: Optional[str] = None,
+                 coll: Optional[str] = None,
+                 *args,
+                 **kwargs):
+        self._client = pymongo.MongoClient(os.getenv("MONGO_HOST"))
+        if db is not None:
+            self._db = self._client[db]
+        if coll is not None:
+            self._coll = self._db[coll]
 
-    @staticmethod
-    def init() -> None:
-        Mongo.client = pymongo.MongoClient(os.getenv("MONGO_HOST"))
-
-    @staticmethod
-    def find(db: str,
-             coll: str,
-             query: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def _find(self, query: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         if query:
-            return Mongo.client[db][coll].find_one(query)
-        return Mongo.client[db][coll].find()
+            return self._coll.find_one(query)
+        return self._coll.find()
 
-    @staticmethod
-    def update(db: str,
-               coll: str,
-               query: Dict[str, Any],
-               data: Dict[str, Dict[str, Any]],
-               upsert: bool = True) -> None:
-        Mongo.client[db][coll].update_one(query, data, upsert=upsert)
+    def _update(self,
+                query: Dict[str, Any],
+                data: Dict[str, Dict[str, Any]],
+                upsert: bool = True) -> None:
+        Mongo._coll.update_one(query, data, upsert=upsert)
 
-    @staticmethod
-    def delete(db: str, coll: str, query: Dict[str, Any]) -> None:
-        Mongo.client[db][coll].delete_one(query)
+    def _delete(self, query: Dict[str, Any]) -> None:
+        Mongo._coll.delete_one(query)
 
 
 Mongo.init()

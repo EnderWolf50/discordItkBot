@@ -8,8 +8,7 @@ from typing import Union
 class EmojiRank(CogInit):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self._db = 'discord_669934356172636199'
-        self._coll = 'emoji_counter'
+        self.mongo = Mongo("discord_669934356172636199", "emoji_counter")
 
         self.rank_msg_details = []
 
@@ -19,7 +18,7 @@ class EmojiRank(CogInit):
         if not isinstance(emoji, discord.Emoji):
             emoji = self.bot.get_emoji(emoji)
 
-        Mongo.update(self._db, self._coll, {'_id': emoji.id}, {
+        self.mongo.update({'_id': emoji.id}, {
             '$set': {
                 '_id': emoji.id,
                 'name': emoji.name,
@@ -34,7 +33,7 @@ class EmojiRank(CogInit):
         if isinstance(emoji, discord.Emoji):
             emoji = emoji.id
 
-        Mongo.delete(self._db, self._coll, {'_id': emoji})
+        self.mongo.delete({'_id': emoji})
 
     def _db_update_emoji(
             self, emoji: Union[discord.abc.Snowflake, discord.Emoji]) -> None:
@@ -42,12 +41,10 @@ class EmojiRank(CogInit):
         if not isinstance(emoji, discord.Emoji):
             emoji = self.bot.get_emoji(emoji)
 
-        Mongo.update(self._db,
-                     self._coll, {'_id': emoji.id},
-                     {'$set': {
-                         'name': emoji.name,
-                     }},
-                     upsert=False)  # 不符合 query 不自動添加
+        self.mongo.update({'_id': emoji.id}, {'$set': {
+            'name': emoji.name,
+        }},
+                          upsert=False)  # 不符合 query 不自動添加
 
     async def _guild_emoji_list(self) -> set[discord.abc.Snowflake]:
         guild = await self.bot.fetch_guild(669934356172636199)
@@ -55,7 +52,7 @@ class EmojiRank(CogInit):
         return result
 
     async def _mongo_emoji_list(self) -> set[discord.abc.Snowflake]:
-        result = {emo['_id'] for emo in Mongo.find(self._db, self._coll)}
+        result = {emo['_id'] for emo in self.mongo.find()}
         return result
 
     async def _get_updated_rank_embed(self) -> discord.Embed:
@@ -129,11 +126,10 @@ class EmojiRank(CogInit):
         # 正則找出訊息內使用的所有表符，重複只算一次
         emojis_in_msg = set(re.findall(r'<a?:.*?:(\d*)>', msg.content))
         for emo in emojis_in_msg:
-            Mongo.update(self._db,
-                         self._coll, {'_id': int(emo)}, {'$inc': {
-                             'count': 1
-                         }},
-                         upsert=False)  # 不符合 query 不自動添加
+            self.mongo.update({'_id': int(emo)}, {'$inc': {
+                'count': 1
+            }},
+                              upsert=False)  # 不符合 query 不自動添加
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg: discord.Message) -> None:
@@ -197,7 +193,7 @@ class EmojiRank(CogInit):
             'name': emo['name'],
             'animated': emo['animated'],
             'count': emo['count'],
-        } for emo in Mongo.find(self._db, self._coll)]
+        } for emo in self.mongo.find()]
         ranked_emo_list = sorted(db_emo_list,
                                  key=lambda x: x["count"],
                                  reverse=True)
@@ -225,7 +221,7 @@ class EmojiRank(CogInit):
         if not (await self.bot.is_owner(ctx.author)): return
 
         for emo in self._mongo_emoji_list():
-            Mongo.update(self._db, self._coll, {
+            self.mongo.update({
                 '_id': emo,
             }, {'$set': {
                 'name': self.bot.get_emoji(emo).name,
@@ -234,6 +230,7 @@ class EmojiRank(CogInit):
 
     @commands.command(aliases=['er'])
     async def emo_rank(self, ctx, arg=None) -> None:
+        # 使舊指令可執行
         await ctx.invoke(self.bot.get_command("emoji rank"))
 
 

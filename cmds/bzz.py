@@ -22,8 +22,7 @@ bzz_options = [
 class Bzz(CogInit):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._db = 'discord_669934356172636199'
-        self._coll = 'tdbzz_record'
+        self.mongo = Mongo("discord_669934356172636199", "tdbzz_record")
 
     @commands.command()
     async def bzz(self, ctx):
@@ -35,16 +34,14 @@ class Bzz(CogInit):
         record = {}
         bzz_msg = ''
         now = dt.now()
-        record = Mongo.find(self._db, self._coll,
-                            {'_id': now.strftime('%Y-%m-%d')})
+        record = self.mongo.find({'_id': now.strftime('%Y-%m-%d')})
 
         if not record or str(ctx.author.id) not in record.keys():
             bzz_msg = random.choice(bzz_options)
-            Mongo.update(self._db, self._coll,
-                         {'_id': now.strftime('%Y-%m-%d')},
-                         {'$set': {
-                             f'{ctx.author.id}': bzz_msg,
-                         }})
+            self.mongo.update({'_id': now.strftime('%Y-%m-%d')},
+                              {'$set': {
+                                  f'{ctx.author.id}': bzz_msg,
+                              }})
         else:
             bzz_msg = record[f'{ctx.author.id}']
 
