@@ -4,16 +4,10 @@ from typing import Dict, Optional, Any
 
 
 class Mongo:
-    def __init__(self,
-                 db: Optional[str] = None,
-                 coll: Optional[str] = None,
-                 *args,
-                 **kwargs):
+    def __init__(self, db: str, coll: str, *args, **kwargs):
         self._client = pymongo.MongoClient(os.getenv("MONGO_HOST"))
-        if db is not None:
-            self._db = self._client[db]
-        if coll is not None:
-            self._coll = self._db[coll]
+        self._db = self._client[db]
+        self._coll = self._db[coll]
 
     def find(self, query: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         if query:

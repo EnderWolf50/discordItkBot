@@ -98,7 +98,7 @@ class EmojiRank(CogInit):
             if emo not in mongo_emojis:
                 self._db_add_emoji(emo)
                 continue
-            self._db_update_emoji(emo)
+            self._db_update_emoji(emo)  # 補正已改名的表符
 
     @commands.Cog.listener()
     async def on_guild_emojis_update(self, guild: discord.Guild,
@@ -174,6 +174,7 @@ class EmojiRank(CogInit):
 
     @commands.group(name="emoji", aliases=["emo"])
     async def emoji(self, ctx: commands.Context) -> None:
+        # 僅作為 Group 用途，略過
         pass
 
     @emoji.command()
@@ -220,6 +221,7 @@ class EmojiRank(CogInit):
         # 只有擁有者可執行
         if not (await self.bot.is_owner(ctx.author)): return
 
+        # 次數設為零，同時補正已更名的表符
         for emo in self._mongo_emoji_list():
             self.mongo.update({
                 '_id': emo,
