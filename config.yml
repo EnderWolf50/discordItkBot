@@ -54,6 +54,8 @@ log:
 
 styles:
   colors:
+    red         : &red 0xDB4A30
+    blue        : &blue 0x5386E4
     cyan        : &cyan 0x21BBAA
     light_yellow: &light_yellow 0xFCD992
 

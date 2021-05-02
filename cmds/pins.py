@@ -6,34 +6,38 @@ import random
 
 
 class Pins(CogInit):
-    @commands.command(aliases=['pin'])
-    async def pins(self, ctx, user: discord.Member = None):
+    @commands.command()
+    async def pin(self,
+                  ctx: commands.Context,
+                  user: discord.Member = None) -> None:
         if user == None:
             await ctx.message.delete(delay=3)
-            msg = await ctx.fetch_message(
+            random_pin = await ctx.fetch_message(
                 random.choice(await ctx.channel.pins()).id)
-            msgContent = msg.content
-            msgAuthor = msg.author.display_name
-            if len(msg.attachments) == 0:
-                await ctx.send(f"{msgAuthor}：\n{msgContent}")
+
+            author = random_pin.author.display_name
+            content = random_pin.content
+            if len(random_pin.attachments) == 0:
+                await ctx.send(f"{author}：\n{content}")
             else:
-                for attachment in msg.attachments:
+                for attachment in random_pin.attachments:
                     await ctx.send(f"{attachment.url}")
         else:
             await ctx.message.delete(delay=3)
-            pinList = []
-            for pin in (await ctx.channel.pins()):
-                if pin.author.id == user.id:
-                    pinList.append(pin)
-            msg = await ctx.fetch_message(random.choice(pinList).id)
-            msgContent = msg.content
-            msgAuthor = msg.author.display_name
-            if len(msg.attachments) == 0:
-                await ctx.send(f"{msgAuthor}：\n{msgContent}")
+            author_pin_list = [
+                m for m in (await ctx.channel.pins()) if m.author.id == user.id
+            ]
+            random_pin = await ctx.fetch_message(
+                random.choice(author_pin_list).id)
+
+            author = random_pin.author.display_name
+            content = random_pin.content
+            if len(random_pin.attachments) == 0:
+                await ctx.send(f"{author}：\n{content}")
             else:
-                for attachment in msg.attachments:
+                for attachment in random_pin.attachments:
                     await ctx.send(f"{attachment.url}")
 
 
-def setup(bot):
+def setup(bot) -> None:
     bot.add_cog(Pins(bot))

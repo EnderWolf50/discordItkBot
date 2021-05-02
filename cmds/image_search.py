@@ -1,15 +1,16 @@
 import discord
 from discord.ext import commands
-from core import CogInit, Bot, Reactions
+from core import CogInit, Bot, Reactions, Colors, Emojis
 
 import os
 import re
+from typing import Any
 from saucenao_api import SauceNao
 from saucenao_api.errors import LongLimitReachedError
 
-SN1 = SauceNao(Bot.sauce_nao_key, dbmask=1666715746400, numres=3)
-SN2 = SauceNao(Bot.sauce_nao_key, dbmask=1666715746400, numres=3)
-IMG_RE = re.compile(
+sn = SauceNao(Bot.sauce_nao_key, dbmask=1666715746400, numres=3)
+
+IMG_LINK_PATTERN = re.compile(
     r'(https?:\/\/[^\s]*(\?format=\w*&name=\d*x\d*|(\.png|\.jpg|\.jpeg)))')
 
 reaction_emos = {
@@ -17,151 +18,164 @@ reaction_emos = {
     for i, r in enumerate(Reactions.numbers + Reactions.letters)
 }
 
-sn1_limit = False
-sn2_limit = False
-ctr = 0
-res_list = {}
-
 
 class ImgSearch(CogInit):
-    def isfloat(self, num):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.result_list = {}
+        self.reaction_emos = {
+            r: i
+            for i, r in enumerate(Reactions.numbers + Reactions.letters)
+        }
+
+    @staticmethod
+    def _isfloat(param: Any) -> bool:
         try:
-            float(num)
+            float(param)
             return True
         except:
             return False
 
-    def embed_gen(self, i, res, ctr):
-        embed = discord.Embed(title='搜尋結果', color=0xFCD992)
-        embed.set_footer(
-            text=f'第 {i} 張圖  |  24h 內流量: {ctr} / 400',
-            icon_url=
-            'https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128'
-        )
+    def _get_result_embed(self, i: int, res: dict[str, Any],
+                          remain: int) -> discord.Embed:
+        embed = discord.Embed(title='搜尋結果', color=Colors.blue)
+        # Footer
+        embed.set_footer(text=f'第 {i} 張圖｜24h 內剩餘可用次數: {remain}',
+                         icon_url=self.bot.user.avatar_url)
+        # Thumbnail
         if res.thumbnail:
             embed.set_thumbnail(url=res.thumbnail)
-        if res.similarity:
-            embed.add_field(name='相似度', value=res.similarity, inline=False)
+        # Fields
+        # 作品標題
         if res.title:
-            embed.add_field(name='標題', value=res.title, inline=False)
-        if res.urls:
-            for url in res.urls:
-                embed.add_field(name='連結', value=url + '\n', inline=False)
+            embed.add_field(name="標題", value=res.title)
+        # 作者
         if res.author:
-            embed.add_field(name='作者', value=res.author, inline=False)
-        if 'source' in res.raw['data'].keys():
-            if res.raw['data']['source']:
-                embed.add_field(name='來源',
-                                value=res.raw['data']['source'],
+            embed.add_field(name="作者", value=res.author)
+        # 相似度
+        if res.similarity:
+            embed.add_field(name="相似度", value=res.similarity, inline=False)
+        # 作品連結
+        if res.urls:
+            for i, url in enumerate(res.urls, 1):
+                embed.add_field(name=f"連結{i}", value=url, inline=False)
+        # 連結來源
+        if "source" in res.raw["data"]:
+            if res.raw["data"]["source"]:
+                embed.add_field(name="來源",
+                                value=res.raw["data"]["source"],
                                 inline=False)
         return embed
 
-    def no_result_embed_gen(self, i, url, ctr):
-        embed = discord.Embed(title='搜尋結果', color=0xDB4A30)
-        embed.set_footer(
-            text=f'第 {i} 張圖  |  24h 內流量: {ctr} / 400',
-            icon_url=
-            'https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128'
-        )
-        embed.set_thumbnail(url=url)
-        embed.add_field(name='沒有結果...',
-                        value='藍瘦香菇 <:010:685774195904479244>',
-                        inline=False)
+    def _get_no_result_embed(self, i: int, img_url: str,
+                             remain: int) -> discord.Embed:
+        embed = discord.Embed(title="搜尋結果", color=Colors.red)
+        # Footer
+        embed.set_footer(text=f"第 {i} 張圖｜24h 內可使用次數: {remain}",
+                         icon_url=self.bot.user.avatar_url)
+        # Thumbnail
+        embed.set_thumbnail(url=img_url)
+        # Fields
+        embed.add_field(name="沒有結果...",
+                        value=f"我...我也沒辦法... {Emojis.pepe_hands}")
 
         return embed
 
+    @commands.Cog.listener()
+    async def on_reaction_add(self, reaction: discord.Reaction,
+                              user: discord.User) -> None:
+        # 忽略機器人的反應添加事件
+        if user.bot: return
+        # 如果沒有結果訊息紀錄，或不是結果訊息，略過
+        if not self.result_list or reaction.message.id not in self.result_list:
+            return
+
+        await reaction.remove(user)
+        raw_reaction = str(reaction.emoji)
+        # 如果不是指定的反應表符，略過
+        if raw_reaction not in reaction_emos: return
+
+        # 反應所代表的數字小於結果串列長度
+        if reaction_emos[raw_reaction] < len(
+                self.result_list[reaction.message.id]):
+            await reaction.message.edit(
+                content=reaction.message.content,
+                embed=self.result_list[reaction.message.id][
+                    reaction_emos[raw_reaction]])
+
+    @commands.Cog.listener()
+    async def on_message_delete(self, msg: discord.Message) -> None:
+        if not self.result_list: return
+
+        if msg.id in self.result_list:
+            del self.result_list[msg.id]
+
     @commands.command(aliases=['img_search', 'is'])
-    async def Image_search(self, ctx, *args):
-        global sn1_limit
-        global sn2_limit
+    async def image_search(self, ctx: commands.Context, *args) -> None:
         try:
-            global ctr
+            # 刪除查詢訊息
             if ctx.channel.type != discord.ChannelType.private:
-                await ctx.message.delete(delay=15)
-            if sn2_limit:
-                await ctx.send(
-                    f'<@{ctx.author.id}> 我爬...不動...了... <:cat_no_energy:806544770746023977>',
-                    delete_after=7)
-                return
-            res_embed_list = []
-            lst_arg_isfloat = self.isfloat(args[-1]) if args else True
-            min_similarity = float(args[-1]) if (args
-                                                 and lst_arg_isfloat) else 52.0
+                await ctx.message.delete(delay=20)
+
+            # 確認是否有指定最低相似度
+            last_isfloat = self._isfloat(args[-1]) if args else False
+            min_similarity = float(args[-1]) if (args and last_isfloat) else 72
+
             queue = []
+            # 若有回覆訊息，先抓取回覆訊息內附件、圖片連結
             if ctx.message.reference:
                 ref_msg = await ctx.channel.fetch_message(
                     ctx.message.reference.message_id)
                 queue += [a.url for a in ref_msg.attachments] + [
-                    a[0] for a in re.findall(IMG_RE, ref_msg.content)
+                    a[0] for a in re.findall(IMG_LINK_PATTERN, ref_msg.content)
                 ]
+            # 若有上傳附件，獲取訊息內圖片連結
             if ctx.message.attachments:
                 queue += [a.url for a in ctx.message.attachments]
-            if (args[:-1] if lst_arg_isfloat else args):
+            # 若有附上圖片連結，抓取訊息內圖片連結
+            if (args[:-1] if last_isfloat else args):
                 queue += [
-                    a for a in (args[:-1] if lst_arg_isfloat else args)
-                    if re.match(IMG_RE, a)
+                    a for a in (args[:-1] if last_isfloat else args)
+                    if re.match(IMG_LINK_PATTERN, a)
                 ]
+            # 執行至此佇列仍為空，判定為未給予搜尋要素
             if not queue:
-                await ctx.send(
-                    f'<@{ctx.author.id}> 你是不是沒有放上要找的圖<:thonk:781092810572562432>',
-                    delete_after=10)
+                await ctx.reply(f'你是不是沒有放上要找的圖 {Emojis.thonk}',
+                                delete_after=20)
                 return
 
-            for i, q in enumerate(queue[:6], 1):
-                if sn2_limit: break
-                similar_ctr = 0
+            result_embeds = []
+            # 最多僅搜尋佇列前 6
+            for i, img_url in enumerate(queue[:6], 1):
+                at_least_one_result = False
 
-                res = SN1.from_url(url=q) if not sn1_limit else SN2.from_url(
-                    url=q)
-                ctr = 200 - res.long_remaining if not sn1_limit else ctr + 1
-                for r in res:
-                    if r.similarity < min_similarity: continue
-                    similar_ctr += 1
-                    res_embed_list.append(self.embed_gen(i, r, ctr))
-                if not similar_ctr:
-                    res_embed_list.append(self.no_result_embed_gen(i, q, ctr))
+                results = sn.from_url(url=img_url)
+                for res in results:
+                    # 相似度小於指定相似度，略過
+                    if res.similarity < min_similarity: continue
 
-                if not sn1_limit and res.long_remaining == 0:
-                    sn1_limit = True
-                elif not sn2_limit and res.long_remaining == 0:
-                    sn2_limit = True
+                    at_least_one_result = True
+                    # 獲取結果 Embed
+                    result_embeds.append(
+                        self._get_result_embed(i, res, results.long_remaining))
+                # 完全沒有高於指定相似度的結果
+                if not at_least_one_result:
+                    # 獲取無結果 Embed
+                    result_embeds.append(
+                        self._get_no_result_embed(i, img_url,
+                                                  results.long_remaining))
+            # 送出搜尋結果訊息
+            result_msg = await ctx.reply(embed=result_embeds[0],
+                                         delete_after=240)
+            # 添加搜尋結果訊息
+            self.result_list[result_msg.id] = result_embeds
+            # 添加反應
+            for i in range(len(result_embeds)):
+                await result_msg.add_reaction(list(reaction_emos.keys())[i])
 
-            msg = await ctx.send(content=f'<@{ctx.author.id}>',
-                                 embed=res_embed_list[0],
-                                 delete_after=240)
-            res_list[msg] = [ctx.author, res_embed_list]
-            for i in range(len(res_embed_list)):
-                await msg.add_reaction(list(reaction_emos.keys())[i])
         except LongLimitReachedError:
-            if not sn1_limit:
-                sn1_limit = True
-                ctr = 200
-            else:
-                sn2_limit = True
-                ctr = 400
-
-    @commands.Cog.listener()
-    async def on_reaction_add(self, reaction, user):
-        if user.bot: return
-        if not res_list or reaction.message not in res_list.keys(): return
-        await reaction.remove(user)
-        if str(reaction.emoji) not in reaction_emos.keys(): return
-        # if user != res_list[reaction.message][0]: return
-
-        if reaction_emos[str(reaction.emoji)] < len(
-                res_list[reaction.message][1]):
-            await reaction.message.edit(
-                content=reaction.message.content,
-                embed=res_list[reaction.message][1][reaction_emos[str(
-                    reaction.emoji)]])
-
-    @commands.Cog.listener()
-    async def on_message_delete(self, msg):
-        global res_list
-        if not res_list: return
-        if msg in res_list.keys():
-            del res_list[msg]
+            await ctx.reply(f"今天的搜尋次數已達上限 {Emojis.pepe_hands}")
 
 
-def setup(bot):
+def setup(bot) -> None:
     bot.add_cog(ImgSearch(bot))
