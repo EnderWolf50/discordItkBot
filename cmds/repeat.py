@@ -1,9 +1,9 @@
 import discord
 from discord.ext import commands
-from core import CogInit, get_setting
+from core import CogInit, Bot
 
-Owner = get_setting("Owner")
-Traveler = get_setting("Traveler")
+Owner = Bot.owner
+Traveler = 590430031281651722
 
 Repeat_cmd_status = False
 Cannot_delete = False

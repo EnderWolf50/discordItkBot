@@ -1,0 +1,251 @@
+bot:
+  token: !ENV "BOT_TOKEN"
+
+  prefix: &BOT_PREFIX "."
+
+  owner: &BOT_OWNER 523755296242270210
+  moderators:
+    - *BOT_OWNER
+    - 590430031281651722 # Traveler
+    - 546614210243854337 # Juxta
+    - 501782173364518912 # Raticate
+
+  active_guild: 669934356172636199
+  test_guild  : 725295821456801842
+
+  log_channel        : 838402956863733820
+  chat_backup_channel: 741556551143391323
+  edit_backup_channel: 745569697013039105
+
+  ignore_channels:
+    - 675956755112394753
+  ignore_keywords:
+    - "+save"
+    - "/url"
+
+  image_folder: &IMAGE_FOLDER "./images/"
+
+  mongo_host             : !ENV "MONGO_HOST"
+  sauce_nao_key          : !ENV "SAUCE_NAO_KEY"
+  google_search_api_key  : !ENV "GOOGLE_SEARCH_API_KEY"
+  custom_search_engine_id: !ENV "CUSTOM_SEARCH_ENGINE_ID"
+
+log:
+  sentry_dsn   : !ENV "SENTRY_DSN"
+
+  log_level  : 5
+
+  log_format : "%(asctime)s | %(name)s | %(levelname)-9s | %(message)s"
+  date_format: "%Y-%m-%d %H:%M:%S"
+  file_path  : "./logs"
+  file_name  : "discord_bot.log"
+
+  coloredlogs:
+    styles:
+      trace:
+        color: 246
+      debug:
+        color: 28
+      warning:
+        color: 220
+      critical:
+        background: "red"
+
+styles:
+  colors:
+    light_yellow: &light_yellow 0xFCD992
+
+  emojis:
+    i11_chiwawa: &i11_chiwawa "<:i11_chiwawa:783346447319171075>"
+    helen:
+      helen_1  : &helen_1 "<:helen_1:838343516743532554>"
+      helen_2  : &helen_2 "<:helen_2:838343516895182848>"
+      helen_3  : &helen_3 "<:helen_3:838343516865298442>"
+      helen_4  : &helen_4 "<:helen_4:838343516374564885>"
+      helen_5  : &helen_5 "<:helen_5:838343517033725992>"
+      helen_6  : &helen_6 "<:helen_6:838343517037133847>"
+      helen_7  : &helen_7 "<:helen_7:838343517037264896>"
+      helen_art: &helen_art "<:helen_art:838378914472263701>"
+
+    thonk: &thonk "<:thonk:781092810572562432>"
+
+    # Pepe
+    bongo_pepe        : &bongo_pepe         "<a:bongo_pepe:823225627259699237>"
+    pepe_coffee       : &pepe_coffee        "<:pepe_coffee:823454537305030657>"
+    pepe_coin         : &pepe_coin          "<a:pepe_coin:823235418529988659>"
+    pepe_cross        : &pepe_cross         "<:pepe_cross:823453075095158804>"
+    pepe_crown_flip   : &pepe_crown_flip    "<a:pepe_crown_flip:823468015412707338>"
+    pepe_depressed    : &pepe_depressed     "<:pepe_depressed:823472210349391873>"
+    pepe_facepalm     : &pepe_facepalm      "<:pepe_facepalm:823196602122108959>"
+    pepe_hands        : &pepe_hands         "<:pepe_hands:823446764378914836>"
+    pepe_hmm          : &pepe_hmm           "<:pepe_hmm:823444896115458060>"
+    pepe_monkaS       : &pepe_monkaS        "<:pepe_monkaS:823445833735208980>"
+    pepe_monkaSTEER   : &pepe_monkaSTEER    "<a:pepe_monkaSTEER:823470686650499092>"
+    pepe_nitro        : &pepe_nitro         "<a:pepe_nitro:823467488930037761>"
+    pepe_nopes        : &pepe_nopes         "<a:pepe_nopes:823465237311127562>"
+    pepe_px_xmas      : &pepe_px_xmas       "<a:pepe_pixel_christmas:823470432803356683>"
+    pepe_px           : &pepe_px            "<a:pepe_pixel:823467770389331978>"
+    pepe_saber        : &pepe_saber         "<a:pepe_saber:823467708217425930>"
+    pepe_sad          : &pepe_sad           "<:pepe_sad:823456479591530507>"
+    pepe_sadge        : &pepe_sadge         "<:pepe_sadge:823456522696392705>"
+    pepe_simp         : &pepe_simp          "<:pepe_simp:823448668198797313>"
+    pepe_sus          : &pepe_sus           "<:pepe_sus:823451080942682153>"
+    pepe_hypers       : &pepe_hypers        "<:pepe_hypers:838345805323960330>"
+    rainbow_pepe_angry: &rainbow_pepe_angry "<a:rainbow_pepe_angry:823463476440727562>"
+    rainbow_pepe_happy: &rainbow_pepe_happy "<a:rainbow_pepe_happy:823463330131738624>"
+
+  reactions:
+    prev_page : "<:prev_page:805002492848767017>"
+    next_page : "<:next_page:805002492525805589>"
+    first_page: "<:first_page:806497548343705610>"
+    last_page : "<:last_page:806497548558532649>"
+    numbers:
+      - "1\N{COMBINING ENCLOSING KEYCAP}"
+      - "2\N{COMBINING ENCLOSING KEYCAP}"
+      - "3\N{COMBINING ENCLOSING KEYCAP}"
+      - "4\N{COMBINING ENCLOSING KEYCAP}"
+      - "5\N{COMBINING ENCLOSING KEYCAP}"
+      - "6\N{COMBINING ENCLOSING KEYCAP}"
+      - "7\N{COMBINING ENCLOSING KEYCAP}"
+      - "8\N{COMBINING ENCLOSING KEYCAP}"
+      - "9\N{COMBINING ENCLOSING KEYCAP}"
+    letters:
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER A}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER B}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER C}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER D}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER E}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER F}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER G}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER H}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER I}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER J}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER K}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER L}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER M}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER N}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER O}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER P}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER Q}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER R}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER S}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER T}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER U}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER V}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER W}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER X}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER Y}"
+      - "\N{REGIONAL INDICATOR SYMBOL LETTER Z}"
+
+help_messages:
+  help:
+    title      : "看看是哪個小可憐忘記指令怎麼打啦？"
+    description: null
+    color      : *light_yellow
+    author     : "Itk Bot"
+    footer     : "那個...窩不知道"
+
+    fields:
+      -
+        - !JOIN [*BOT_PREFIX, "bzz"]
+        - "抽籤"
+      -
+        - !JOIN [*BOT_PREFIX, "tdbzz"]
+        - "當日運勢"
+      -
+        - !JOIN [*BOT_PREFIX, "choose"]
+        - "從選項中隨機挑選"
+      -
+        - !JOIN [*BOT_PREFIX, "poll"]
+        - "發起投票"
+      -
+        - !JOIN [*BOT_PREFIX, "roll"]
+        - "抽...數字？"
+      -
+        - !JOIN [*BOT_PREFIX, "pin"]
+        - "奇怪的發言大全"
+
+events:
+  flaming: !JOIN [*IMAGE_FOLDER, "flaming.jpg"]
+  make_friend: !JOIN [*IMAGE_FOLDER, "make_friends.jpg"]
+  helen_art: *helen_art
+  idk:
+    -
+      - !JOIN [*IMAGE_FOLDER, "idk_orig.jpg"]
+      - 30
+    -
+      - !JOIN [*IMAGE_FOLDER, "idk_kailiu.jpg"]
+      - 20
+    -
+      - !JOIN [*IMAGE_FOLDER, "idk_too.jpg"]
+      - 15
+    -
+      - !JOIN [*IMAGE_FOLDER, "idk_flaming.jpg"]
+      - 10
+    -
+      - !JOIN [*IMAGE_FOLDER, "idk_whatever.jpg"]
+      - 10
+    -
+      - !JOIN [*IMAGE_FOLDER, "idk_ero.jpg"]
+      - 10
+    -
+      - !JOIN [*IMAGE_FOLDER, "idk_gif.gif"]
+      - 5
+  yeah:
+    - !JOIN [*IMAGE_FOLDER, "yeah.jpg"]
+    - !JOIN [*IMAGE_FOLDER, "yeah_no.jpg"]
+    - !JOIN [*IMAGE_FOLDER, "yeah_san_xiao.jpg"]
+    - !JOIN [*IMAGE_FOLDER, "yeah_startburst.jpg"]
+  mentioned_reply:
+    - "蛤"
+    - "笑死"
+    - "嗷？"
+    - "噁男"
+    - "變態"
+    - "ㄐㄐ"
+    - "ouo"
+    - "嘎嘎嘎"
+    - "狐尼狐尼"
+    - "黑洞黑洞"
+    - "撒嬌撒嬌"
+    - "窩不知道…"
+    - "嗷嗷嗷嗷嗷"
+    - "嘿嘿嘿嘿嘿"
+    - ":thinking:"
+    - "¯\\_(ツ)_/¯"
+    - *helen_2
+    - *helen_3
+    - *helen_5
+    - *helen_6
+    - *helen_7
+    - !JOIN ["我就爛 ", *pepe_hypers]
+    - !JOIN ["我想要那個 donut ", *helen_4]
+    - !JOIN ["給我那個 donut 好嗎 ", *helen_1]
+  act_cute:
+    - *helen_1
+    - *helen_2
+    - *helen_3
+    - *helen_4
+    - *helen_5
+    - *helen_6
+    - *helen_7
+  loading_cat:
+    - !JOIN ["<:ldc_01:725343128986320916>","<:ldc_02:725343129011486761>","<:ldc_03:725343129183584367>","<:ldc_04:725343129011748976>","<:ldc_05:725343128604770348>"]
+    - !JOIN ["<:ldc_06:725343128910954547>","<:ldc_07:725343128839520259>","<a:ldc_08:725343129892552764>","<:ldc_09:725343129011617852>","<:ldc_10:725343128986583059>"]
+    - !JOIN ["<:ldc_11:725343129087115374>","<:ldc_12:725343128818548737>","<:ldc_13:725343128822743041>","<:ldc_14:725343128994840657>","<:ldc_15:725343129003360346>"]
+
+fun:
+  bzz:
+   options: &BZZ_OPTIONS
+    - "大凶"
+    - "小凶"
+    - "凶"
+    - "平"
+    - "吉"
+    - "小吉"
+    - "大吉"
+    - "吉掰"
+    - "大吉掰"
+    - *i11_chiwawa
+  tdbzz:
+   options: *BZZ_OPTIONS

@@ -3,6 +3,9 @@ __pycache__/
 .env
 .google-cookie
 
+logs/
+images/backup/
+
 sub.*
 temp.*
 tempCodeRunnerFile.*

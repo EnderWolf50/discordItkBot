@@ -4,12 +4,15 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-google = "*"
 "discord.py" = "*"
 python-dotenv = "*"
 pymongo = "*"
 saucenao-api = "*"
 dnspython = "*"
+pyyaml = "*"
+coloredlogs = "*"
+sentry-sdk = "*"
+google-api-python-client = "*"
 
 [dev-packages]
 

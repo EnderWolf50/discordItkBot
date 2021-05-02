@@ -1,32 +1,27 @@
-import discord, os
+import os
+from discord import Intents
 from discord.ext import commands
 
-from dotenv import load_dotenv
+from core import Bot, logging_setup, sentry_setup
 
-load_dotenv()
-TOKEN = os.getenv("TOKEN")
+logging_setup()
+sentry_setup()
 
-bot = commands.Bot(command_prefix=".",
+bot = commands.Bot(command_prefix=Bot.prefix,
                    case_insensitive=True,
-                   intents=discord.Intents.all(),
-                   owner_id=523755296242270210)
+                   intents=Intents.all(),
+                   owner_id=Bot.owner)
 bot.remove_command("help")
 
-for Filename in os.listdir("./cmds"):
-    if Filename.endswith(".py"):
-        bot.load_extension(f"cmds.{Filename[:-3]}")
 
-for Filename in os.listdir("./events"):
-    if Filename.endswith(".py"):
-        bot.load_extension(f"events.{Filename[:-3]}")
+def _load_folder_ext(*folders) -> None:
+    for folder in folders:
+        for file in os.listdir(f"./{folder}"):
+            if not file.startswith("_") and file.endswith(".py"):
+                bot.load_extension(f"{folder}.{file[:-3]}")
 
-for Filename in os.listdir("./games"):
-    if Filename.endswith(".py"):
-        bot.load_extension(f"games.{Filename[:-3]}")
 
-for Filename in os.listdir("./tasks"):
-    if Filename.endswith(".py"):
-        bot.load_extension(f"tasks.{Filename[:-3]}")
+_load_folder_ext("cmds", "events", "games", "tasks")
 
 if __name__ == "__main__":
-    bot.run(TOKEN)
+    bot.run(Bot.token)

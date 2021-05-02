@@ -1,49 +1,81 @@
 import discord
 from discord.ext import commands
-from core import CogInit, rFile
-
-import random
+from core import CogInit, HelpMessages
 
 
 class Basic(CogInit):
-    @commands.command(aliases=['load'])
-    async def ext_load(self, ctx, folder, extension):
-        if not (await self.bot.is_owner(ctx.author)): return
-        self.bot.load_extension(f"{folder}.{extension}")
-        await ctx.message.delete()
-        await ctx.send(f"**{extension}** has been loaded!", delete_after=3)
+    @commands.group(name="extension", aliases=["ext"])
+    async def extension(self, ctx: commands.Context):
+        # 僅用作 Group
+        pass
 
-    @commands.command(aliases=['unload'])
-    async def ext_unload(self, ctx, folder, extension):
+    @extension.command(aliases=['l'])
+    async def load(self, ctx: commands.Context, *input_path) -> None:
         if not (await self.bot.is_owner(ctx.author)): return
-        self.bot.unload_extension(f"{folder}.{extension}")
-        await ctx.message.delete()
-        await ctx.send(f"**{extension}** has been unloaded!", delete_after=3)
 
-    @commands.command(aliases=['reload'])
-    async def ext_reload(self, ctx, folder, extension):
+        ext_path = ".".join(input_path)
+        self.bot.load_extension(ext_path)
+
+        await ctx.reply(f"**{ext_path}** has been loaded!", delete_after=5)
+        await ctx.message.delete(delay=5)
+
+    @extension.command(aliases=['u'])
+    async def unload(self, ctx: commands.Context, *input_path) -> None:
         if not (await self.bot.is_owner(ctx.author)): return
-        self.bot.reload_extension(f"{folder}.{extension}")
-        await ctx.message.delete()
-        await ctx.send(f"**{extension}** has been reloaded!", delete_after=3)
+
+        ext_path = ".".join(input_path)
+        self.bot.unload_extension(ext_path)
+
+        await ctx.reply(f"**{ext_path}** has been unloaded!", delete_after=5)
+        await ctx.message.delete(delay=5)
+
+    @extension.command(aliases=['r'])
+    async def reload(self, ctx: commands.Context, *input_path) -> None:
+        if not (await self.bot.is_owner(ctx.author)): return
+
+        ext_path = ".".join(input_path)
+        self.bot.reload_extension(ext_path)
+
+        await ctx.reply(f"**{ext_path}** has been reloaded!", delete_after=5)
+        await ctx.message.delete(delay=5)
 
     @commands.command()
-    async def help(self, ctx):
-        await ctx.message.delete()
-        embed = discord.Embed(title="看看是哪個小可憐忘記指令怎麼打啦？", color=0xFCD992)
-        embed.set_author(
-            name="Itk Bot",
-            icon_url=
-            "https://cdn.discordapp.com/avatars/710498084194484235/e91dbe68bd05239c050805cc060a34e9.webp?size=128"
-        )
-        embed.set_footer(text="那個...窩不知道")
-        for command, description, inline in rFile("others")["help"]:
-            embed.add_field(name=command, value=description, inline=inline)
-        await ctx.send(embed=embed, delete_after=30)
+    async def help(self, ctx: commands.Context) -> None:
+        embed_details = HelpMessages.help
+
+        embed = discord.Embed(
+            title=embed_details["title"],
+            #   description=embed_details["description"],
+            color=embed_details["color"])
+        # Author
+        embed.set_author(name=embed_details["author"] or self.bot.user.name,
+                         icon_url=self.bot.user.avatar_url)
+        # Footer
+        embed.set_footer(text=embed_details["footer"])
+        # Fields
+        for command, description in embed_details["fields"]:
+            embed.add_field(name=command, value=description, inline=True)
+        await ctx.reply(embed=embed, delete_after=60)
+        await ctx.message.delete(delay=60)
 
     @commands.command()
-    async def ping(self, ctx):
-        await ctx.send(round(self.bot.latency * 1000))
+    async def ping(self, ctx: commands.Context) -> None:
+        await ctx.reply(f"Pong? {round(self.bot.latency * 1000)}")
+
+    @commands.command(aliases=["load"])
+    async def ext_load(self, ctx: commands.Context, *input_path) -> None:
+        # 使舊指令可執行
+        await ctx.invoke(self.bot.get_command("extension load"), *input_path)
+
+    @commands.command(aliases=["unload"])
+    async def ext_unload(self, ctx: commands.Context, *input_path) -> None:
+        # 使舊指令可執行
+        await ctx.invoke(self.bot.get_command("extension unload"), *input_path)
+
+    @commands.command(aliases=["reload"])
+    async def ext_reload(self, ctx: commands.Context, *input_path) -> None:
+        # 使舊指令可執行
+        await ctx.invoke(self.bot.get_command("extension reload"), *input_path)
 
 
 def setup(bot):

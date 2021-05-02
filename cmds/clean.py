@@ -1,18 +1,10 @@
 import discord
 from discord.ext import commands
-from core import CogInit, get_setting
+from core import CogInit, Bot
 
 import datetime
 
-Owner = get_setting("Owner")
-Traveler = get_setting("Traveler")
-Bot = get_setting("Bot")
-
-administrators = [
-    get_setting("Owner"),
-    get_setting("Traveler"),
-    get_setting("Juxta")
-]
+administrators = Bot.moderators
 
 
 # TODO: 改寫判斷

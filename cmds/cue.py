@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from core import CogInit, Mongo
+from core import CogInit, Mongo, Reactions
 
 import random
 from typing import Optional, Union
@@ -59,20 +59,20 @@ class Cue(CogInit):
         details = self.cue_msg_details
 
         # 上一頁
-        if str(reaction.emoji) == "<:prev_page:805002492848767017>":
+        if str(reaction.emoji) == Reactions.prev_page:
             # 避免頁數出現負值
             if details[1] != 0:
                 details[1] -= 1
         # 下一頁
-        elif str(reaction.emoji) == "<:next_page:805002492525805589>":
+        elif str(reaction.emoji) == Reactions.next_page:
             # 避免頁數超出總頁數
             if details[1] != details[2]:
                 details[1] += 1
         # 首頁
-        elif str(reaction.emoji) == "<:first_page:806497548343705610>":
+        elif str(reaction.emoji) == Reactions.first_page:
             details[1] = 0
         # 末頁
-        elif str(reaction.emoji) == "<:last_page:806497548558532649>":
+        elif str(reaction.emoji) == Reactions.last_page:
             details[1] = details[2]
 
         embed = self._get_updated_cue_embed()
@@ -259,5 +259,5 @@ class Cue(CogInit):
         await ctx.invoke(self.bot.get_command("cue list"), member=member)
 
 
-def setup(bot):
+def setup(bot) -> None:
     bot.add_cog(Cue(bot))
