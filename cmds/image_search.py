@@ -1,53 +1,20 @@
 import discord
 from discord.ext import commands
-from core import CogInit
+from core import CogInit, Bot, Reactions
 
-import os, re
+import os
+import re
 from saucenao_api import SauceNao
 from saucenao_api.errors import LongLimitReachedError
 
-KEYS = [os.getenv('SAUCE_NAO_KEY_1'), os.getenv('SAUCE_NAO_KEY_2')]
-SN1 = SauceNao(api_key=KEYS[0], dbmask=1666715746400, numres=3)
-SN2 = SauceNao(api_key=KEYS[1], dbmask=1666715746400, numres=3)
+SN1 = SauceNao(Bot.sauce_nao_key, dbmask=1666715746400, numres=3)
+SN2 = SauceNao(Bot.sauce_nao_key, dbmask=1666715746400, numres=3)
 IMG_RE = re.compile(
     r'(https?:\/\/[^\s]*(\?format=\w*&name=\d*x\d*|(\.png|\.jpg|\.jpeg)))')
 
 reaction_emos = {
-    "1\N{COMBINING ENCLOSING KEYCAP}": 0,
-    "2\N{COMBINING ENCLOSING KEYCAP}": 1,
-    "3\N{COMBINING ENCLOSING KEYCAP}": 2,
-    "4\N{COMBINING ENCLOSING KEYCAP}": 3,
-    "5\N{COMBINING ENCLOSING KEYCAP}": 4,
-    "6\N{COMBINING ENCLOSING KEYCAP}": 5,
-    "7\N{COMBINING ENCLOSING KEYCAP}": 6,
-    "8\N{COMBINING ENCLOSING KEYCAP}": 7,
-    "9\N{COMBINING ENCLOSING KEYCAP}": 8,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER A}": 9,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER B}": 10,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER C}": 11,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER D}": 12,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER E}": 13,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER F}": 14,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER G}": 15,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER H}": 16,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER I}": 17,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER J}": 18,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER K}": 19,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER L}": 20,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER M}": 21,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER N}": 22,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER O}": 23,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER P}": 24,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER Q}": 25,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER R}": 26,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER S}": 27,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER T}": 28,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER U}": 29,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER V}": 30,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER W}": 31,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER X}": 32,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER Y}": 33,
-    "\N{REGIONAL INDICATOR SYMBOL LETTER Z}": 34
+    r: i
+    for i, r in enumerate(Reactions.numbers + Reactions.letters)
 }
 
 sn1_limit = False
