@@ -41,7 +41,7 @@ def logging_setup() -> None:
     root_logger.setLevel(log_level)
     root_logger.addHandler(log_handler)
 
-    logging.getLogger("discord").setLevel(logging.WARNING)
+    logging.getLogger("discord").setLevel(logging.ERROR)
     logging.getLogger("urllib3").setLevel(logging.WARNING)
     logging.getLogger("asyncio").setLevel(logging.INFO)
 

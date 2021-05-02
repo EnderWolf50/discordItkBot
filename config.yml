@@ -16,6 +16,7 @@ bot:
   log_channel        : 838402956863733820
   chat_backup_channel: 741556551143391323
   edit_backup_channel: 745569697013039105
+  main_channel       : 669934356172636208
 
   ignore_channels:
     - 675956755112394753
@@ -31,9 +32,9 @@ bot:
   custom_search_engine_id: !ENV "CUSTOM_SEARCH_ENGINE_ID"
 
 log:
-  sentry_dsn   : !ENV "SENTRY_DSN"
+  sentry_dsn: !ENV "SENTRY_DSN"
 
-  log_level  : 5
+  log_level: 5
 
   log_format : "%(asctime)s | %(name)s | %(levelname)-9s | %(message)s"
   date_format: "%Y-%m-%d %H:%M:%S"
@@ -53,6 +54,7 @@ log:
 
 styles:
   colors:
+    cyan        : &cyan 0x21BBAA
     light_yellow: &light_yellow 0xFCD992
 
   emojis:
@@ -70,27 +72,28 @@ styles:
     thonk: &thonk "<:thonk:781092810572562432>"
 
     # Pepe
-    bongo_pepe        : &bongo_pepe         "<a:bongo_pepe:823225627259699237>"
-    pepe_coffee       : &pepe_coffee        "<:pepe_coffee:823454537305030657>"
-    pepe_coin         : &pepe_coin          "<a:pepe_coin:823235418529988659>"
-    pepe_cross        : &pepe_cross         "<:pepe_cross:823453075095158804>"
-    pepe_crown_flip   : &pepe_crown_flip    "<a:pepe_crown_flip:823468015412707338>"
-    pepe_depressed    : &pepe_depressed     "<:pepe_depressed:823472210349391873>"
-    pepe_facepalm     : &pepe_facepalm      "<:pepe_facepalm:823196602122108959>"
-    pepe_hands        : &pepe_hands         "<:pepe_hands:823446764378914836>"
-    pepe_hmm          : &pepe_hmm           "<:pepe_hmm:823444896115458060>"
-    pepe_monkaS       : &pepe_monkaS        "<:pepe_monkaS:823445833735208980>"
-    pepe_monkaSTEER   : &pepe_monkaSTEER    "<a:pepe_monkaSTEER:823470686650499092>"
-    pepe_nitro        : &pepe_nitro         "<a:pepe_nitro:823467488930037761>"
-    pepe_nopes        : &pepe_nopes         "<a:pepe_nopes:823465237311127562>"
-    pepe_px_xmas      : &pepe_px_xmas       "<a:pepe_pixel_christmas:823470432803356683>"
-    pepe_px           : &pepe_px            "<a:pepe_pixel:823467770389331978>"
-    pepe_saber        : &pepe_saber         "<a:pepe_saber:823467708217425930>"
-    pepe_sad          : &pepe_sad           "<:pepe_sad:823456479591530507>"
-    pepe_sadge        : &pepe_sadge         "<:pepe_sadge:823456522696392705>"
-    pepe_simp         : &pepe_simp          "<:pepe_simp:823448668198797313>"
-    pepe_sus          : &pepe_sus           "<:pepe_sus:823451080942682153>"
-    pepe_hypers       : &pepe_hypers        "<:pepe_hypers:838345805323960330>"
+    bongo_pepe        : &bongo_pepe "<a:bongo_pepe:823225627259699237>"
+    pepe_coffee       : &pepe_coffee "<:pepe_coffee:823454537305030657>"
+    pepe_coin         : &pepe_coin "<a:pepe_coin:823235418529988659>"
+    pepe_cross        : &pepe_cross "<:pepe_cross:823453075095158804>"
+    pepe_crown_flip   : &pepe_crown_flip "<a:pepe_crown_flip:823468015412707338>"
+    pepe_depressed    : &pepe_depressed "<:pepe_depressed:823472210349391873>"
+    pepe_facepalm     : &pepe_facepalm "<:pepe_facepalm:823196602122108959>"
+    pepe_hands        : &pepe_hands "<:pepe_hands:823446764378914836>"
+    pepe_hmm          : &pepe_hmm "<:pepe_hmm:823444896115458060>"
+    pepe_hypers       : &pepe_hypers "<:pepe_hypers:838345805323960330>"
+    pepe_monkaS       : &pepe_monkaS "<:pepe_monkaS:823445833735208980>"
+    pepe_monkaSTEER   : &pepe_monkaSTEER "<a:pepe_monkaSTEER:823470686650499092>"
+    pepe_nitro        : &pepe_nitro "<a:pepe_nitro:823467488930037761>"
+    pepe_nopes        : &pepe_nopes "<a:pepe_nopes:823465237311127562>"
+    pepe_pog_champ    : &pepe_pog_champ "<:pepe_pog_champ:838461034275799061>"
+    pepe_px           : &pepe_px "<a:pepe_pixel:823467770389331978>"
+    pepe_px_xmas      : &pepe_px_xmas "<a:pepe_pixel_christmas:823470432803356683>"
+    pepe_saber        : &pepe_saber "<a:pepe_saber:823467708217425930>"
+    pepe_sad          : &pepe_sad "<:pepe_sad:823456479591530507>"
+    pepe_sadge        : &pepe_sadge "<:pepe_sadge:823456522696392705>"
+    pepe_simp         : &pepe_simp "<:pepe_simp:823448668198797313>"
+    pepe_sus          : &pepe_sus "<:pepe_sus:823451080942682153>"
     rainbow_pepe_angry: &rainbow_pepe_angry "<a:rainbow_pepe_angry:823463476440727562>"
     rainbow_pepe_happy: &rainbow_pepe_happy "<a:rainbow_pepe_happy:823463330131738624>"
 
@@ -146,23 +149,17 @@ help_messages:
     footer     : "那個...窩不知道"
 
     fields:
-      -
-        - !JOIN [*BOT_PREFIX, "bzz"]
+      - - !JOIN [*BOT_PREFIX, "bzz"]
         - "抽籤"
-      -
-        - !JOIN [*BOT_PREFIX, "tdbzz"]
+      - - !JOIN [*BOT_PREFIX, "tdbzz"]
         - "當日運勢"
-      -
-        - !JOIN [*BOT_PREFIX, "choose"]
+      - - !JOIN [*BOT_PREFIX, "choose"]
         - "從選項中隨機挑選"
-      -
-        - !JOIN [*BOT_PREFIX, "poll"]
+      - - !JOIN [*BOT_PREFIX, "poll"]
         - "發起投票"
-      -
-        - !JOIN [*BOT_PREFIX, "roll"]
+      - - !JOIN [*BOT_PREFIX, "roll"]
         - "抽...數字？"
-      -
-        - !JOIN [*BOT_PREFIX, "pin"]
+      - - !JOIN [*BOT_PREFIX, "pin"]
         - "奇怪的發言大全"
 
 events:
@@ -170,26 +167,19 @@ events:
   make_friend: !JOIN [*IMAGE_FOLDER, "make_friends.jpg"]
   helen_art: *helen_art
   idk:
-    -
-      - !JOIN [*IMAGE_FOLDER, "idk_orig.jpg"]
+    - - !JOIN [*IMAGE_FOLDER, "idk_orig.jpg"]
       - 30
-    -
-      - !JOIN [*IMAGE_FOLDER, "idk_kailiu.jpg"]
+    - - !JOIN [*IMAGE_FOLDER, "idk_kailiu.jpg"]
       - 20
-    -
-      - !JOIN [*IMAGE_FOLDER, "idk_too.jpg"]
+    - - !JOIN [*IMAGE_FOLDER, "idk_too.jpg"]
       - 15
-    -
-      - !JOIN [*IMAGE_FOLDER, "idk_flaming.jpg"]
+    - - !JOIN [*IMAGE_FOLDER, "idk_flaming.jpg"]
       - 10
-    -
-      - !JOIN [*IMAGE_FOLDER, "idk_whatever.jpg"]
+    - - !JOIN [*IMAGE_FOLDER, "idk_whatever.jpg"]
       - 10
-    -
-      - !JOIN [*IMAGE_FOLDER, "idk_ero.jpg"]
+    - - !JOIN [*IMAGE_FOLDER, "idk_ero.jpg"]
       - 10
-    -
-      - !JOIN [*IMAGE_FOLDER, "idk_gif.gif"]
+    - - !JOIN [*IMAGE_FOLDER, "idk_gif.gif"]
       - 5
   yeah:
     - !JOIN [*IMAGE_FOLDER, "yeah.jpg"]
@@ -230,22 +220,40 @@ events:
     - *helen_6
     - *helen_7
   loading_cat:
-    - !JOIN ["<:ldc_01:725343128986320916>","<:ldc_02:725343129011486761>","<:ldc_03:725343129183584367>","<:ldc_04:725343129011748976>","<:ldc_05:725343128604770348>"]
-    - !JOIN ["<:ldc_06:725343128910954547>","<:ldc_07:725343128839520259>","<a:ldc_08:725343129892552764>","<:ldc_09:725343129011617852>","<:ldc_10:725343128986583059>"]
-    - !JOIN ["<:ldc_11:725343129087115374>","<:ldc_12:725343128818548737>","<:ldc_13:725343128822743041>","<:ldc_14:725343128994840657>","<:ldc_15:725343129003360346>"]
+    - !JOIN [
+        "<:ldc_01:725343128986320916>",
+        "<:ldc_02:725343129011486761>",
+        "<:ldc_03:725343129183584367>",
+        "<:ldc_04:725343129011748976>",
+        "<:ldc_05:725343128604770348>",
+      ]
+    - !JOIN [
+        "<:ldc_06:725343128910954547>",
+        "<:ldc_07:725343128839520259>",
+        "<a:ldc_08:725343129892552764>",
+        "<:ldc_09:725343129011617852>",
+        "<:ldc_10:725343128986583059>",
+      ]
+    - !JOIN [
+        "<:ldc_11:725343129087115374>",
+        "<:ldc_12:725343128818548737>",
+        "<:ldc_13:725343128822743041>",
+        "<:ldc_14:725343128994840657>",
+        "<:ldc_15:725343129003360346>",
+      ]
 
 fun:
   bzz:
-   options: &BZZ_OPTIONS
-    - "大凶"
-    - "小凶"
-    - "凶"
-    - "平"
-    - "吉"
-    - "小吉"
-    - "大吉"
-    - "吉掰"
-    - "大吉掰"
-    - *i11_chiwawa
+    options: &BZZ_OPTIONS
+      - "大凶"
+      - "小凶"
+      - "凶"
+      - "平"
+      - "吉"
+      - "小吉"
+      - "大吉"
+      - "吉掰"
+      - "大吉掰"
+      - *i11_chiwawa
   tdbzz:
-   options: *BZZ_OPTIONS
+    options: *BZZ_OPTIONS

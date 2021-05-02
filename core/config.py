@@ -58,7 +58,9 @@ class Bot(metaclass=ConfigGetter):
 class Log(metaclass=ConfigGetter):
     section = "log"
 
-
+class Colors(metaclass=ConfigGetter):
+    section = "styles"
+    subsection = "colors"
 class Emojis(metaclass=ConfigGetter):
     section = "styles"
     subsection = "emojis"
