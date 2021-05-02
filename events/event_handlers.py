@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class EventHandlers(CogInit):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.backup_path = Path(Bot.image_folder, "backup")
         self.backup_path.mkdir(exist_ok=True)

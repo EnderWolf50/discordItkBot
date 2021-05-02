@@ -4,7 +4,7 @@ from typing import Dict, Optional, Any
 
 
 class Mongo:
-    def __init__(self, db: str, coll: str, *args, **kwargs):
+    def __init__(self, db: str, coll: str, *args, **kwargs) -> None:
         self._client = pymongo.MongoClient(os.getenv("MONGO_HOST"))
         self._db = self._client[db]
         self._coll = self._db[coll]

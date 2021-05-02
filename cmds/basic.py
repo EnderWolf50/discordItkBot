@@ -78,5 +78,5 @@ class Basic(CogInit):
         await ctx.invoke(self.bot.get_command("extension reload"), *input_path)
 
 
-def setup(bot):
+def setup(bot) -> None:
     bot.add_cog(Basic(bot))

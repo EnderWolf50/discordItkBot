@@ -5,7 +5,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def _env_var_constructor(loader, node):
+def _env_var_constructor(loader, node) -> str:
     default = None
 
     key = loader.construct_scalar(node)
@@ -14,7 +14,7 @@ def _env_var_constructor(loader, node):
     return value
 
 
-def _join_var_constructor(loader, node):
+def _join_var_constructor(loader, node) -> str:
     fields = loader.construct_sequence(node)
     return "".join(str(x) for x in fields)
 
