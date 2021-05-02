@@ -142,7 +142,7 @@ class Cue(CogInit):
         await ctx.message.delete(delay=7)
         return
 
-    @cue.command(aliases=["d", "r", "remove"])
+    @cue.command(aliases=["remove", "d", "r"])
     async def delete(self, ctx, member: discord.Member,
                      pos_or_string: Union[int, str]) -> None:
         # 獲取已添加的語錄
@@ -236,7 +236,7 @@ class Cue(CogInit):
         await cue_list_message.add_reaction("<:next_page:805002492525805589>")
         await cue_list_message.add_reaction("<:last_page:806497548558532649>")
 
-    @commands.command()
+    @commands.command(aliases=["ca"])
     async def cue_add(self, ctx, member: discord.Member, *,
                       cue_string) -> None:
         # 使舊指令可執行
@@ -244,7 +244,7 @@ class Cue(CogInit):
                          member=member,
                          cue_string=cue_string)
 
-    @commands.command(aliases=["cue_del", "cue_remove", "cue_rem"])
+    @commands.command(aliases=["cd", "cr"])
     async def cue_delete(self, ctx: commands.Context, member: discord.Member,
                          pos_or_string: Union[int, str]) -> None:
         # 使舊指令可執行
@@ -252,7 +252,7 @@ class Cue(CogInit):
                          member=member,
                          pos_or_string=pos_or_string)
 
-    @commands.command()
+    @commands.command(aliases=["cl"])
     async def cue_list(self, ctx: commands.Context,
                        member: discord.Member) -> None:
         # 使舊指令可執行
