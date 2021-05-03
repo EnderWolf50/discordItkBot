@@ -28,8 +28,11 @@ bot:
 
   mongo_host             : !ENV "MONGO_HOST"
   sauce_nao_key          : !ENV "SAUCE_NAO_KEY"
-  google_search_api_key  : !ENV "GOOGLE_SEARCH_API_KEY"
   custom_search_engine_id: !ENV "CUSTOM_SEARCH_ENGINE_ID"
+  google_search_api_keys : !ENV
+    - "GOOGLE_SEARCH_API_KEY_1"
+    - "GOOGLE_SEARCH_API_KEY_2"
+    - "GOOGLE_SEARCH_API_KEY_3"
 
 log:
   sentry_dsn: !ENV "SENTRY_DSN"

@@ -1,17 +1,26 @@
 import os
 import yaml
 import logging
+from typing import Union
 
 logger = logging.getLogger(__name__)
 
 
-def _env_var_constructor(loader, node) -> str:
+def _env_var_constructor(loader, node) -> Union[str, list[str]]:
     default = None
 
-    key = loader.construct_scalar(node)
-    value = os.getenv(key, default)
+    # 為純量，獲取單一環境變數
+    if node.id == "scalar":
+        key = loader.construct_scalar(node)
+        value = os.getenv(key, default)
 
-    return value
+        return value
+    # 為序列，獲取多個環境變數
+    else:
+        keys = loader.construct_sequence(node)
+        values = [os.getenv(key) for key in keys]
+
+        return values
 
 
 def _join_var_constructor(loader, node) -> str:
@@ -58,9 +67,12 @@ class Bot(metaclass=ConfigGetter):
 class Log(metaclass=ConfigGetter):
     section = "log"
 
+
 class Colors(metaclass=ConfigGetter):
     section = "styles"
     subsection = "colors"
+
+
 class Emojis(metaclass=ConfigGetter):
     section = "styles"
     subsection = "emojis"

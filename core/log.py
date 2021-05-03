@@ -44,6 +44,7 @@ def logging_setup() -> None:
     logging.getLogger("discord").setLevel(logging.ERROR)
     logging.getLogger("urllib3").setLevel(logging.WARNING)
     logging.getLogger("asyncio").setLevel(logging.INFO)
+    logging.getLogger("googleapiclient").setLevel(logging.WARNING)
 
     coloredlogs.DEFAULT_LEVEL_STYLES = {
         **coloredlogs.DEFAULT_LEVEL_STYLES,

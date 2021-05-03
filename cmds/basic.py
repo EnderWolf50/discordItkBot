@@ -5,7 +5,7 @@ from core import CogInit, HelpMessages
 
 class Basic(CogInit):
     @commands.group(name="extension", aliases=["ext"])
-    async def extension(self, ctx: commands.Context):
+    async def extension(self, ctx: commands.Context) -> None:
         # 僅用作 Group
         pass
 

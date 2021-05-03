@@ -1,15 +1,16 @@
-import os
 import discord
 from discord.ext import commands
 from core import CogInit, Bot, Events
 
+import os
 import re
 import random
 import logging
 from typing import Any
 from pathlib import Path
+from itertools import cycle
 from datetime import datetime, timedelta
-from googleapiclient.discovery import build
+from googleapiclient import discovery, errors
 
 logger = logging.getLogger(__name__)
 
@@ -28,13 +29,26 @@ class EventHandlers(CogInit):
         for word in Bot.ignore_keywords:
             self.ignore_list.append(word)
 
-    @staticmethod
-    def google_search(q: str, **kwargs) -> dict[str, Any]:
-        key = Bot.google_search_api_key
+        self.google_search_api_keys = cycle(Bot.google_search_api_keys)
+
+    def google_search(self, q: str, **kwargs) -> dict[str, Any]:
+        key = next(self.google_search_api_keys)
         cse = Bot.custom_search_engine_id
-        service = build("customsearch", "v1", developerKey=key)
-        res = service.cse().list(q=q, cx=cse, **kwargs).execute()
-        return res["items"]
+        try:
+            service = discovery.build("customsearch", "v1", developerKey=key)
+            res = service.cse().list(
+                q=q,
+                cx=cse,
+                c2coff=0,  # 簡繁中結果
+                hl="zh-TW",  # 介面語言
+                gl="tw",  # 地理位置
+                lr="lang_zh-TW",  # 結果語言
+                safe="off",  # 安全搜索
+                **kwargs).execute()
+
+            return res["items"]
+        except errors.HttpError:
+            logger.error(f"使用 {key} 進行搜索時發生錯誤，可能是超出配額或或金鑰無效")
 
     @commands.Cog.listener()
     async def on_ready(self) -> None:
@@ -106,10 +120,7 @@ class EventHandlers(CogInit):
             await msg.reply(file=pic, delete_after=7)
         # 請問
         if content.startswith("請問"):
-            result = self.google_search(content[2:],
-                                        lr="lang_zh-TW",
-                                        safe="off",
-                                        num=1)[0]
+            result = self.google_search(content[2:], num=1)[0]
             await msg.reply(result["link"])
 
         # 圖片備份

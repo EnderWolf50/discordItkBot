@@ -5,23 +5,17 @@ from core import CogInit, Bot, Reactions, Colors, Emojis
 import os
 import re
 from typing import Any
-from saucenao_api import SauceNao
-from saucenao_api.errors import LongLimitReachedError
-
-sn = SauceNao(Bot.sauce_nao_key, dbmask=1666715746400, numres=3)
-
-IMG_LINK_PATTERN = re.compile(
-    r'(https?:\/\/[^\s]*(\?format=\w*&name=\d*x\d*|(\.png|\.jpg|\.jpeg)))')
-
-reaction_emos = {
-    r: i
-    for i, r in enumerate(Reactions.numbers + Reactions.letters)
-}
+from saucenao_api import SauceNao, errors
 
 
 class ImgSearch(CogInit):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        self.sn = SauceNao(Bot.sauce_nao_key, dbmask=1666715746400, numres=3)
+        self.IMG_LINK_PATTERN = re.compile(
+            r'(https?:\/\/[^\s]*(\?format=\w*&name=\d*x\d*|(\.png|\.jpg|\.jpeg)))'
+        )
+
         self.result_list = {}
         self.reaction_emos = {
             r: i
@@ -127,7 +121,8 @@ class ImgSearch(CogInit):
                 ref_msg = await ctx.channel.fetch_message(
                     ctx.message.reference.message_id)
                 queue += [a.url for a in ref_msg.attachments] + [
-                    a[0] for a in re.findall(IMG_LINK_PATTERN, ref_msg.content)
+                    a[0]
+                    for a in re.findall(self.IMG_LINK_PATTERN, ref_msg.content)
                 ]
             # 若有上傳附件，獲取訊息內圖片連結
             if ctx.message.attachments:
@@ -136,7 +131,7 @@ class ImgSearch(CogInit):
             if (args[:-1] if last_isfloat else args):
                 queue += [
                     a for a in (args[:-1] if last_isfloat else args)
-                    if re.match(IMG_LINK_PATTERN, a)
+                    if re.match(self.IMG_LINK_PATTERN, a)
                 ]
             # 執行至此佇列仍為空，判定為未給予搜尋要素
             if not queue:
@@ -149,7 +144,7 @@ class ImgSearch(CogInit):
             for i, img_url in enumerate(queue[:6], 1):
                 at_least_one_result = False
 
-                results = sn.from_url(url=img_url)
+                results = self.sn.from_url(url=img_url)
                 for res in results:
                     # 相似度小於指定相似度，略過
                     if res.similarity < min_similarity: continue
@@ -173,7 +168,7 @@ class ImgSearch(CogInit):
             for i in range(len(result_embeds)):
                 await result_msg.add_reaction(list(reaction_emos.keys())[i])
 
-        except LongLimitReachedError:
+        except errors.LongLimitReachedError:
             await ctx.reply(f"今天的搜尋次數已達上限 {Emojis.pepe_hands}")
 
 
