@@ -87,15 +87,15 @@ class ImgSearch(CogInit):
         await reaction.remove(user)
         raw_reaction = str(reaction.emoji)
         # 如果不是指定的反應表符，略過
-        if raw_reaction not in reaction_emos: return
+        if raw_reaction not in self.reaction_emos: return
 
         # 反應所代表的數字小於結果串列長度
-        if reaction_emos[raw_reaction] < len(
+        if self.reaction_emos[raw_reaction] < len(
                 self.result_list[reaction.message.id]):
             await reaction.message.edit(
                 content=reaction.message.content,
                 embed=self.result_list[reaction.message.id][
-                    reaction_emos[raw_reaction]])
+                    self.reaction_emos[raw_reaction]])
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg: discord.Message) -> None:
@@ -166,7 +166,7 @@ class ImgSearch(CogInit):
             self.result_list[result_msg.id] = result_embeds
             # 添加反應
             for i in range(len(result_embeds)):
-                await result_msg.add_reaction(list(reaction_emos.keys())[i])
+                await result_msg.add_reaction(list(self.reaction_emos.keys())[i])
 
         except errors.LongLimitReachedError:
             await ctx.reply(f"今天的搜尋次數已達上限 {Emojis.pepe_hands}")
