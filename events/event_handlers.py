@@ -120,14 +120,14 @@ class EventHandlers(CogInit):
             await msg.reply(file=pic, delete_after=7)
         # 請問
         if content.startswith("請問"):
-            result = self.google_search(content[2:], num=1)[0]
+            result = self.google_search(content[2:], num=1)
             if result is None:
                 await msg.reply(
                     f"很遺憾\n你問的東西連 Google 都回答不了你 {Emojis.pepe_coffee}",
                     delete_after=10)
                 await msg.delete(delay=10)
                 return
-            await msg.reply(result["link"])
+            await msg.reply(result[0]["link"])
 
         # 圖片備份
         counter = 0
