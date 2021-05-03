@@ -21,8 +21,8 @@ bot:
   ignore_channels:
     - 675956755112394753
   ignore_keywords:
-    - "+save"
-    - "/url"
+    - "save"
+    - "url"
 
   image_folder: &IMAGE_FOLDER "./images/"
 
