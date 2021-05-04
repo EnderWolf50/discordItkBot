@@ -120,14 +120,17 @@ class EventHandlers(CogInit):
             await msg.reply(file=pic, delete_after=7)
         # 請問
         if content.startswith("請問"):
-            result = self.google_search(content[2:], num=1)
-            if result is None:
-                await msg.reply(
-                    f"很遺憾\n你問的東西連 Google 都回答不了你 {Emojis.pepe_coffee}",
-                    delete_after=10)
-                await msg.delete(delay=10)
-                return
-            await msg.reply(result[0]["link"])
+            if content[2:].startswith("晚餐"):
+                await msg.reply(random.choice(Events.meals["dinner"]))
+            else:
+                result = self.google_search(content[2:], num=1)
+                if result is None:
+                    await msg.reply(
+                        f"很遺憾\n你問的東西連 Google 都回答不了你 {Emojis.pepe_coffee}",
+                        delete_after=10)
+                    await msg.delete(delay=10)
+                    return
+                await msg.reply(result[0]["link"])
 
         # 圖片備份
         counter = 0
@@ -148,6 +151,8 @@ class EventHandlers(CogInit):
         if after.author.bot: return
         # 忽略私訊及測試群組
         if not after.guild or after.guild.id == Bot.test_guild: return
+        # 前後訊息內容相同，略過
+        if before.content.lower() == after.content.lower(): return
 
         author = after.author
         channel = after.channel
@@ -158,9 +163,8 @@ class EventHandlers(CogInit):
             self.backup_path / Path(f) for f in os.listdir(self.backup_path)
             if f.startswith(str(after.id))
         ]
-        backup_content = f"{before.content}\n~~-{'／'*20}-~~\n{after.content}"
         await self.bot.get_channel(Bot.edit_backup_channel).send(
-            f"{author.display_name} `{author.id}`｜{channel.name} `{create_time}`\n{backup_content}",
+            f"{author.display_name} `{author.id}`｜{channel.name} `{create_time}`\n{before.content} `→` {after.content}",
             files=[discord.File(file) for file in files])
 
     @commands.Cog.listener()
