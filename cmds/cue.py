@@ -7,7 +7,7 @@ from typing import Optional, Union
 
 
 class Cue(CogInit):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.mongo = Mongo("discord_669934356172636199", "cue_list")
 
@@ -47,7 +47,8 @@ class Cue(CogInit):
             self.cue_msg_details = []
 
     @commands.Cog.listener()
-    async def on_reaction_add(self, reaction, user):
+    async def on_reaction_add(self, reaction: discord.Reaction,
+                              user: discord.User) -> None:
         # 忽略來自機器人的 Emoji 添加事件
         if user.bot: return
         # 如果之前沒有列出語錄，或事件訊息不是語錄訊息，忽略

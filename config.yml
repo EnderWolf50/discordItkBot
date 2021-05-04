@@ -20,6 +20,7 @@ bot:
 
   ignore_channels:
     - 675956755112394753
+    - 703215004807069737
   ignore_keywords:
     - "save"
     - "url"

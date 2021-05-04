@@ -141,7 +141,7 @@ class EmojiRank(CogInit):
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction: discord.Reaction,
-                              user: discord.User):
+                              user: discord.User) -> None:
         # 忽略來自機器人的 Emoji 添加事件
         if user.bot: return
         # 如果之前沒有列出排行，或事件訊息不是排行訊息，忽略
@@ -172,13 +172,13 @@ class EmojiRank(CogInit):
         embed = await self._get_updated_rank_embed()
         await reaction.message.edit(embed=embed)
 
-    @commands.group(name="emoji", aliases=["emo"])
+    @commands.group(name="emoji", aliases=["emo", "e"])
     async def emoji(self, ctx: commands.Context) -> None:
         # 僅作為 Group 用途，略過
         pass
 
-    @emoji.command()
-    async def rank(self, ctx: commands.Context):
+    @emoji.command(aliases=["r"])
+    async def rank(self, ctx: commands.Context) -> None:
         await ctx.message.delete(delay=3)
         # 嘗試刪除之前已送出的排行訊息
         try:

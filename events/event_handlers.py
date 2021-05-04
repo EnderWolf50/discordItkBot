@@ -140,6 +140,30 @@ class EventHandlers(CogInit):
                                       Path(f"{msg.id}_{counter:02d}.{ext}"))
 
     @commands.Cog.listener()
+    async def on_message_edit(self, before: discord.Message,
+                              after: discord.Message) -> None:
+        # 忽略頻道
+        if after.channel and after.channel.id in Bot.ignore_channels: return
+        # 忽略機器人
+        if after.author.bot: return
+        # 忽略私訊及測試群組
+        if not after.guild or after.guild.id == Bot.test_guild: return
+
+        author = after.author
+        channel = after.channel
+        create_time = (after.edited_at +
+                       timedelta(hours=8)).strftime("%Y/%m/%d %H:%M:%S")
+        # 尋找已備份的圖片檔
+        files = [
+            self.backup_path / Path(f) for f in os.listdir(self.backup_path)
+            if f.startswith(str(after.id))
+        ]
+        backup_content = f"{before.content}\n~~-{'／'*20}-~~\n{after.content}"
+        await self.bot.get_channel(Bot.edit_backup_channel).send(
+            f"{author.display_name} `{author.id}`｜{channel.name} `{create_time}`\n{backup_content}",
+            files=[discord.File(file) for file in files])
+
+    @commands.Cog.listener()
     async def on_message_delete(self, msg: discord.Message) -> None:
         # 忽略機器人
         if msg.author.bot: return
