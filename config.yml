@@ -191,7 +191,7 @@ events:
     - !JOIN [*IMAGE_FOLDER, "yeah.jpg"]
     - !JOIN [*IMAGE_FOLDER, "yeah_no.jpg"]
     - !JOIN [*IMAGE_FOLDER, "yeah_san_xiao.jpg"]
-    - !JOIN [*IMAGE_FOLDER, "yeah_startburst.jpg"]
+    - !JOIN [*IMAGE_FOLDER, "yeah_starburst.jpg"]
   mentioned_reply:
     - "蛤"
     - "笑死"
