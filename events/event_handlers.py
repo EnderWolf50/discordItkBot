@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 from core import CogInit, Bot, Events, Emojis
 
-import os
 import re
 import random
 import logging
@@ -120,7 +119,9 @@ class EventHandlers(CogInit):
             await msg.reply(file=pic, delete_after=7)
         # 請問
         if content.startswith("請問"):
-            if content[2:].startswith("晚餐"):
+            if content[2:4] == "早餐":
+                pass
+            elif content[2:4] == "晚餐":
                 await msg.reply(random.choice(Events.meals["dinner"]))
             else:
                 result = self.google_search(content[2:], num=1)
@@ -160,8 +161,8 @@ class EventHandlers(CogInit):
                        timedelta(hours=8)).strftime("%Y/%m/%d %H:%M:%S")
         # 尋找已備份的圖片檔
         files = [
-            self.backup_path / Path(f) for f in os.listdir(self.backup_path)
-            if f.startswith(str(after.id))
+            f for f in self.backup_path.iterdir()
+            if f.name.startswith(str(after.id))
         ]
         await self.bot.get_channel(Bot.edit_backup_channel).send(
             f"{author.display_name} `{author.id}`｜{channel.name} `{create_time}`\n{before.content} `→` {after.content}",
@@ -190,16 +191,15 @@ class EventHandlers(CogInit):
                        timedelta(hours=8)).strftime("%Y/%m/%d %H:%M:%S")
         # 尋找已備份的圖片檔
         files = [
-            self.backup_path / Path(f) for f in os.listdir(self.backup_path)
-            if f.startswith(str(msg.id))
+            f for f in self.backup_path.iterdir()
+            if f.name.startswith(str(msg.id))
         ]
-
         await self.bot.get_channel(Bot.chat_backup_channel).send(
             f"{author.display_name} `{author.id}`｜{channel.name} `{create_time}`\n{msg.content}",
             files=[discord.File(file) for file in files])
         # 刪除圖片
         for file in files:
-            os.remove(file)
+            file.unlink()
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction: discord.Reaction,
