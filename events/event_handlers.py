@@ -109,9 +109,14 @@ class EventHandlers(CogInit):
                  for name in [u.display_name for u in msg.mentions]):
             pic = discord.File(Events.so_hot)
             await msg.reply(file=pic, delete_after=7)
+        # 假的
         elif "假的" in content:
             pic = discord.File(Events.fake)
             await msg.reply(file=pic, delete_after=10)
+        # 你很壞
+        elif "你很壞" in content:
+            pic = discord.File(Events.you_bad)
+            await msg.reply(file=pic, delete_after=7)
         # 好耶
         elif "好耶" in content:
             pic = discord.File(random.choice(Events.yeah))
