@@ -177,6 +177,7 @@ help_messages:
 events:
   flaming: !JOIN [*IMAGE_FOLDER, "flaming.jpg"]
   make_friend: !JOIN [*IMAGE_FOLDER, "make_friends.jpg"]
+  so_hot: !JOIN [*IMAGE_FOLDER, "so_hot.jpg"]
   helen_art: *helen_art
   idk:
     - - !JOIN [*IMAGE_FOLDER, "idk_orig.jpg"]
@@ -272,6 +273,7 @@ events:
       - "肯德基"
       - "麥外勞"
       - "丹丹漢堡"
+
 fun:
   bzz:
     options: &BZZ_OPTIONS
