@@ -100,7 +100,12 @@ class EventHandlers(CogInit):
         # 撒嬌 (名稱)
         elif any(kw in author_name for kw in ("donut", "bakery", "撒嬌")):
             await msg.add_reaction(random.choice(Events.act_cute))
+        # 素每（訊息）
         elif any(kw in content for kw in ("熱", "好熱", "素每")):
+            pic = discord.File(Events.so_hot)
+            await msg.reply(file=pic, delete_after=7)
+        # 素每（名稱）
+        elif "素每" in (u.display_name for u in msg.mentions):
             pic = discord.File(Events.so_hot)
             await msg.reply(file=pic, delete_after=7)
         # 好耶
