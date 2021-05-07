@@ -54,7 +54,6 @@ class EventHandlers(CogInit):
 
     @commands.Cog.listener()
     async def on_message(self, msg: discord.Message) -> None:
-        print([u.display_name for u in msg.mentions])
         # 忽略指定頻道
         if msg.channel and msg.channel.id in Bot.ignore_channels: return
 
