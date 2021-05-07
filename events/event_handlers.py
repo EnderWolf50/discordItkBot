@@ -114,8 +114,8 @@ class EventHandlers(CogInit):
         elif "假的" in content:
             pic = discord.File(Events.fake)
             await msg.reply(file=pic, delete_after=10)
-        # 你很壞
-        elif "你很壞" in content:
+        # 很壞
+        elif "很壞" in content:
             pic = discord.File(Events.you_bad)
             await msg.reply(file=pic, delete_after=7)
         # 綺麗な双子
