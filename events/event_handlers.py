@@ -72,6 +72,8 @@ class EventHandlers(CogInit):
             await msg.reply(Events.helen_art)
 
         if msg.author.bot: return
+
+        mentions = [u.display_name for u in msg.mentions]
         # Mentioned
         if self.bot.user in msg.mentions:
             await msg.reply(random.choice(Events.mentioned_reply))
@@ -105,8 +107,7 @@ class EventHandlers(CogInit):
             pic = discord.File(Events.so_hot)
             await msg.reply(file=pic, delete_after=7)
         # 素每（名稱）
-        elif any("素每" in name
-                 for name in [u.display_name for u in msg.mentions]):
+        elif any("素每" in name for name in mentions):
             pic = discord.File(Events.so_hot)
             await msg.reply(file=pic, delete_after=7)
         # 假的
@@ -117,6 +118,10 @@ class EventHandlers(CogInit):
         elif "你很壞" in content:
             pic = discord.File(Events.you_bad)
             await msg.reply(file=pic, delete_after=7)
+        # 綺麗な双子
+        elif "綺麗な双子(姊)" in mentions and "綺麗な双子(妹)" in mentions:
+            pic = discord.File(Events.sisters)
+            await msg.reply(file=pic, delete_after=8.5)
         # 好耶
         elif "好耶" in content:
             pic = discord.File(random.choice(Events.yeah))

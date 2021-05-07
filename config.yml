@@ -180,6 +180,7 @@ events:
   you_bad: !JOIN [*IMAGE_FOLDER, "you_bad.jpg"]
   so_hot: !JOIN [*IMAGE_FOLDER, "so_hot.jpg"]
   fake: !JOIN [*IMAGE_FOLDER, "fake.gif"]
+  sisters: !JOIN [*IMAGE_FOLDER, "sisters.jpg"]
   helen_art: *helen_art
   idk:
     - - !JOIN [*IMAGE_FOLDER, "idk_orig.jpg"]
