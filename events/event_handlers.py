@@ -105,7 +105,7 @@ class EventHandlers(CogInit):
             pic = discord.File(Events.so_hot)
             await msg.reply(file=pic, delete_after=7)
         # 素每（名稱）
-        elif "素每" in (u.display_name for u in msg.mentions):
+        elif "素每" in [u.display_name for u in msg.mentions]:
             pic = discord.File(Events.so_hot)
             await msg.reply(file=pic, delete_after=7)
         # 好耶
