@@ -166,7 +166,8 @@ class ImgSearch(CogInit):
             self.result_list[result_msg.id] = result_embeds
             # 添加反應
             for i in range(len(result_embeds)):
-                await result_msg.add_reaction(list(self.reaction_emos.keys())[i])
+                await result_msg.add_reaction(
+                    list(self.reaction_emos.keys())[i])
 
         except errors.LongLimitReachedError:
             await ctx.reply(f"今天的搜尋次數已達上限 {Emojis.pepe_hands}")
