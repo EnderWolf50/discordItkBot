@@ -4,6 +4,7 @@ from core import CogInit
 
 import random
 import asyncio
+from datetime import timedelta
 from datetime import datetime as dt
 from typing import Any, Union
 
@@ -55,7 +56,6 @@ class AbGame(CogInit):
             game_info = self.ongoing_games[msg.channel.id]
             ans_len = game_info["ans_len"]
             ans = game_info["ans"]
-            print(game_info)
 
             content = msg.content
             res_msg = None
@@ -102,7 +102,7 @@ class AbGame(CogInit):
         # 未被記錄等於未開始遊戲
         elif ctx.channel not in self.ongoing_games:
             self.ongoing_games[ctx.channel.id] = {
-                "start_time": ctx.message.created_at,
+                "start_time": ctx.message.created_at - timedelta(seconds=1),
                 "ans_len": answer_length,
                 "ans": random.sample('1234567890', answer_length),
                 "msg_delete_queue":
