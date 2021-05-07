@@ -2,8 +2,6 @@ import discord
 from discord.ext import commands
 from core import CogInit
 
-import unicodedata
-
 
 class Others(CogInit):
     @commands.command()

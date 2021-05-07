@@ -34,6 +34,12 @@ bot:
     - "GOOGLE_SEARCH_API_KEY_1"
     - "GOOGLE_SEARCH_API_KEY_2"
     - "GOOGLE_SEARCH_API_KEY_3"
+  google_search_options:
+    c2coff: 0             # Chinese results
+    hl    : 'zh-TW'       # Interface lang
+    gl    : 'tw'          # Geographic location
+    lr    : 'lang_zh-TW'  # Result lang
+    safe  : 'off'         # Safe mode
 
 log:
   sentry_dsn: !ENV "SENTRY_DSN"

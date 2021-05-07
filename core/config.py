@@ -1,9 +1,21 @@
 import os
 import yaml
+import addict
 import logging
 from typing import Union
 
 logger = logging.getLogger(__name__)
+
+__all__ = (
+    'Bot',
+    'Log',
+    'Colors',
+    'Emojis',
+    'Reactions',
+    'HelpMessages',
+    'Events',
+    'Fun',
+)
 
 
 def _env_var_constructor(loader, node) -> Union[str, list[str]]:
@@ -32,64 +44,21 @@ yaml.SafeLoader.add_constructor("!ENV", _env_var_constructor)
 yaml.SafeLoader.add_constructor("!JOIN", _join_var_constructor)
 
 with open("config.yml", "r", encoding="UTF-8") as f:
-    _CONFIG = yaml.safe_load(f)
+    _CONFIG_YAML = yaml.safe_load(f)
+    _CONFIG_DICT = addict.Dict(_CONFIG_YAML)
 
+Bot: addict.Dict = _CONFIG_DICT.bot
 
-class ConfigGetter(type):
-    subsection = None
+Log: addict.Dict = _CONFIG_DICT.log
 
-    def __getattr__(cls, name):
-        name = name.lower()
+Colors: addict.Dict = _CONFIG_DICT.styles.colors
 
-        try:
-            if cls.subsection is not None:
-                return _CONFIG[cls.section][cls.subsection][name]
-            return _CONFIG[cls.section][name]
-        except KeyError as e:
-            dotted_path = '.'.join((cls.section, cls.subsection,
-                                    name) if cls.subsection is not None else (
-                                        cls.section, name))
-            logger.info(f"嘗試獲取 `{dotted_path}` 失敗")
-            raise AttributeError(repr(name)) from e
+Emojis: addict.Dict = _CONFIG_DICT.styles.emojis
 
-    def __getitem__(cls, name):
-        return cls.__getattr__(name)
+Reactions: addict.Dict = _CONFIG_DICT.styles.reactions
 
-    def __iter__(cls):
-        for name in cls.__annotations__:
-            yield name, getattr(cls, name)
+HelpMessages: addict.Dict = _CONFIG_DICT.help_messages
 
+Events: addict.Dict = _CONFIG_DICT.events
 
-class Bot(metaclass=ConfigGetter):
-    section = "bot"
-
-
-class Log(metaclass=ConfigGetter):
-    section = "log"
-
-
-class Colors(metaclass=ConfigGetter):
-    section = "styles"
-    subsection = "colors"
-
-
-class Emojis(metaclass=ConfigGetter):
-    section = "styles"
-    subsection = "emojis"
-
-
-class Reactions(metaclass=ConfigGetter):
-    section = "styles"
-    subsection = "reactions"
-
-
-class HelpMessages(metaclass=ConfigGetter):
-    section = "help_messages"
-
-
-class Events(metaclass=ConfigGetter):
-    section = "events"
-
-
-class Fun(metaclass=ConfigGetter):
-    section = "fun"
+Fun: addict.Dict = _CONFIG_DICT.fun

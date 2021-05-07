@@ -2,6 +2,8 @@ import os
 import pymongo
 from typing import Dict, Optional, Any
 
+__all__ = ('Mongo', )
+
 
 class Mongo:
     def __init__(self, db: str, coll: str, *args, **kwargs) -> None:

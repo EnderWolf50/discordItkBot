@@ -11,8 +11,8 @@ class Bzz(CogInit):
         super().__init__(*args, **kwargs)
         self.mongo = Mongo("discord_669934356172636199", "tdbzz_record")
 
-        self.bzz_options = Fun.bzz["options"]
-        self.tdbzz_options = Fun.tdbzz["options"]
+        self.bzz_options = Fun.bzz.options
+        self.tdbzz_options = Fun.tdbzz.options
 
     @commands.command()
     async def bzz(self, ctx: commands.Context) -> None:

@@ -10,6 +10,11 @@ from sentry_sdk.integrations.logging import LoggingIntegration
 
 from core import Log
 
+__all__ = (
+    'logging_setup',
+    'sentry_setup',
+)
+
 
 def logging_setup() -> None:
     logging.TRACE = Log.log_level

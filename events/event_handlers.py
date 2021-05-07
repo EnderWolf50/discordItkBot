@@ -35,15 +35,10 @@ class EventHandlers(CogInit):
         cse = Bot.custom_search_engine_id
         try:
             service = discovery.build("customsearch", "v1", developerKey=key)
-            res = service.cse().list(
-                q=q,
-                cx=cse,
-                c2coff=0,  # 簡繁中結果
-                hl="zh-TW",  # 介面語言
-                gl="tw",  # 地理位置
-                lr="lang_zh-TW",  # 結果語言
-                safe="off",  # 安全搜索
-                **kwargs).execute()
+            res = service.cse().list(q=q,
+                                     cx=cse,
+                                     **Bot.google_search_options,
+                                     **kwargs).execute()
 
             return res.get("items", None)
         except errors.HttpError:
@@ -122,7 +117,7 @@ class EventHandlers(CogInit):
             if content[2:4] == "早餐":
                 pass
             elif content[2:4] == "晚餐":
-                await msg.reply(random.choice(Events.meals["dinner"]))
+                await msg.reply(random.choice(Events.meals.dinner))
             else:
                 result = self.google_search(content[2:], num=1)
                 if result is None:

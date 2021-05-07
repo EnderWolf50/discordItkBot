@@ -5,15 +5,14 @@ name = "pypi"
 
 [packages]
 "discord.py" = "*"
-python-dotenv = "*"
 pymongo = "*"
-saucenao-api = "*"
-dnspython = "*"
-pyyaml = "*"
-coloredlogs = "*"
 sentry-sdk = "*"
+coloredlogs = "*"
+pyyaml = "*"
+saucenao-api = "*"
 google-api-python-client = "*"
-pynacl = "*"
+addict = "*"
+dnspython = "*"
 
 [dev-packages]
 
