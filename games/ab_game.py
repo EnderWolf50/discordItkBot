@@ -67,13 +67,15 @@ class AbGame(CogInit):
                     res_msg = await msg.reply(f"請勿輸入重複的數字！｜答案長度：{ans_len}")
                 # A 數量等於答案長度即為答對
                 elif a_count == ans_len:
+                    # 刪除遊戲資訊
+                    del self.ongoing_games[msg.channel.id]
+
                     time_taken = dt.min + (dt.utcnow() -
                                            game_info["start_time"])
                     await msg.reply(
-                        f"（{content}）：**{a_count}A{b_count}B**\n恭喜 {msg.author.mention} 答對了！｜遊戲總時長 `{time_taken.strftime('%H:%M:%S')}`"
+                        f"（{content}）：**{a_count}A{b_count}B**\n恭喜 {msg.author.mention} 答對了！｜遊戲總時長 {time_taken.strftime('%H:%M:%S')}"
                     )
-                    # 刪除並提早跳出函式（避免發送提示訊息及記錄）
-                    del self.ongoing_games[msg.channel.id]
+                    # 提早跳出函式（避免發送提示訊息及記錄）
                     await asyncio.sleep(5)
                     await self._clean_game_messages(msg.channel, game_info)
                     return
@@ -102,11 +104,14 @@ class AbGame(CogInit):
         # 未被記錄等於未開始遊戲
         elif ctx.channel not in self.ongoing_games:
             self.ongoing_games[ctx.channel.id] = {
-                "start_time": ctx.message.created_at - timedelta(seconds=1),
-                "ans_len": answer_length,
-                "ans": random.sample('1234567890', answer_length),
+                "start_time":
+                ctx.message.created_at - timedelta(seconds=1),
+                "ans_len":
+                answer_length,
+                "ans":
+                random.sample('1234567890', answer_length),
                 "msg_delete_queue":
-                [await ctx.send(f"請輸入 {answer_length} 位不同數字")],
+                [(await ctx.send(f"請輸入 {answer_length} 位不同數字")).id],
             }
         await ctx.message.delete(delay=7)
 
@@ -123,7 +128,7 @@ class AbGame(CogInit):
             ans = "".join(game_info["ans"])
             time_taken = dt.min + (dt.utcnow() - game_info["start_time"])
             await ctx.reply(
-                f"{ctx.author.mention} 結束了遊戲!\n正確答案為 **{ans}**！｜遊戲總時長 `{time_taken.strftime('%H:%M:%S')}`"
+                f"{ctx.author.mention} 結束了遊戲!\n正確答案為 **{ans}**！｜遊戲總時長 {time_taken.strftime('%H:%M:%S')}"
             )
             await asyncio.sleep(5)
             await self._clean_game_messages(ctx.channel, game_info)
