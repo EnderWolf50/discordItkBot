@@ -8,7 +8,8 @@ import logging
 from typing import Any
 from pathlib import Path
 from itertools import cycle
-from datetime import datetime, timedelta
+from datetime import timedelta
+from datetime import datetime as dt
 from googleapiclient import discovery, errors
 
 logger = logging.getLogger(__name__)
@@ -50,10 +51,11 @@ class EventHandlers(CogInit):
 
         await self.bot.get_channel(
             Bot.log_channel
-        ).send(f'你家機器人睡醒囉 `{datetime.now().strftime("%Y/%m/%d %H:%M:%S")}`')
+        ).send(f'你家機器人睡醒囉 `{dt.now().strftime("%Y/%m/%d %H:%M:%S")}`')
 
     @commands.Cog.listener()
     async def on_message(self, msg: discord.Message) -> None:
+
         # 忽略指定頻道
         if msg.channel and msg.channel.id in Bot.ignore_channels: return
 
@@ -74,7 +76,7 @@ class EventHandlers(CogInit):
         if msg.author.bot: return
 
         mentions = [u.display_name for u in msg.mentions]
-        # Mentioned
+        # 提及機器人
         if self.bot.user in msg.mentions:
             await msg.reply(random.choice(Events.mentioned_reply))
         # 窩不知道
@@ -106,7 +108,7 @@ class EventHandlers(CogInit):
         elif any(kw in content for kw in ("熱", "好熱", "素每")):
             pic = discord.File(Events.so_hot)
             await msg.reply(file=pic, delete_after=7)
-        # 素每（名稱）
+        # 素每（提及）
         elif any("素每" in name for name in mentions):
             pic = discord.File(Events.so_hot)
             await msg.reply(file=pic, delete_after=7)
@@ -118,10 +120,6 @@ class EventHandlers(CogInit):
         elif "你很壞" in content:
             pic = discord.File(Events.you_bad)
             await msg.reply(file=pic, delete_after=7)
-        # 綺麗な双子
-        elif "綺麗な双子(姊)" in mentions and "綺麗な双子(妹)" in mentions:
-            pic = discord.File(Events.sisters)
-            await msg.reply(file=pic, delete_after=8.5)
         # 好耶
         elif "好耶" in content:
             pic = discord.File(random.choice(Events.yeah))
@@ -134,6 +132,21 @@ class EventHandlers(CogInit):
         elif re.search(r"很嗆(?:是吧|[喔欸])?|嗆[喔欸]", content):
             pic = discord.File(Events.flaming)
             await msg.reply(file=pic, delete_after=7)
+        # 綺麗な双子
+        _sister_1 = False
+        _sister_2 = False
+        _msg_rec = await msg.channel.history(
+            limit=None, after=dt.utcnow() - timedelta(seconds=10.5)).flatten()
+        _msg_rec_name = [_m.author.display_name for _m in _msg_rec]
+        _msg_rec_attachment = [
+            f.filename for _m in _msg_rec for f in _m.attachments
+        ]
+        if "綺麗な双子(姊)" in _msg_rec_name: _sister_1 = True
+        if "綺麗な双子(妹)" in _msg_rec_name: _sister_2 = True
+        if "sisters.jpg" in _msg_rec_attachment: _sister_1 = _sister_2 = False
+        if _sister_1 and _sister_2:
+            pic = discord.File(Events.sisters)
+            await msg.channel.send(file=pic, delete_after=10)
         # 請問
         if content.startswith("請問"):
             if content[2:4] == "早餐":
