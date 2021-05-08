@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 from core import CogInit, HelpMessages
 
+from typing import Any
+
 
 class Basic(CogInit):
     @commands.group(name="extension", aliases=["ext"])
@@ -38,25 +40,6 @@ class Basic(CogInit):
 
         await ctx.reply(f"**{ext_path}** has been reloaded!", delete_after=5)
         await ctx.message.delete(delay=5)
-
-    @commands.command()
-    async def help(self, ctx: commands.Context) -> None:
-        embed_details = HelpMessages.help
-
-        embed = discord.Embed(
-            title=embed_details["title"],
-            #   description=embed_details["description"],
-            color=embed_details["color"])
-        # Author
-        embed.set_author(name=embed_details["author"] or self.bot.user.name,
-                         icon_url=self.bot.user.avatar_url)
-        # Footer
-        embed.set_footer(text=embed_details["footer"])
-        # Fields
-        for command, description in embed_details["fields"]:
-            embed.add_field(name=command, value=description, inline=True)
-        await ctx.reply(embed=embed, delete_after=60)
-        await ctx.message.delete(delay=60)
 
     @commands.command()
     async def ping(self, ctx: commands.Context) -> None:

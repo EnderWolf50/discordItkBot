@@ -172,10 +172,9 @@ class EmojiRank(CogInit):
         embed = await self._get_updated_rank_embed()
         await reaction.message.edit(embed=embed)
 
-    @commands.group(name="emoji", aliases=["emo", "e"])
+    @commands.group(name="emoji", aliases=["e"], invoke_without_command=True)
     async def emoji(self, ctx: commands.Context) -> None:
-        # 僅作為 Group 用途，略過
-        pass
+        await ctx.invoke(self.bot.get_command("emoji rank"))
 
     @emoji.command(aliases=["r"])
     async def rank(self, ctx: commands.Context) -> None:

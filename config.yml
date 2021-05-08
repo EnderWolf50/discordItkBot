@@ -2,6 +2,7 @@ bot:
   token: !ENV "BOT_TOKEN"
 
   prefix: &BOT_PREFIX "."
+  name  : &BOT_NAME "Itk Bot"
 
   owner: &BOT_OWNER 523755296242270210
   moderators:
@@ -65,8 +66,18 @@ log:
 styles:
   colors:
     red         : &red 0xDB4A30
+    teal        : &teal 0x0F7173
     blue        : &blue 0x5386E4
-    cyan        : &cyan 0x21BBAA
+    pink        : &pink 0xDA627D
+    cyan        : &cyan 0x66999B
+    green       : &green 0x8EA604
+    yellow      : &yellow 0xE9DF00
+    purple      : &purple 0x4D0D43
+    navy_blue   : &navy_blue 0x273469
+    dark_teal   : &dark_teal 0x113537
+    blue_gray   : &blue_gray 0x7798AB
+    dark_green  : &dark_green 0x34403A
+    olive_green : &olive_green 0xB1B695
     light_yellow: &light_yellow 0xFCD992
 
   emojis:
@@ -159,9 +170,8 @@ help_messages:
     title      : "看看是哪個小可憐忘記指令怎麼打啦？"
     description: null
     color      : *light_yellow
-    author     : "Itk Bot"
+    author     : *BOT_NAME
     footer     : "那個...窩不知道"
-
     fields:
       - - !JOIN [*BOT_PREFIX, "bzz"]
         - "抽籤"
@@ -173,8 +183,172 @@ help_messages:
         - "發起投票"
       - - !JOIN [*BOT_PREFIX, "roll"]
         - "抽...數字？"
+      - - !JOIN [*BOT_PREFIX, "is"]
+        - "根據回覆、連結、附件搜尋圖片"
+      - - !JOIN [*BOT_PREFIX, "cue"]
+        - "另一個奇怪的錯字全集"
+      - - !JOIN [*BOT_PREFIX, "emoji"]
+        - "觀看伺服器的表符使用率"
       - - !JOIN [*BOT_PREFIX, "pin"]
         - "奇怪的發言大全"
+      - - !JOIN [*BOT_PREFIX, "clean"]
+        - "清除訊息"
+  bzz:
+    title      : !JOIN [*BOT_PREFIX, "bzz"]
+    description: "別名：無"
+    color      : *teal
+    author     : *BOT_NAME
+    footer     : !JOIN ["今天要來點小", *i11_chiwawa, "嗎？"]
+    fields:
+      - - !JOIN [*BOT_PREFIX, "bzz"]
+        - "沒什麼特別的，就是回覆給你一個運勢"
+  tdbzz:
+    title      : !JOIN [*BOT_PREFIX, "tdbzz"]
+    description: "別名：無"
+    color      : *blue
+    author     : *BOT_NAME
+    footer     : !JOIN ["今天要來點大", *i11_chiwawa, "嗎？"]
+    fields:
+      - - !JOIN [*BOT_PREFIX, "tdbzz"]
+        - "回覆給你一個運勢，此運勢會在 00:00 (GMT+8) 時重置"
+  choose:
+    title      : !JOIN [*BOT_PREFIX, "choose [選項]..."]
+    description: "別名：`ch`"
+    color      : *pink
+    author     : *BOT_NAME
+    footer     : "狗才做選擇，汪"
+    fields:
+      - - !JOIN [*BOT_PREFIX, "choose"]
+        - "從選項內隨機挑選"
+      - - "[選項]..."
+        - "可自由輸入選項，以空格區隔（選項含空格可以''括起）"
+  poll:
+    title      : !JOIN [*BOT_PREFIX, "poll <標題> [選項]..."]
+    description: "別名：`vote`"
+    color      : *cyan
+    author     : *BOT_NAME
+    footer     : "這是人民的意志，人民的法槌！"
+    fields:
+      - - !JOIN [*BOT_PREFIX, "poll"]
+        - "以標題及選項發起投票"
+      - - "<標題>"
+        - "當次投票的標題、主題"
+      - - "[選項]..."
+        - "可輸入最多 20 個的選項，以空格區隔（選項含空格可以''括起）"
+  pin:
+    title      : !JOIN [*BOT_PREFIX, "pin [成員]"]
+    description: "別名：無"
+    color      : *green
+    author     : *BOT_NAME
+    footer     : "你看看你們都講了些什麼"
+    fields:
+      - - !JOIN [*BOT_PREFIX, "pin"]
+        - "總之就是從釘選中隨機選出一句奇怪的話"
+      - - "[成員]"
+        - "~~你要迫害的人~~"
+  cue:
+    title      : !JOIN [*BOT_PREFIX, "cue [成員] [位置]"]
+    description: "別名：`c`"
+    color      : *yellow
+    author     : *BOT_NAME
+    footer     : "在啦幹"
+    fields:
+      - - !JOIN [*BOT_PREFIX, "cue"]
+        - "各位的錯字都在這裡了 :)"
+      - - "[成員]"
+        - "指定成員，不填入則為隨機"
+      - - "[位置]"
+        - "指定位置，不填入則為隨機"
+      - - "子指令"
+        - "`add`|`delete`|`list`"
+    add:
+      title      : !JOIN [*BOT_PREFIX, "cue add <成員> <語句>"]
+      description: "別名：`a`"
+      color      : *yellow
+      author     : *BOT_NAME
+      footer     : "我猜又是花花"
+      fields:
+        - - !JOIN [*BOT_PREFIX, "add"]
+          - "看看又是誰打錯字了"
+        - - "<成員>"
+          - "錯字仔"
+        - - "<語句>"
+          - "總之就是錯字"
+    delete:
+      title      : !JOIN [*BOT_PREFIX, "cue delete <成員> <語句|位置>"]
+      description: "別名：`del`|`remove`|`r`"
+      color      : *yellow
+      author     : *BOT_NAME
+      footer     : "這是一場美麗的誤會"
+      fields:
+        - - !JOIN [*BOT_PREFIX, "delete"]
+          - "看看又是誰打錯字了"
+        - - "<成員>"
+          - "不是錯字仔的錯字仔"
+        - - "<語句|位置>"
+          - "透過指定語句或位置來刪除語錄"
+    list:
+      title      : !JOIN [*BOT_PREFIX, "cue list <成員>"]
+      description: "別名：`l`"
+      color      : *yellow
+      author     : *BOT_NAME
+      footer     : "國文老師現在很火"
+      fields:
+        - - !JOIN [*BOT_PREFIX, "list"]
+          - "列出錯字仔的所有錯字"
+        - - "<成員>"
+          - "沒有錯就是那個錯字仔"
+  emoji:
+    title      : !JOIN [*BOT_PREFIX, "emoji"]
+    description: "別名：`emo`|`e`"
+    color      : *purple
+    author     : *BOT_NAME
+    footer     : "驚訝貓貓"
+    fields:
+      - - !JOIN [*BOT_PREFIX, "emoji"]
+        - "列出伺服器表符的使用次數"
+      - - "子指令"
+        - "`rank`|`reset`"
+    rank:
+      title      : !JOIN [*BOT_PREFIX, "emoji rank"]
+      description: "別名：`r`"
+      color      : *purple
+      author     : *BOT_NAME
+      footer     : "驚訝貓貓 2.0（？"
+      fields:
+        - - !JOIN [*BOT_PREFIX, "emoji rank"]
+          - "其實就跟單打 emoji 一樣"
+    reset:
+      title      : !JOIN [*BOT_PREFIX, "emoji reset"]
+      description: "別名：無"
+      color      : *purple
+      author     : *BOT_NAME
+      footer     : "驚訝貓貓 3.0（？？？"
+      fields:
+        - - !JOIN [*BOT_PREFIX, "emoji reset"]
+          - "重設已經紀錄的使用次數"
+  clean:
+    title      : !JOIN [*BOT_PREFIX, "clean [天數]"]
+    description: "別名：無"
+    color      : *blue_gray
+    author     : *BOT_NAME
+    footer     : "黑人消失.gif"
+    fields:
+      - - !JOIN [*BOT_PREFIX, "clean"]
+        - "清除機器人的訊息"
+      - - "[天數]"
+        - "指定要清除的天數，若未指定則為一天"
+  image_search:
+    title      : !JOIN [*BOT_PREFIX, "image_search [網址]..."]
+    description: "別名：`is`"
+    color      : *blue_gray
+    author     : *BOT_NAME
+    footer     : "is 怪欸"
+    fields:
+      - - !JOIN [*BOT_PREFIX, "image_search"]
+        - "依序抓取回覆訊息的附件 → 指令訊息的附件 → 指令訊息的連結，並進行搜尋（上限為 6 附件）"
+      - - "[網址]"
+        - "圖片網址，須為`.jpg`|`.png`|`.jpeg`結尾"
 
 events:
   flaming: !JOIN [*IMAGE_FOLDER, "flaming.jpg"]
