@@ -27,92 +27,92 @@ class Help(CogInit):
     @commands.group(name="help", invoke_without_command=True)
     async def help(self, ctx: commands.Context) -> None:
         embed = await self._get_help_embed(HelpMessages.help)
-        await ctx.reply(embed=embed, delete_after=60)
-        await ctx.message.delete(delay=60)
+        await ctx.reply(embed=embed, delete_after=40)
+        await ctx.message.delete(delay=40)
 
     @help.command()
     async def bzz(self, ctx: commands.Context) -> None:
         embed = await self._get_help_embed(HelpMessages.bzz)
-        await ctx.reply(embed=embed, delete_after=60)
-        await ctx.message.delete(delay=60)
+        await ctx.reply(embed=embed, delete_after=40)
+        await ctx.message.delete(delay=40)
 
     @help.command()
     async def tdbzz(self, ctx: commands.Context) -> None:
         embed = await self._get_help_embed(HelpMessages.tdbzz)
-        await ctx.reply(embed=embed, delete_after=60)
-        await ctx.message.delete(delay=60)
+        await ctx.reply(embed=embed, delete_after=40)
+        await ctx.message.delete(delay=40)
 
     @help.command(aliases=["ch"])
     async def choose(self, ctx: commands.Context) -> None:
         embed = await self._get_help_embed(HelpMessages.choose)
-        await ctx.reply(embed=embed, delete_after=60)
-        await ctx.message.delete(delay=60)
+        await ctx.reply(embed=embed, delete_after=40)
+        await ctx.message.delete(delay=40)
 
     @help.command(aliases=["vote"])
     async def poll(self, ctx: commands.Context) -> None:
         embed = await self._get_help_embed(HelpMessages.poll)
-        await ctx.reply(embed=embed, delete_after=60)
-        await ctx.message.delete(delay=60)
+        await ctx.reply(embed=embed, delete_after=40)
+        await ctx.message.delete(delay=40)
 
     @help.command()
     async def pin(self, ctx: commands.Context) -> None:
         embed = await self._get_help_embed(HelpMessages.pin)
-        await ctx.reply(embed=embed, delete_after=60)
-        await ctx.message.delete(delay=60)
+        await ctx.reply(embed=embed, delete_after=40)
+        await ctx.message.delete(delay=40)
 
     @help.group(name="cue", aliases=["c"], invoke_without_command=True)
     async def cue(self, ctx: commands.Context) -> None:
         embed = await self._get_help_embed(HelpMessages.cue)
-        await ctx.reply(embed=embed, delete_after=60)
-        await ctx.message.delete(delay=60)
+        await ctx.reply(embed=embed, delete_after=40)
+        await ctx.message.delete(delay=40)
 
     @cue.command(aliases=["a"])
     async def add(self, ctx: commands.Context) -> None:
         embed = await self._get_help_embed(HelpMessages.cue.add)
-        await ctx.reply(embed=embed, delete_after=60)
-        await ctx.message.delete(delay=60)
+        await ctx.reply(embed=embed, delete_after=40)
+        await ctx.message.delete(delay=40)
 
     @cue.command(aliases=["remove", "d", "r"])
     async def delete(self, ctx: commands.Context) -> None:
         embed = await self._get_help_embed(HelpMessages.cue.delete)
-        await ctx.reply(embed=embed, delete_after=60)
-        await ctx.message.delete(delay=60)
+        await ctx.reply(embed=embed, delete_after=40)
+        await ctx.message.delete(delay=40)
 
     @cue.command(aliases=["l"])
     async def list(self, ctx: commands.Context) -> None:
         embed = await self._get_help_embed(HelpMessages.cue.list)
-        await ctx.reply(embed=embed, delete_after=60)
-        await ctx.message.delete(delay=60)
+        await ctx.reply(embed=embed, delete_after=40)
+        await ctx.message.delete(delay=40)
 
     @help.group(name="emoji", aliases=["e"], invoke_without_command=True)
     async def emoji(self, ctx: commands.Context) -> None:
         embed = await self._get_help_embed(HelpMessages.emoji)
-        await ctx.reply(embed=embed, delete_after=60)
-        await ctx.message.delete(delay=60)
+        await ctx.reply(embed=embed, delete_after=40)
+        await ctx.message.delete(delay=40)
 
     @emoji.command(aliases=["r"])
     async def rank(self, ctx: commands.Context) -> None:
         embed = await self._get_help_embed(HelpMessages.emoji.rank)
-        await ctx.reply(embed=embed, delete_after=60)
-        await ctx.message.delete(delay=60)
+        await ctx.reply(embed=embed, delete_after=40)
+        await ctx.message.delete(delay=40)
 
     @emoji.command()
     async def reset(self, ctx: commands.Context) -> None:
         embed = await self._get_help_embed(HelpMessages.emoji.reset)
-        await ctx.reply(embed=embed, delete_after=60)
-        await ctx.message.delete(delay=60)
+        await ctx.reply(embed=embed, delete_after=40)
+        await ctx.message.delete(delay=40)
 
     @help.command()
     async def clean(self, ctx: commands.Context) -> None:
         embed = await self._get_help_embed(HelpMessages.clean)
-        await ctx.reply(embed=embed, delete_after=60)
-        await ctx.message.delete(delay=60)
+        await ctx.reply(embed=embed, delete_after=40)
+        await ctx.message.delete(delay=40)
 
     @help.command(aliases=["is"])
     async def image_search(self, ctx: commands.Context) -> None:
         embed = await self._get_help_embed(HelpMessages.image_search)
-        await ctx.reply(embed=embed, delete_after=60)
-        await ctx.message.delete(delay=60)
+        await ctx.reply(embed=embed, delete_after=40)
+        await ctx.message.delete(delay=40)
 
 
 def setup(bot) -> None:
