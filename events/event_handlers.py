@@ -133,23 +133,23 @@ class EventHandlers(CogInit):
             pic = discord.File(Events.flaming)
             await msg.reply(file=pic, delete_after=7)
         # 綺麗な双子
-        _sister_1 = False
-        _sister_2 = False
-        _msg_rec = await msg.channel.history(limit=None,
-                                             after=msg.created_at -
-                                             timedelta(seconds=10.5),
-                                             oldest_first=False).flatten()
-        _msg_rec_name = {_m.author.display_name for _m in _msg_rec}
-        _msg_rec_attachments = {
-            f.filename
-            for _m in _msg_rec for f in _m.attachments
-        }
-        if "綺麗な双子(姊)" in _msg_rec_name: _sister_1 = True
-        if "綺麗な双子(妹)" in _msg_rec_name: _sister_2 = True
-        if "sisters.jpg" in _msg_rec_attachments: _sister_1 = _sister_2 = False
-        if _sister_1 and _sister_2:
-            pic = discord.File(Events.sisters)
-            await msg.channel.send(file=pic, delete_after=10)
+        _sister_1 = True if author_name == "綺麗な双子(姊)" else False
+        _sister_2 = True if author_name == "綺麗な双子(妹)" else False
+        if _sister_1 or _sister_2:
+            async for _m in msg.channel.history(limit=None,
+                                                after=msg.created_at -
+                                                timedelta(seconds=10.5),
+                                                oldest_first=False):
+                _m_author_name = _m.author.display_name.lower()
+                if "sisters.jpg" in {_a.filename for _a in _m.attachments}:
+                    _sister_1 = _sister_2 = False
+                    break
+                if _sister_2 and _m_author_name == "綺麗な双子(姊)": _sister_1 = True
+                if _sister_1 and _m_author_name == "綺麗な双子(妹)": _sister_2 = True
+                if _sister_1 and _sister_2: break
+            if _sister_1 and _sister_2:
+                pic = discord.File(Events.sisters)
+                await msg.channel.send(file=pic, delete_after=10)
         # 請問
         if content.startswith("請問"):
             if content[2:4] == "早餐":
