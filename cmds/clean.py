@@ -131,23 +131,26 @@ class Clean(CogInit):
             def is_specific(m: discord.Message) -> bool:
                 return member is None or m.author == member
 
+            history_length = 0
             msg_delete_queue = []
-            queue_length = 0
             async with ctx.typing():
                 async for m in ctx.history(limit=None,
                                            before=ctx.message.created_at,
                                            oldest_first=False):
+                    history_length += 1
                     if is_specific(m):
-                        queue_length += 1
                         msg_delete_queue.append(m)
-                    if queue_length == amounts:
+                    if len(msg_delete_queue) == amounts:
                         break
 
+                def in_queue(m: discord.Message) -> bool:
+                    return m in msg_delete_queue
+
                 deleted_msg_count = len(await ctx.channel.purge(
-                    limit=None,
+                    limit=history_length,
                     before=ctx.message.created_at,
                     oldest_first=False,
-                    check=lambda m: m in msg_delete_queue))
+                    check=in_queue))
 
             # 計算花費時間
             time_taken = (dt.now() - start_time).total_seconds()
