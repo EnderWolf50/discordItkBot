@@ -108,11 +108,11 @@ class EventHandlers(CogInit):
             await msg.add_reaction(random.choice(Events.act_cute))
         # 素每（訊息）
         elif any(kw in content for kw in ("熱", "好熱", "素每")):
-            pic = discord.File(Events.so_hot)
+            pic = discord.File(random.choice(Events.so_hot))
             await msg.reply(file=pic, delete_after=7)
         # 素每（提及）
         elif any("素每" in name for name in mentions):
-            pic = discord.File(Events.so_hot)
+            pic = discord.File(random.choice(Events.so_hot))
             await msg.reply(file=pic, delete_after=7)
         # 假的
         elif "假的" in content:

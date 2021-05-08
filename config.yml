@@ -178,10 +178,12 @@ events:
   flaming: !JOIN [*IMAGE_FOLDER, "flaming.jpg"]
   make_friend: !JOIN [*IMAGE_FOLDER, "make_friends.jpg"]
   you_bad: !JOIN [*IMAGE_FOLDER, "you_bad.png"]
-  so_hot: !JOIN [*IMAGE_FOLDER, "so_hot.jpg"]
   fake: !JOIN [*IMAGE_FOLDER, "fake.gif"]
   sisters: !JOIN [*IMAGE_FOLDER, "sisters.jpg"]
   helen_art: *helen_art
+  so_hot:
+    - !JOIN [*IMAGE_FOLDER, "so_hot.jpg"]
+    - !JOIN [*IMAGE_FOLDER, "so_hot_sumei.png"]
   idk:
     - - !JOIN [*IMAGE_FOLDER, "idk_orig.jpg"]
       - 30
