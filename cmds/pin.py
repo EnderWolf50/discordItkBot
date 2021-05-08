@@ -5,7 +5,7 @@ from core import CogInit
 import random
 
 
-class Pins(CogInit):
+class Pin(CogInit):
     @commands.command()
     async def pin(self,
                   ctx: commands.Context,
@@ -40,4 +40,4 @@ class Pins(CogInit):
 
 
 def setup(bot) -> None:
-    bot.add_cog(Pins(bot))
+    bot.add_cog(Pin(bot))
