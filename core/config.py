@@ -15,6 +15,7 @@ __all__ = (
     'HelpMessages',
     'Events',
     'Fun',
+    'tasks',
 )
 
 
@@ -62,3 +63,5 @@ HelpMessages: addict.Dict = _CONFIG_DICT.help_messages
 Events: addict.Dict = _CONFIG_DICT.events
 
 Fun: addict.Dict = _CONFIG_DICT.fun
+
+Tasks: addict.Dict = _CONFIG_DICT.tasks

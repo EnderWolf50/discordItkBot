@@ -294,3 +294,8 @@ fun:
       - *i11_chiwawa
   tdbzz:
     options: *BZZ_OPTIONS
+
+tasks:
+  left_ten_seconds: !JOIN [*IMAGE_FOLDER, "left_ten_seconds.png"]
+  left_three_hours: !JOIN [*IMAGE_FOLDER, "left_three_hours.jpg"]
+  three_oclock    : !JOIN [*IMAGE_FOLDER, "three_oclock.png"]
