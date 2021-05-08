@@ -121,6 +121,10 @@ class EventHandlers(CogInit):
         elif "你很壞" in content:
             pic = discord.File(Events.you_bad)
             await msg.reply(file=pic, delete_after=7)
+        elif "神奇海螺" in content:
+            if content[:2] != "請問":
+                pic = discord.File(random.choice(Events.magic_conc.kw))
+                await msg.reply(file=pic, delete_after=7)
         # 好耶
         elif "好耶" in content:
             pic = discord.File(random.choice(Events.yeah))
@@ -166,10 +170,11 @@ class EventHandlers(CogInit):
                     await msg.channel.send(file=pic, delete_after=15)
         # 請問
         if content.startswith("請問"):
-            if content[2:4] == "早餐":
-                pass
-            elif content[2:4] == "晚餐":
+            if content[2:4] == "晚餐":
                 await msg.reply(random.choice(Events.meals.dinner))
+            elif content[2:6] == "神奇海螺":
+                pic = discord.File(random.choice(Events.magic_conch.ask))
+                await msg.reply(file=pic, delete_after=7)
             else:
                 result = self.google_search(content[2:], num=1)
                 if result is None:

@@ -186,6 +186,14 @@ events:
   so_hot:
     - !JOIN [*IMAGE_FOLDER, "so_hot.jpg"]
     - !JOIN [*IMAGE_FOLDER, "so_hot_sumei.png"]
+  magic_conch:
+    kw:
+      - !JOIN [*IMAGE_FOLDER, "magic_conch_why.png"]
+      - !JOIN [*IMAGE_FOLDER, "magic_conch_wow.png"]
+      - !JOIN [*IMAGE_FOLDER, "magic_conch_sus.png"]
+    ask:
+      - !JOIN [*IMAGE_FOLDER, "magic_conch_yes.png"]
+      - !JOIN [*IMAGE_FOLDER, "magic_conch_no.png"]
   idk:
     - - !JOIN [*IMAGE_FOLDER, "idk_orig.jpg"]
       - 30
