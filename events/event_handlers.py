@@ -135,9 +135,10 @@ class EventHandlers(CogInit):
         # 綺麗な双子
         _sister_1 = False
         _sister_2 = False
-        _msg_rec = await msg.channel.history(
-            limit=None,
-            after=msg.created_at - timedelta(seconds=10.5)).flatten()
+        _msg_rec = await msg.channel.history(limit=None,
+                                             after=msg.created_at -
+                                             timedelta(seconds=10.5),
+                                             oldest_first=False).flatten()
         _msg_rec_name = {_m.author.display_name for _m in _msg_rec}
         _msg_rec_attachments = {
             f.filename
