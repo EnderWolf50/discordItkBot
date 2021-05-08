@@ -107,10 +107,6 @@ class ImgSearch(CogInit):
     @commands.command(aliases=['img_search', 'is'])
     async def image_search(self, ctx: commands.Context, *args) -> None:
         try:
-            # 刪除查詢訊息
-            if ctx.channel.type != discord.ChannelType.private:
-                await ctx.message.delete(delay=20)
-
             # 確認是否有指定最低相似度
             last_isfloat = self._isfloat(args[-1]) if args else False
             min_similarity = float(args[-1]) if (args and last_isfloat) else 72
@@ -136,7 +132,10 @@ class ImgSearch(CogInit):
             # 執行至此佇列仍為空，判定為未給予搜尋要素
             if not queue:
                 await ctx.reply(f'你是不是沒有放上要找的圖 {Emojis.thonk}',
-                                delete_after=20)
+                                delete_after=10)
+                # 刪除查詢訊息
+                if ctx.channel.type != discord.ChannelType.private:
+                    await ctx.message.delete(delay=10)
                 return
 
             result_embeds = []
@@ -162,6 +161,9 @@ class ImgSearch(CogInit):
             # 送出搜尋結果訊息
             result_msg = await ctx.reply(embed=result_embeds[0],
                                          delete_after=240)
+            # 刪除查詢訊息
+            if ctx.channel.type != discord.ChannelType.private:
+                await ctx.message.delete(delay=240)
             # 添加搜尋結果訊息
             self.result_list[result_msg.id] = result_embeds
             # 添加反應
@@ -170,7 +172,11 @@ class ImgSearch(CogInit):
                     list(self.reaction_emos.keys())[i])
 
         except errors.LongLimitReachedError:
-            await ctx.reply(f"今天的搜尋次數已達上限 {Emojis.pepe_hands}")
+            await ctx.reply(f"今天的搜尋次數已達上限 {Emojis.pepe_hands}",
+                            delete_after=10)
+            # 刪除查詢訊息
+            if ctx.channel.type != discord.ChannelType.private:
+                await ctx.message.delete(delay=10)
 
 
 def setup(bot) -> None:
