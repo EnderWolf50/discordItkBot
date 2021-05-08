@@ -123,7 +123,7 @@ class EventHandlers(CogInit):
             await msg.reply(file=pic, delete_after=7)
         elif "神奇海螺" in content:
             if content[:2] != "請問":
-                pic = discord.File(random.choice(Events.magic_conc.kw))
+                pic = discord.File(random.choice(Events.magic_conch.kw))
                 await msg.reply(file=pic, delete_after=7)
         # 好耶
         elif "好耶" in content:
