@@ -116,8 +116,8 @@ class EventHandlers(CogInit):
         elif "假的" in content:
             pic = discord.File(Events.fake)
             await msg.reply(file=pic, delete_after=10)
-        # 很壞
-        elif "很壞" in content:
+        # 你很壞
+        elif "你很壞" in content:
             pic = discord.File(Events.you_bad)
             await msg.reply(file=pic, delete_after=7)
         # 好耶
@@ -136,14 +136,16 @@ class EventHandlers(CogInit):
         _sister_1 = False
         _sister_2 = False
         _msg_rec = await msg.channel.history(
-            limit=None, after=dt.utcnow() - timedelta(seconds=10.5)).flatten()
-        _msg_rec_name = [_m.author.display_name for _m in _msg_rec]
-        _msg_rec_attachment = [
-            f.filename for _m in _msg_rec for f in _m.attachments
-        ]
+            limit=None,
+            after=msg.created_at - timedelta(seconds=10.5)).flatten()
+        _msg_rec_name = {_m.author.display_name for _m in _msg_rec}
+        _msg_rec_attachments = {
+            f.filename
+            for _m in _msg_rec for f in _m.attachments
+        }
         if "綺麗な双子(姊)" in _msg_rec_name: _sister_1 = True
         if "綺麗な双子(妹)" in _msg_rec_name: _sister_2 = True
-        if "sisters.jpg" in _msg_rec_attachment: _sister_1 = _sister_2 = False
+        if "sisters.jpg" in _msg_rec_attachments: _sister_1 = _sister_2 = False
         if _sister_1 and _sister_2:
             pic = discord.File(Events.sisters)
             await msg.channel.send(file=pic, delete_after=10)
