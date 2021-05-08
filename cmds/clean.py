@@ -53,12 +53,13 @@ class Clean(CogInit):
             def is_specific(m: discord.Message) -> bool:
                 return member is None or m.author == member
 
-            deleted_msg_count = len(await ctx.channel.purge(
-                limit=None,
-                after=dt.utcnow() - timedelta(days=days, seconds=1),
-                before=ctx.message.created_at,
-                oldest_first=False,
-                check=is_specific))
+            async with ctx.typing():
+                deleted_msg_count = len(await ctx.channel.purge(
+                    limit=None,
+                    after=dt.utcnow() - timedelta(days=days, seconds=1),
+                    before=ctx.message.created_at,
+                    oldest_first=False,
+                    check=is_specific))
 
             # 計算花費時間
             time_taken = (dt.now() - start_time).total_seconds()
