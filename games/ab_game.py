@@ -31,6 +31,13 @@ class AbGame(CogInit):
                     a_count += 1
         return a_count, b_count
 
+    @staticmethod
+    def _get_time_taken_str(time: dt) -> str:
+        time_taken = (dt.utcnow() - time).total_seconds()
+        h, r = divmod(time_taken, 3600)
+        m, s = divmod(r, 60)
+        return f"{h:02.0f}:{m:02.0f}:{s:02.0f}"
+
     async def _clean_game_messages(self, channel: Union[discord.TextChannel,
                                                         discord.DMChannel],
                                    game_info: dict[str, Any]) -> None:
@@ -70,10 +77,8 @@ class AbGame(CogInit):
                     # 刪除遊戲資訊
                     del self.ongoing_games[msg.channel.id]
 
-                    time_taken = dt.min + (dt.utcnow() -
-                                           game_info["start_time"])
                     await msg.reply(
-                        f"（{content}）：**{a_count}A{b_count}B**\n恭喜 {msg.author.mention} 答對了！｜遊戲總時長 {time_taken.strftime('%H:%M:%S')}"
+                        f"（{content}）：**{a_count}A{b_count}B**\n恭喜 {msg.author.mention} 答對了！｜遊戲總時長：{self._get_time_taken_str(game_info['start_time'])}"
                     )
                     # 提早跳出函式（避免發送提示訊息及記錄）
                     await asyncio.sleep(5)
@@ -126,9 +131,8 @@ class AbGame(CogInit):
             del self.ongoing_games[ctx.channel.id]
 
             ans = "".join(game_info["ans"])
-            time_taken = dt.min + (dt.utcnow() - game_info["start_time"])
             await ctx.reply(
-                f"{ctx.author.mention} 結束了遊戲!\n正確答案為 **{ans}**！｜遊戲總時長 {time_taken.strftime('%H:%M:%S')}"
+                f"{ctx.author.mention} 結束了遊戲!\n正確答案為 **{ans}**！｜遊戲總時長：{self._get_time_taken_str(game_info['start_time'])}"
             )
             await asyncio.sleep(5)
             await self._clean_game_messages(ctx.channel, game_info)

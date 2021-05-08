@@ -114,6 +114,8 @@ styles:
     next_page : "<:next_page:805002492525805589>"
     first_page: "<:first_page:806497548343705610>"
     last_page : "<:last_page:806497548558532649>"
+    check_mark: "\u2705"
+    cross_mark: "\u274E"
     numbers:
       - "1\u20E3"
       - "2\u20E3"

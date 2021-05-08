@@ -15,7 +15,7 @@ __all__ = (
     'HelpMessages',
     'Events',
     'Fun',
-    'tasks',
+    'Tasks',
 )
 
 
