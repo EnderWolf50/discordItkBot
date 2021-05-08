@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from core import CogInit, HelpMessages
 
+from typing import Any
 
 class Help(CogInit):
     def _get_help_embed(self, embed_info: dict[str, Any]) -> discord.Embed:

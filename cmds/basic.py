@@ -2,8 +2,6 @@ import discord
 from discord.ext import commands
 from core import CogInit, HelpMessages
 
-from typing import Any
-
 
 class Basic(CogInit):
     @commands.group(name="extension", aliases=["ext"])
