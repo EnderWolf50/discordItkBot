@@ -188,9 +188,9 @@ events:
     - !JOIN [*IMAGE_FOLDER, "so_hot_sumei.png"]
   magic_conch:
     kw:
-      - !JOIN [*IMAGE_FOLDER, "magic_conch_why.png"]
-      - !JOIN [*IMAGE_FOLDER, "magic_conch_wow.png"]
-      - !JOIN [*IMAGE_FOLDER, "magic_conch_sus.png"]
+      - !JOIN [*IMAGE_FOLDER, "magic_conch_why.jpg"]
+      - !JOIN [*IMAGE_FOLDER, "magic_conch_wow.jpg"]
+      - !JOIN [*IMAGE_FOLDER, "magic_conch_sus.jpg"]
     ask:
       - !JOIN [*IMAGE_FOLDER, "magic_conch_yes.png"]
       - !JOIN [*IMAGE_FOLDER, "magic_conch_no.png"]
