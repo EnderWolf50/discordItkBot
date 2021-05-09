@@ -1,6 +1,7 @@
 import logging
 
 from core import CogInit, Emojis
+from core.config import Bot
 from discord.ext import commands
 from discord.ext.commands import errors
 from sentry_sdk import push_scope
@@ -11,35 +12,45 @@ logger = logging.getLogger(__name__)
 class ErrorHandlers(CogInit):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.owner = self.bot.get_user(Bot.owner)
+
+    @commands.Cog.listener()
+    async def on_error(self, event: str, *args, **kwargs):
+        with push_scope() as scope:
+            scope.set_tag("event", event)
+            scope.set_extra("args", args)
+            scope.set_extra("kwargs", kwargs)
+
+            logger.exception(f"Unhandled exception in {event}.")
 
     @commands.Cog.listener()
     async def on_command_error(
         self, ctx: commands.Context, e: errors.CommandError
     ) -> None:
+        await ctx.message.delete(delay=13)
+
         if hasattr(e, "handled"):
-            return
+            return  # 略過
+
+        if isinstance(e, errors.CommandNotFound):
+            return  # 略過
 
         if isinstance(e, errors.CommandInvokeError):
-            await self.command_invoke_error_handler(ctx, e)
+            await self._command_invoke_error_handler(ctx, e)
         elif isinstance(e, errors.UserInputError):
-            await self.user_input_error_handler(ctx, e)
+            await self._user_input_error_handler(ctx, e)
         elif isinstance(e, errors.CheckFailure):
-            await self.check_failure_handler(ctx, e)
+            await self._check_failure_handler(ctx, e)
         elif isinstance(e, errors.DisabledCommand):
-            await ctx.message.delete(delay=13)
-            await ctx.reply("該指令無法直接使用或被禁用", delete_after=13)
+            await ctx.reply(f"該指令被禁用或無法直接使用", delete_after=13)
         elif isinstance(e, errors.CommandOnCooldown):
-            await ctx.message.delete(delay=13)
             await ctx.reply(
-                f"該指令還在冷卻，請待訊息消失後重試 ( {e.retry_after:.1f}s )。",
-                delete_after=e.retry_after,
+                f"該指令還在冷卻｜{e.retry_after:.2f}s ", delete_after=e.retry_after
             )
-            return
-        elif isinstance(e, errors.CommandNotFound):
-            return  # Ignore
+            return  # 不紀錄
         else:
             await self._unexpected_error_handler(ctx, e)
-            return
+            return  # 不做普通紀錄
 
         logger.debug(
             f"Command {ctx.command} invoked by {ctx.author} ({ctx.author.id}) | "
@@ -47,131 +58,98 @@ class ErrorHandlers(CogInit):
             exc_info=e,
         )
 
-    async def command_invoke_error_handler(
+    async def _command_invoke_error_handler(
         self, ctx: commands.Context, e: errors.CommandInvokeError
     ):
-        await ctx.message.delete(delay=13)
-        await ctx.reply(f"指令執行時發生錯誤，看來又要除蟲了 {Emojis.pepe_coffee}", delete_after=13)
+        await self.bot.get_channel(Bot.log_channel).send(
+            f"{self.owner.mention}\n"
+            f"{ctx.command}｜{ctx.content}｜{ctx.author} `{ctx.author.id}`\n"
+            f"{e.__class__.__name__}: {e}"
+        )
+        await ctx.reply(f"指令執行時發生錯誤，是時候該叫作者除蟲囉 {Emojis.pepe_coffee}", delete_after=13)
 
-    async def user_input_error_handler(
+    async def _user_input_error_handler(
         self, ctx: commands.Context, e: errors.UserInputError
     ) -> None:
         if isinstance(e, errors.BadArgument):
-            await self.bad_argument_handler(ctx, e)
+            await self._bad_argument_handler(ctx, e)
         elif isinstance(e, errors.MissingRequiredArgument):
-            await ctx.message.delete(delay=13)
-            await ctx.reply(f"你好像少打了一些東西 {Emojis.pepe_hmm}？", delete_after=13)
+            await ctx.reply(f"你好像少打了一些東西 {Emojis.pepe_hmm}", delete_after=13)
         elif isinstance(e, errors.ArgumentParsingError):
-            await ctx.message.delete(delay=13)
-            await ctx.reply(f"你的括號有點錯誤喔 {Emojis.pepe_coin}", delete_after=13)
+            await ctx.reply(f"請重新確認引號位置 {Emojis.pepe_coin}", delete_after=13)
         elif isinstance(e, errors.BadUnionArgument):
-            await ctx.message.delete(delay=13)
-            await ctx.reply(f"無法轉換輸入的參數 {Emojis.bongo_pepe}", delete_after=13)
+            await ctx.reply(f"參數轉換錯誤 {Emojis.bongo_pepe}", delete_after=13)
         elif isinstance(e, errors.TooManyArguments):
-            await ctx.message.delete(delay=13)
-            await ctx.reply(
-                f"看到這個訊息代表我腦抽關了某個功能 {Emojis.pepe_facepalm}", delete_after=13
-            )
-            return
+            await ctx.reply(f"輸入的參數過多 {Emojis.pepe_facepalm}", delete_after=13)
         await ctx.send(f"指令用法：`{ctx.command.help}`", delete_after=10)
 
     @staticmethod
-    async def bad_argument_handler(
+    async def _bad_argument_handler(
         ctx: commands.Context, e: errors.BadUnionArgument
     ) -> None:
         if isinstance(e, errors.MessageNotFound):
-            await ctx.message.delete(delay=13)
-            await ctx.reply(
-                f"我找不到 {e.argument} 所指定的訊息 {Emojis.pepe_sad}", delete_after=13
-            )
+            await ctx.reply(f"訊息 {e.argument} 轉換失敗 {Emojis.pepe_sad}", delete_after=13)
         elif isinstance(e, errors.ChannelNotFound):
-            await ctx.message.delete(delay=13)
-            await ctx.reply(
-                f"我找不到 {e.argument} 所指定的頻道 {Emojis.pepe_sad}", delete_after=13
-            )
+            await ctx.reply(f"頻道 {e.argument} 轉換失敗 {Emojis.pepe_sad}", delete_after=13)
         elif isinstance(e, errors.RoleNotFound):
-            await ctx.message.delete(delay=13)
-            await ctx.reply(
-                f"我找不到 {e.argument} 所指定的身分組 {Emojis.pepe_sad}", delete_after=13
-            )
+            await ctx.reply(f"身分組 {e.argument} 轉換失敗 {Emojis.pepe_sad}", delete_after=13)
         elif isinstance(e, (errors.UserNotFound, errors.MemberNotFound)):
-            await ctx.message.delete(delay=13)
-            await ctx.reply(
-                f"我找不到 {e.argument} 所指定的使用者 {Emojis.pepe_sad}", delete_after=13
-            )
+            await ctx.reply(f"使用者 {e.argument} 轉換失敗 {Emojis.pepe_sad}", delete_after=13)
         elif isinstance(e, errors.EmojiNotFound):
-            await ctx.message.delete(delay=13)
-            await ctx.reply(
-                f"我找不到 {e.argument} 所指定的表情符號 {Emojis.pepe_sad}", delete_after=13
-            )
+            await ctx.reply(f"表符 {e.argument} 轉換失敗 {Emojis.pepe_sad}", delete_after=13)
         elif isinstance(e, errors.PartialEmojiConversionFailure):
-            await ctx.message.delete(delay=13)
-            await ctx.reply(
-                f"我無法將 {e.argument} 轉成對應的表情符號 {Emojis.pepe_sad}", delete_after=13
-            )
+            await ctx.reply(f"無法將 {e.argument} 轉換失敗 {Emojis.pepe_sad}", delete_after=13)
         elif isinstance(e, errors.BadBoolArgument):
-            await ctx.message.delete(delay=13)
-            await ctx.reply(
-                f"我不確定 {e.argument} 所代表的布林值 {Emojis.pepe_sad}", delete_after=13
-            )
-        elif isinstance(e, errors.BadInviteArgument):
-            await ctx.message.delete(delay=13)
-            await ctx.reply(f"你給予的邀請連結好像過期了欸 {Emojis.pepe_sus}", delete_after=13)
+            await ctx.reply(f"布林值 {e.argument} 轉換失敗 {Emojis.pepe_sad}", delete_after=13)
         elif isinstance(e, (errors.BadColourArgument, errors.BadColorArgument)):
-            await ctx.message.delete(delay=13)
-            await ctx.reply(
-                f"我無法將 {e.argument} 轉成對應的顏色，請將其改為 `#<HEX>` 格式 {Emojis.pepe_simp}",
-                delete_after=13,
-            )
+            await ctx.reply(f"顏色 {e.argument} 轉換失敗 {Emojis.pepe_simp}", delete_after=13)
+        elif isinstance(e, errors.BadInviteArgument):
+            await ctx.reply(f"邀請連結無用或過期 {Emojis.pepe_sus}", delete_after=13)
         elif isinstance(e, errors.ChannelNotReadable):
-            await ctx.message.delete(delay=13)
-            await ctx.reply(f"窩沒有讀取這個頻道的權限 {Emojis.pepe_hands}", delete_after=13)
+            await ctx.reply(
+                f"沒有讀取 {e.argument.mention} 的權限 {Emojis.pepe_hands}", delete_after=13
+            )
         else:
-            await ctx.message.delete(delay=13)
-            await ctx.reply(f"不知道你打錯了什麼，我想你可以重試看看 {Emojis.pepe_hmm}", delete_after=13)
+            await ctx.reply(f"不知道你打錯了什麼，請檢查後重試 {Emojis.pepe_hmm}", delete_after=13)
 
     @staticmethod
-    async def check_failure_handler(
+    async def _check_failure_handler(
         ctx: commands.Context, e: errors.CheckFailure
     ) -> None:
-        bot_missing_errors = (
+        BOT_MISSING_ERRORS = (
             errors.BotMissingAnyRole,
             errors.BotMissingPermissions,
             errors.BotMissingRole,
         )
 
-        user_missing_errors = (
+        USER_MISSING_ERRORS = (
             errors.MissingAnyRole,
             errors.MissingPermissions,
             errors.MissingRole,
         )
-        if isinstance(e, user_missing_errors):
-            await ctx.message.delete(delay=13)
-            await ctx.reply(f"你沒有足夠的權限執行指令 {Emojis.pepe_nopes}", delete_after=13)
-        elif isinstance(e, bot_missing_errors):
-            await ctx.message.delete(delay=13)
-            await ctx.reply(f"我沒有足夠的權限執行指令 {Emojis.pepe_depressed}", delete_after=13)
-        elif isinstance(e, errors.PrivateMessageOnly):
-            await ctx.message.delete(delay=13)
+        if isinstance(e, USER_MISSING_ERRORS):
+            await ctx.reply(f"**你**沒有足夠的權限執行指令 {Emojis.pepe_nopes}", delete_after=13)
+        elif isinstance(e, BOT_MISSING_ERRORS):
             await ctx.reply(
-                f"這個指令只能在私人訊息中使用 {Emojis.rainbow_pepe_angry}", delete_after=13
+                f"**我**沒有足夠的權限執行指令 {Emojis.pepe_depressed}", delete_after=13
+            )
+
+        if isinstance(e, errors.NotOwner):
+            await ctx.reply(f"只有擁有者可以使用這個指令 {Emojis.pepe_crown_flip}", delete_after=13)
+        elif isinstance(e, errors.NSFWChannelRequired):
+            await ctx.reply(f"請不要在這裡開車 {Emojis.pepe_monkaSTEER}", delete_after=13)
+        elif isinstance(e, errors.PrivateMessageOnly):
+            await ctx.reply(
+                f"這個指令**只能*在私人訊息中使用 {Emojis.rainbow_pepe_angry}", delete_after=13
             )
         elif isinstance(e, errors.NoPrivateMessage):
-            await ctx.message.delete(delay=13)
             await ctx.reply(
-                f"這個指令無法在私人訊息中使用 {Emojis.rainbow_pepe_angry}", delete_after=13
+                f"這個指令**無法**在私人訊息中使用 {Emojis.rainbow_pepe_angry}", delete_after=13
             )
-        elif isinstance(e, errors.NSFWChannelRequired):
-            await ctx.message.delete(delay=13)
-            await ctx.reply(f"請不要在這裡開車 {Emojis.pepe_monkaSTEER}", delete_after=13)
-        elif isinstance(e, errors.NotOwner):
-            await ctx.message.delete(delay=13)
-            await ctx.reply(f"這個指令只有作者才可以用喔 {Emojis.pepe_crown_flip}", delete_after=13)
         elif isinstance(e, errors.CheckAnyFailure):
-            await ctx.message.delete(delay=13)
             await ctx.reply(
-                f"以下檢查項目未通過 `{'`, `'.join({e.__class__.__name__ for e in e.errors})}` "
-                "{Emojis.pepe_hmm}",
+                f"未通過以下檢查 {Emojis.pepe_hmm}\n"
+                f"`{'`, `'.join({e.__class__.__name__ for e in e.errors})}`",
                 delete_after=13,
             )
 

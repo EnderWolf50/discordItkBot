@@ -49,14 +49,6 @@ class EventHandlers(CogInit):
             logger.error(f"使用 {key} 進行搜索時發生錯誤，可能是超出配額或或金鑰無效")
 
     @commands.Cog.listener()
-    async def on_ready(self) -> None:
-        logger.info("Bot is ready")
-
-        await self.bot.get_channel(Bot.log_channel).send(
-            f'你家機器人睡醒囉 `{dt.now().strftime("%Y/%m/%d %H:%M:%S")}`'
-        )
-
-    @commands.Cog.listener()
     async def on_message(self, msg: discord.Message) -> None:
         # 忽略指定頻道
         if msg.channel and msg.channel.id in Bot.ignore_channels:
