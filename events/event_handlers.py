@@ -73,7 +73,7 @@ class EventHandlers(CogInit):
 
         mentions = [u.display_name for u in msg.mentions]
         # 提及機器人
-        if self.bot.user in msg.mentions:
+        if self.bot.user in msg.mentions and not ctx.command:
             await msg.reply(random.choice(Events.mentioned_reply))
         # 窩不知道
         elif any(kw in content for kw in ("窩不知道", "我不知道", "idk")):
