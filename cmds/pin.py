@@ -1,19 +1,18 @@
-import discord
-from discord.ext import commands
-from core import CogInit
-
 import random
+
+import discord
+from core import CogInit
+from discord.ext import commands
 
 
 class Pin(CogInit):
     @commands.command()
-    async def pin(self,
-                  ctx: commands.Context,
-                  user: discord.Member = None) -> None:
-        if user == None:
+    async def pin(self, ctx: commands.Context, user: discord.Member = None) -> None:
+        if user is None:
             await ctx.message.delete(delay=3)
             random_pin = await ctx.fetch_message(
-                random.choice(await ctx.channel.pins()).id)
+                random.choice(await ctx.channel.pins()).id
+            )
 
             author = random_pin.author.display_name
             content = random_pin.content
@@ -27,8 +26,7 @@ class Pin(CogInit):
             author_pin_list = [
                 m for m in (await ctx.channel.pins()) if m.author.id == user.id
             ]
-            random_pin = await ctx.fetch_message(
-                random.choice(author_pin_list).id)
+            random_pin = await ctx.fetch_message(random.choice(author_pin_list).id)
 
             author = random_pin.author.display_name
             content = random_pin.content

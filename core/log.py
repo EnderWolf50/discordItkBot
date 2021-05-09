@@ -1,19 +1,18 @@
-import sys
 import logging
-import sentry_sdk
-from pathlib import Path
-from datetime import datetime
+import sys
 from logging import handlers
+from pathlib import Path
 
 import coloredlogs
+import sentry_sdk
 from sentry_sdk.integrations.logging import LoggingIntegration
 
 from core import Log
 
-__all__ = (
-    'logging_setup',
-    'sentry_setup',
-)
+__all__ = [
+    "logging_setup",
+    "sentry_setup",
+]
 
 
 def logging_setup() -> None:

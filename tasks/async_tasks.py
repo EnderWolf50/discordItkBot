@@ -1,8 +1,8 @@
-import discord
-from core import CogInit, Bot, Tasks
-
 import asyncio
 from datetime import datetime as dt
+
+import discord
+from core import Bot, CogInit, Tasks
 
 
 class AsyncTasks(CogInit):
@@ -33,8 +33,7 @@ class AsyncTasks(CogInit):
                     await self.channel.send(file=pic)
                 await asyncio.sleep(0.5)
 
-        self._LEFT_THREE_HOURS_TASK = self.bot.loop.create_task(
-            _left_three_hours())
+        self._LEFT_THREE_HOURS_TASK = self.bot.loop.create_task(_left_three_hours())
 
         # 只剩十秒
         async def _left_ten_seconds() -> None:
@@ -47,8 +46,7 @@ class AsyncTasks(CogInit):
                     await self.channel.send(file=pic)
                 await asyncio.sleep(0.5)
 
-        self._LEFT_TEN_SECONDS_TASK = self.bot.loop.create_task(
-            _left_ten_seconds())
+        self._LEFT_TEN_SECONDS_TASK = self.bot.loop.create_task(_left_ten_seconds())
 
 
 def setup(bot):

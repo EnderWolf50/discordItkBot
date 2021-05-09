@@ -1,15 +1,15 @@
-import discord
-from discord.ext import commands
-from core import CogInit, Bot, Events, Emojis
-
-import re
-import random
 import logging
-from typing import Any
-from pathlib import Path
-from itertools import cycle
-from datetime import timedelta
+import random
+import re
 from datetime import datetime as dt
+from datetime import timedelta
+from itertools import cycle
+from pathlib import Path
+from typing import Any
+
+import discord
+from core import Bot, CogInit, Emojis, Events
+from discord.ext import commands
 from googleapiclient import discovery, errors
 
 logger = logging.getLogger(__name__)
@@ -38,10 +38,11 @@ class EventHandlers(CogInit):
         cse = Bot.custom_search_engine_id
         try:
             service = discovery.build("customsearch", "v1", developerKey=key)
-            res = service.cse().list(q=q,
-                                     cx=cse,
-                                     **Bot.google_search_options,
-                                     **kwargs).execute()
+            res = (
+                service.cse()
+                .list(q=q, cx=cse, **Bot.google_search_options, **kwargs)
+                .execute()
+            )
 
             return res.get("items", None)
         except errors.HttpError:
@@ -51,14 +52,15 @@ class EventHandlers(CogInit):
     async def on_ready(self) -> None:
         logger.info("Bot is ready")
 
-        await self.bot.get_channel(
-            Bot.log_channel
-        ).send(f'你家機器人睡醒囉 `{dt.now().strftime("%Y/%m/%d %H:%M:%S")}`')
+        await self.bot.get_channel(Bot.log_channel).send(
+            f'你家機器人睡醒囉 `{dt.now().strftime("%Y/%m/%d %H:%M:%S")}`'
+        )
 
     @commands.Cog.listener()
     async def on_message(self, msg: discord.Message) -> None:
         # 忽略指定頻道
-        if msg.channel and msg.channel.id in Bot.ignore_channels: return
+        if msg.channel and msg.channel.id in Bot.ignore_channels:
+            return
 
         author = msg.author
         author_name = author.display_name.lower()
@@ -74,7 +76,8 @@ class EventHandlers(CogInit):
         if "<:095:802993480632631316>" in content:
             await msg.reply(Events.helen_art)
 
-        if msg.author.bot: return
+        if msg.author.bot:
+            return
 
         mentions = [u.display_name for u in msg.mentions]
         # 提及機器人
@@ -99,7 +102,7 @@ class EventHandlers(CogInit):
         # 撒嬌 (訊息)
         elif any(kw in content for kw in ("donut", "bakery", "撒嬌")):
             if random.randint(0, 4) == 4:
-                await msg.reply(f"還敢撒嬌阿")
+                await msg.reply("還敢撒嬌阿")
             else:
                 await msg.reply(random.choice(Events.act_cute))
         # 撒嬌 (名稱)
@@ -146,10 +149,11 @@ class EventHandlers(CogInit):
             # 若為其中一人則處理
             if _sister_1 or _sister_2:
                 # 獲取 20 秒內的歷史訊息
-                async for _m in msg.channel.history(limit=None,
-                                                    after=msg.created_at -
-                                                    timedelta(seconds=15.5),
-                                                    oldest_first=False):
+                async for _m in msg.channel.history(
+                    limit=None,
+                    after=msg.created_at - timedelta(seconds=15.5),
+                    oldest_first=False,
+                ):
                     _m_author_name = _m.author.display_name.lower()
                     # 如果 20 秒內已經觸發過，跳過並重新記錄時間
                     if "sisters.jpg" in {_a.filename for _a in _m.attachments}:
@@ -161,7 +165,8 @@ class EventHandlers(CogInit):
                     if _sister_1 and _m_author_name == "綺麗な双子(妹)":
                         _sister_2 = True
                     # 皆為 True 提早跳出以便發送
-                    if _sister_1 and _sister_2: break
+                    if _sister_1 and _sister_2:
+                        break
                 # 皆為 True 則兩者於 20 秒內同時出現
                 if _sister_1 and _sister_2:
                     # 紀錄發送時間
@@ -180,7 +185,8 @@ class EventHandlers(CogInit):
                 if result is None:
                     await msg.reply(
                         f"很遺憾\n你問的東西連 Google 都回答不了你 {Emojis.pepe_coffee}",
-                        delete_after=10)
+                        delete_after=10,
+                    )
                     await msg.delete(delay=10)
                     return
                 await msg.reply(result[0]["link"])
@@ -188,78 +194,104 @@ class EventHandlers(CogInit):
         # 圖片備份
         counter = 0
         for attachment in msg.attachments:
-            if any(attachment.filename.lower().endswith(ext)
-                   for ext in (".jpg", ".jpeg", ".png", ".gif")):
+            if any(
+                attachment.filename.lower().endswith(ext)
+                for ext in (".jpg", ".jpeg", ".png", ".gif")
+            ):
                 counter += 1
                 ext = attachment.filename.split(".")[1]
-                await attachment.save(self.backup_path /
-                                      Path(f"{msg.id}_{counter:02d}.{ext}"))
+                await attachment.save(
+                    self.backup_path / Path(f"{msg.id}_{counter:02d}.{ext}")
+                )
 
     @commands.Cog.listener()
-    async def on_message_edit(self, before: discord.Message,
-                              after: discord.Message) -> None:
+    async def on_message_edit(
+        self, before: discord.Message, after: discord.Message
+    ) -> None:
         # 忽略頻道
-        if after.channel and after.channel.id in Bot.ignore_channels: return
+        if after.channel and after.channel.id in Bot.ignore_channels:
+            return
         # 忽略機器人
-        if after.author.bot: return
+        if after.author.bot:
+            return
         # 忽略私訊及測試群組
-        if not after.guild or after.guild.id == Bot.test_guild: return
+        if not after.guild or after.guild.id == Bot.test_guild:
+            return
         # 前後訊息內容相同，略過
-        if before.content.lower() == after.content.lower(): return
+        if before.content.lower() == after.content.lower():
+            return
 
         author = after.author
         channel = after.channel
-        create_time = (after.edited_at +
-                       timedelta(hours=8)).strftime("%Y/%m/%d %H:%M:%S")
+        create_time = (after.edited_at + timedelta(hours=8)).strftime(
+            "%Y/%m/%d %H:%M:%S"
+        )
         # 尋找已備份的圖片檔
         files = [
-            f for f in self.backup_path.iterdir()
-            if f.name.startswith(str(after.id))
+            f for f in self.backup_path.iterdir() if f.name.startswith(str(after.id))
         ]
         await self.bot.get_channel(Bot.edit_backup_channel).send(
-            f"{author.display_name} `{author.id}`｜{channel.name} `{create_time}`\n{before.content} `→` {after.content}",
-            files=[discord.File(file) for file in files])
+            f"{author.display_name} `{author.id}`｜{channel.name} `{create_time}`\n"
+            f"{before.content} `→` {after.content}",
+            files=[discord.File(file) for file in files],
+        )
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg: discord.Message) -> None:
         # 忽略機器人
-        if msg.author.bot: return
+        if msg.author.bot:
+            return
         # 忽略私訊及測試群組
-        if not msg.guild or msg.guild.id == Bot.test_guild: return
+        if not msg.guild or msg.guild.id == Bot.test_guild:
+            return
         # 忽略指令
-        if msg.content.lower()[1:].split(' ')[0] in self.ignore_list: return
+        if msg.content.lower()[1:].split(" ")[0] in self.ignore_list:
+            return
 
         # 無限讀取貓咪
-        if any(kw in msg.content
-               for kw in (Events.loading_cat[0], Events.loading_cat[1],
-                          Events.loading_cat[2])):
+        if any(
+            kw in msg.content
+            for kw in (
+                Events.loading_cat[0],
+                Events.loading_cat[1],
+                Events.loading_cat[2],
+            )
+        ):
             await msg.channel.send(Events.loading_cat[0])
             await msg.channel.send(Events.loading_cat[1])
             await msg.channel.send(Events.loading_cat[2])
 
         author = msg.author
         channel = msg.channel
-        create_time = (msg.created_at +
-                       timedelta(hours=8)).strftime("%Y/%m/%d %H:%M:%S")
+        create_time = (msg.created_at + timedelta(hours=8)).strftime(
+            "%Y/%m/%d %H:%M:%S"
+        )
         # 尋找已備份的圖片檔
         files = [
-            f for f in self.backup_path.iterdir()
-            if f.name.startswith(str(msg.id))
+            f for f in self.backup_path.iterdir() if f.name.startswith(str(msg.id))
         ]
         await self.bot.get_channel(Bot.chat_backup_channel).send(
-            f"{author.display_name} `{author.id}`｜{channel.name} `{create_time}`\n{msg.content}",
-            files=[discord.File(file) for file in files])
+            f"{author.display_name} `{author.id}`｜{channel.name} `{create_time}`\n"
+            f"{msg.content}",
+            files=[discord.File(file) for file in files],
+        )
         # 刪除圖片
         for file in files:
             file.unlink()
 
     @commands.Cog.listener()
-    async def on_reaction_add(self, reaction: discord.Reaction,
-                              user: discord.User) -> None:
+    async def on_reaction_add(
+        self, reaction: discord.Reaction, user: discord.User
+    ) -> None:
         # 取消對貓貓分屍的行為
-        if any(kw in reaction.message.content
-               for kw in (Events.loading_cat[0], Events.loading_cat[1],
-                          Events.loading_cat[2])):
+        if any(
+            kw in reaction.message.content
+            for kw in (
+                Events.loading_cat[0],
+                Events.loading_cat[1],
+                Events.loading_cat[2],
+            )
+        ):
             await reaction.message.remove_reaction(reaction, user)
 
 

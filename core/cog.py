@@ -1,6 +1,8 @@
 from discord.ext import commands
 
-__all__ = ('CogInit', )
+__all__ = [
+    "CogInit",
+]
 
 
 class CogInit(commands.Cog):

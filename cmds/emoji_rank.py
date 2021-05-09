@@ -1,8 +1,8 @@
-import discord
-from discord.ext import commands
-from core import CogInit, Bot, Mongo, Reactions
-
 from typing import Union
+
+import discord
+from core import Bot, CogInit, Mongo, Reactions
+from discord.ext import commands
 
 
 class EmojiRank(CogInit):
@@ -12,39 +12,48 @@ class EmojiRank(CogInit):
 
         self.rank_msg_details = []
 
-    def _db_add_emoji(
-            self, emoji: Union[discord.abc.Snowflake, discord.Emoji]) -> None:
+    def _db_add_emoji(self, emoji: Union[discord.abc.Snowflake, discord.Emoji]) -> None:
         # 若傳進來的是 ID，先透過群組獲得 Emoji 物件
         if not isinstance(emoji, discord.Emoji):
             emoji = self.bot.get_emoji(emoji)
 
-        self.mongo.update({'_id': emoji.id}, {
-            '$set': {
-                '_id': emoji.id,
-                'name': emoji.name,
-                'animated': emoji.animated,
-                'count': 0,
-            }
-        })
+        self.mongo.update(
+            {"_id": emoji.id},
+            {
+                "$set": {
+                    "_id": emoji.id,
+                    "name": emoji.name,
+                    "animated": emoji.animated,
+                    "count": 0,
+                }
+            },
+        )
 
     def _db_delete_emoji(
-            self, emoji: Union[discord.abc.Snowflake, discord.Emoji]) -> None:
+        self, emoji: Union[discord.abc.Snowflake, discord.Emoji]
+    ) -> None:
         # 若傳進來的是 Emoji 物件，將變數設為其 ID
         if isinstance(emoji, discord.Emoji):
             emoji = emoji.id
 
-        self.mongo.delete({'_id': emoji})
+        self.mongo.delete({"_id": emoji})
 
     def _db_update_emoji(
-            self, emoji: Union[discord.abc.Snowflake, discord.Emoji]) -> None:
+        self, emoji: Union[discord.abc.Snowflake, discord.Emoji]
+    ) -> None:
         # 若傳進來的是 ID，先透過群組獲得 Emoji 物件
         if not isinstance(emoji, discord.Emoji):
             emoji = self.bot.get_emoji(emoji)
 
-        self.mongo.update({'_id': emoji.id}, {'$set': {
-            'name': emoji.name,
-        }},
-                          upsert=False)  # 不符合 query 不自動添加
+        self.mongo.update(
+            {"_id": emoji.id},
+            {
+                "$set": {
+                    "name": emoji.name,
+                }
+            },
+            upsert=False,
+        )  # 不符合 query 不自動添加
 
     async def _guild_emoji_list(self) -> set[discord.abc.Snowflake]:
         guild = await self.bot.fetch_guild(Bot.active_guild)
@@ -52,7 +61,7 @@ class EmojiRank(CogInit):
         return result
 
     async def _mongo_emoji_list(self) -> set[discord.abc.Snowflake]:
-        result = {emo['_id'] for emo in self.mongo.find()}
+        result = {emo["_id"] for emo in self.mongo.find()}
         return result
 
     async def _get_updated_rank_embed(self) -> discord.Embed:
@@ -63,12 +72,12 @@ class EmojiRank(CogInit):
         embed = discord.Embed()
         # Author
         embed.set_author(
-            name=f"表符使用率排名 {current_page * 12 + 1} ~ {current_page * 12 + 12}")
+            name=f"表符使用率排名 {current_page * 12 + 1} ~ {current_page * 12 + 12}"
+        )
         # Footer
         embed.set_footer(text=f"頁 {current_page + 1} / {total_page + 1}")
         # Thumbnail
-        embed.set_thumbnail(
-            url=(await self.bot.fetch_guild(Bot.active_guild)).icon_url)
+        embed.set_thumbnail(url=(await self.bot.fetch_guild(Bot.active_guild)).icon_url)
         # Fields
         start = current_page * 12
         end = start + 12
@@ -77,9 +86,11 @@ class EmojiRank(CogInit):
             name = emoji["name"]
             emoji_id = emoji["id"]
             count = emoji["count"]
-            embed.add_field(name=rank,
-                            value=f"<{animated}:{name}:{emoji_id}> `{count}`次",
-                            inline=True)
+            embed.add_field(
+                name=rank,
+                value=f"<{animated}:{name}:{emoji_id}> `{count}`次",
+                inline=True,
+            )
         return embed
 
     @commands.Cog.listener()
@@ -101,11 +112,15 @@ class EmojiRank(CogInit):
             self._db_update_emoji(emo)  # 補正已改名的表符
 
     @commands.Cog.listener()
-    async def on_guild_emojis_update(self, guild: discord.Guild,
-                                     before: list[discord.Emoji],
-                                     after: list[discord.Emoji]) -> None:
+    async def on_guild_emojis_update(
+        self,
+        guild: discord.Guild,
+        before: list[discord.Emoji],
+        after: list[discord.Emoji],
+    ) -> None:
         # 如果不是指定群組，不紀錄
-        if guild.id != Bot.active_guild: return
+        if guild.id != Bot.active_guild:
+            return
 
         # 變更前數量 > 變更後數量: 刪除表符
         if len(before) > len(after):
@@ -123,13 +138,13 @@ class EmojiRank(CogInit):
             return
 
         import re
+
         # 正則找出訊息內使用的所有表符，重複只算一次
-        emojis_in_msg = set(re.findall(r'<a?:.*?:(\d*)>', msg.content))
+        emojis_in_msg = set(re.findall(r"<a?:.*?:(\d*)>", msg.content))
         for emo in emojis_in_msg:
-            self.mongo.update({'_id': int(emo)}, {'$inc': {
-                'count': 1
-            }},
-                              upsert=False)  # 不符合 query 不自動添加
+            self.mongo.update(
+                {"_id": int(emo)}, {"$inc": {"count": 1}}, upsert=False
+            )  # 不符合 query 不自動添加
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg: discord.Message) -> None:
@@ -140,13 +155,14 @@ class EmojiRank(CogInit):
             self.rank_msg_details = []
 
     @commands.Cog.listener()
-    async def on_reaction_add(self, reaction: discord.Reaction,
-                              user: discord.User) -> None:
+    async def on_reaction_add(
+        self, reaction: discord.Reaction, user: discord.User
+    ) -> None:
         # 忽略來自機器人的 Emoji 添加事件
-        if user.bot: return
+        if user.bot:
+            return
         # 如果之前沒有列出排行，或事件訊息不是排行訊息，忽略
-        if not self.rank_msg_details or reaction.message != self.rank_msg_details[
-                0]:
+        if not self.rank_msg_details or reaction.message != self.rank_msg_details[0]:
             return
         await reaction.remove(user)
 
@@ -188,15 +204,16 @@ class EmojiRank(CogInit):
             pass  # 略過並繼續執行
 
         # 獲取 Mongo 內的統計資料並排序
-        db_emo_list = [{
-            'id': emo['_id'],
-            'name': emo['name'],
-            'animated': emo['animated'],
-            'count': emo['count'],
-        } for emo in self.mongo.find()]
-        ranked_emo_list = sorted(db_emo_list,
-                                 key=lambda x: x["count"],
-                                 reverse=True)
+        db_emo_list = [
+            {
+                "id": emo["_id"],
+                "name": emo["name"],
+                "animated": emo["animated"],
+                "count": emo["count"],
+            }
+            for emo in self.mongo.find()
+        ]
+        ranked_emo_list = sorted(db_emo_list, key=lambda x: x["count"], reverse=True)
         total_page = len(ranked_emo_list) // 12
 
         # 初始化排行訊息詳情
@@ -218,18 +235,24 @@ class EmojiRank(CogInit):
     async def reset(self, ctx: commands.Context) -> None:
         await ctx.message.delete()
         # 只有擁有者可執行
-        if not (await self.bot.is_owner(ctx.author)): return
+        if not (await self.bot.is_owner(ctx.author)):
+            return
 
         # 次數設為零，同時補正已更名的表符
         for emo in self._mongo_emoji_list():
-            self.mongo.update({
-                '_id': emo,
-            }, {'$set': {
-                'name': self.bot.get_emoji(emo).name,
-                'count': 0,
-            }})
+            self.mongo.update(
+                {
+                    "_id": emo,
+                },
+                {
+                    "$set": {
+                        "name": self.bot.get_emoji(emo).name,
+                        "count": 0,
+                    }
+                },
+            )
 
-    @commands.command(aliases=['er'])
+    @commands.command(aliases=["er"])
     async def emo_rank(self, ctx: commands.Context) -> None:
         # 使舊指令可執行
         await ctx.invoke(self.bot.get_command("emoji rank"))

@@ -1,24 +1,26 @@
-import discord
-from discord.ext import commands
-from core import CogInit, Bot, HelpMessages
-
 from typing import Any
+
+import discord
+from core import Bot, CogInit, HelpMessages
+from discord.ext import commands
 
 
 class Help(CogInit):
-    async def _get_help_embed(self, embed_info: dict[str,
-                                                     Any]) -> discord.Embed:
-        embed = discord.Embed(title=embed_info["title"],
-                              description=embed_info["description"],
-                              color=embed_info["color"])
+    async def _get_help_embed(self, embed_info: dict[str, Any]) -> discord.Embed:
+        embed = discord.Embed(
+            title=embed_info["title"],
+            description=embed_info["description"],
+            color=embed_info["color"],
+        )
         # Author
-        embed.set_author(name=embed_info["author"] or self.bot.user.name,
-                         icon_url=self.bot.user.avatar_url)
+        embed.set_author(
+            name=embed_info["author"] or self.bot.user.name,
+            icon_url=self.bot.user.avatar_url,
+        )
         # Footer
         embed.set_footer(text=embed_info["footer"])
         # Thumbnail
-        embed.set_thumbnail(
-            url=(await self.bot.fetch_guild(Bot.active_guild)).icon_url)
+        embed.set_thumbnail(url=(await self.bot.fetch_guild(Bot.active_guild)).icon_url)
         # Fields
         for command, description in embed_info["fields"]:
             embed.add_field(name=command, value=description, inline=True)

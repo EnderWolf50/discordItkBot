@@ -1,8 +1,11 @@
 import os
-import pymongo
-from typing import Dict, Optional, Any
+from typing import Any, Dict, Optional
 
-__all__ = ('Mongo', )
+import pymongo
+
+__all__ = [
+    "Mongo",
+]
 
 
 class Mongo:
@@ -16,10 +19,12 @@ class Mongo:
             return self._coll.find_one(query)
         return self._coll.find()
 
-    def update(self,
-               query: Dict[str, Any],
-               data: Dict[str, Dict[str, Any]],
-               upsert: bool = True) -> None:
+    def update(
+        self,
+        query: Dict[str, Any],
+        data: Dict[str, Dict[str, Any]],
+        upsert: bool = True,
+    ) -> None:
         self._coll.update_one(query, data, upsert=upsert)
 
     def delete(self, query: Dict[str, Any]) -> None:

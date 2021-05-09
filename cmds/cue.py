@@ -1,9 +1,9 @@
-import discord
-from discord.ext import commands
-from core import CogInit, Mongo, Reactions
-
 import random
 from typing import Optional, Union
+
+import discord
+from core import CogInit, Mongo, Reactions
+from discord.ext import commands
 
 
 class Cue(CogInit):
@@ -47,13 +47,14 @@ class Cue(CogInit):
             self.cue_msg_details = []
 
     @commands.Cog.listener()
-    async def on_reaction_add(self, reaction: discord.Reaction,
-                              user: discord.User) -> None:
+    async def on_reaction_add(
+        self, reaction: discord.Reaction, user: discord.User
+    ) -> None:
         # 忽略來自機器人的 Emoji 添加事件
-        if user.bot: return
+        if user.bot:
+            return
         # 如果之前沒有列出語錄，或事件訊息不是語錄訊息，忽略
-        if not self.cue_msg_details or reaction.message != self.cue_msg_details[
-                0]:
+        if not self.cue_msg_details or reaction.message != self.cue_msg_details[0]:
             return
         await reaction.remove(user)
 
@@ -80,10 +81,12 @@ class Cue(CogInit):
         await reaction.message.edit(embed=embed)
 
     @commands.group(name="cue", aliases=["c"], invoke_without_command=True)
-    async def cue(self,
-                  ctx: commands.Context,
-                  member: Optional[discord.Member] = None,
-                  pos: Optional[int] = None) -> None:
+    async def cue(
+        self,
+        ctx: commands.Context,
+        member: Optional[discord.Member] = None,
+        pos: Optional[int] = None,
+    ) -> None:
         # 有指定成員
         if member is not None:
             member_cue_list = self._get_member_cue_list(member)
@@ -113,7 +116,9 @@ class Cue(CogInit):
         pos = random.randint(1, len(random_cue_list))
         cue_string = random_cue_list[pos - 1]
 
-        await ctx.send(f"{member_name} 語錄 {pos} - {cue_string}", )
+        await ctx.send(
+            f"{member_name} 語錄 {pos} - {cue_string}",
+        )
         await ctx.message.delete()
         return
 
@@ -124,17 +129,14 @@ class Cue(CogInit):
 
         # 未在清單內: 未添加過，更新
         if cue_string not in member_cue_list:
-            self.mongo.update({"_id": member.id},
-                              {"$push": {
-                                  "list": cue_string
-                              }})
+            self.mongo.update({"_id": member.id}, {"$push": {"list": cue_string}})
 
             member_name = member.display_name
             total_length = len(member_cue_list) + 1
 
             await ctx.reply(
-                f"已新增 {member_name} 語錄 {total_length} - {cue_string}",
-                delete_after=7)
+                f"已新增 {member_name} 語錄 {total_length} - {cue_string}", delete_after=7
+            )
             await ctx.message.delete(delay=7)
             return
 
@@ -144,8 +146,9 @@ class Cue(CogInit):
         return
 
     @cue.command(aliases=["remove", "d", "r"])
-    async def delete(self, ctx, member: discord.Member,
-                     pos_or_string: Union[int, str]) -> None:
+    async def delete(
+        self, ctx, member: discord.Member, pos_or_string: Union[int, str]
+    ) -> None:
         # 獲取已添加的語錄
         member_cue_list = self._get_member_cue_list(member)
 
@@ -172,7 +175,7 @@ class Cue(CogInit):
 
         # 指定位置小於等於 0: 位置無效，傳送提示
         if pos <= 0:
-            await ctx.reply(f"指定位置必須大於 1 喔", delete_after=7)
+            await ctx.reply("指定位置必須大於 1", delete_after=7)
             await ctx.message.delete(delay=7)
             return
         # 指定位置大於語錄長度: 位置無效，傳送提示
@@ -189,15 +192,15 @@ class Cue(CogInit):
             # 刪除成員紀錄
             self.mongo.delete({"_id": member.id})
 
-            await ctx.reply(f"已刪除 {member_name} 語錄 {pos} - {cue_string}",
-                            delete_after=7)
+            await ctx.reply(
+                f"已刪除 {member_name} 語錄 {pos} - {cue_string}", delete_after=7
+            )
             await ctx.message.delete(delay=7)
             return
 
         # 以 $pull 操作符刪除指定語錄
         self.mongo.update({"_id": member.id}, {"$pull": {"list": cue_string}})
-        await ctx.reply(f"已刪除 {member_name} 語錄 {pos} - {cue_string}",
-                        delete_after=7)
+        await ctx.reply(f"已刪除 {member_name} 語錄 {pos} - {cue_string}", delete_after=7)
         await ctx.message.delete(delay=7)
 
     @cue.command(aliases=["l"])
@@ -221,9 +224,7 @@ class Cue(CogInit):
 
         total_page = len(member_cue_list) // 21
         # 初始化語錄訊息詳情
-        self.cue_msg_details = [
-            None, total_page, total_page, member_cue_list, member
-        ]
+        self.cue_msg_details = [None, total_page, total_page, member_cue_list, member]
 
         # 取得要傳送的 Embed
         embed = self._get_updated_cue_embed()
@@ -238,24 +239,28 @@ class Cue(CogInit):
         await cue_list_message.add_reaction("<:last_page:806497548558532649>")
 
     @commands.command(aliases=["ca"])
-    async def cue_add(self, ctx, member: discord.Member, *,
-                      cue_string) -> None:
+    async def cue_add(self, ctx, member: discord.Member, *, cue_string) -> None:
         # 使舊指令可執行
-        await ctx.invoke(self.bot.get_command("cue add"),
-                         member=member,
-                         cue_string=cue_string)
+        await ctx.invoke(
+            self.bot.get_command("cue add"), member=member, cue_string=cue_string
+        )
 
     @commands.command(aliases=["cd", "cr"])
-    async def cue_delete(self, ctx: commands.Context, member: discord.Member,
-                         pos_or_string: Union[int, str]) -> None:
+    async def cue_delete(
+        self,
+        ctx: commands.Context,
+        member: discord.Member,
+        pos_or_string: Union[int, str],
+    ) -> None:
         # 使舊指令可執行
-        await ctx.invoke(self.bot.get_command("cue delete"),
-                         member=member,
-                         pos_or_string=pos_or_string)
+        await ctx.invoke(
+            self.bot.get_command("cue delete"),
+            member=member,
+            pos_or_string=pos_or_string,
+        )
 
     @commands.command(aliases=["cl"])
-    async def cue_list(self, ctx: commands.Context,
-                       member: discord.Member) -> None:
+    async def cue_list(self, ctx: commands.Context, member: discord.Member) -> None:
         # 使舊指令可執行
         await ctx.invoke(self.bot.get_command("cue list"), member=member)
 

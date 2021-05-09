@@ -1,8 +1,7 @@
-import discord
-from discord.ext import commands
-from core import CogInit
-
 from random import randint
+
+from core import CogInit
+from discord.ext import commands
 
 
 class Roll(CogInit):
@@ -16,11 +15,9 @@ class Roll(CogInit):
         # 若有指定字元，將字串格式化後送出
         else:
             if "{}" in roll_msg:
-                await ctx.reply(
-                    roll_msg.replace("{}", str(randint(1, max_num)), 1))
+                await ctx.reply(roll_msg.replace("{}", str(randint(1, max_num)), 1))
             elif "%" in roll_msg:
-                await ctx.reply(
-                    roll_msg.replace("%", str(randint(1, max_num)), 1))
+                await ctx.reply(roll_msg.replace("%", str(randint(1, max_num)), 1))
             else:
                 await ctx.reply(f"{roll_msg} {randint(1, max_num)}%")
             await ctx.message.delete(delay=20)
