@@ -10,7 +10,7 @@ from core import Bot, logging_setup, sentry_setup
 logging_setup()
 sentry_setup()
 
-logger = logging.getLogger()
+logger = logging.getLogger("bot")
 
 
 bot = commands.Bot(
@@ -34,7 +34,7 @@ async def on_ready() -> None:
 
 @bot.event
 async def on_command(ctx: commands.Context) -> None:
-    logger.info(f"{ctx.author} ({ctx.author.id}) 使用了指令: `{ctx.message.content}`")
+    logger.trace(f"{ctx.author} ({ctx.author.id}) | `{ctx.message.content}`")
 
 
 def _load_folder_ext(*folders) -> None:
@@ -43,7 +43,7 @@ def _load_folder_ext(*folders) -> None:
             # 非底線開頭且為 .py 結尾
             if not file.startswith("_") and file.endswith(".py"):
                 bot.load_extension(f"{folder}.{file[:-3]}")
-                logger.info(f"{folder}.{file[:-3]} has been successfully loaded.")
+                logger.info(f"{folder}.{file[:-3]} has been loaded.")
 
 
 _load_folder_ext("cmds", "events", "games", "tasks")

@@ -1,7 +1,7 @@
 import logging
 
-from core import CogInit, Emojis
-from core.config import Bot
+import discord
+from core import Bot, CogInit, Emojis
 from discord.ext import commands
 from discord.ext.commands import errors
 from sentry_sdk import push_scope
@@ -13,6 +13,18 @@ class ErrorHandlers(CogInit):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.owner = self.bot.get_user(Bot.owner)
+
+    @staticmethod
+    def _error_embed_gen(ctx: commands.Context, e: errors) -> discord.Embed:
+        embed = discord.Embed(
+            title=f"{ctx.prefix}{ctx.command}",
+            description=f"{ctx.author} | `{ctx.author.id}`",
+        )
+        # Thumbnail
+        embed.set_thumbnail(url=ctx.author.avatar_url)
+        # Fields
+        embed.add_field(name=e.__class__.__name__, value=e, inline=True)
+        return embed
 
     @commands.Cog.listener()
     async def on_error(self, event: str, *args, **kwargs):
@@ -27,13 +39,18 @@ class ErrorHandlers(CogInit):
     async def on_command_error(
         self, ctx: commands.Context, e: errors.CommandError
     ) -> None:
-        await ctx.message.delete(delay=13)
-
         if hasattr(e, "handled"):
             return  # 略過
 
-        if isinstance(e, errors.CommandNotFound):
+        if isinstance(e, errors.CommandNotFound) and not getattr(
+            ctx, "invoked_from_error_handler", False
+        ):
             return  # 略過
+
+        await ctx.message.delete(delay=13)
+        await self.bot.get_channel(Bot.log_channel).send(
+            content=f"{self.owner.mention}", embed=self._error_embed_gen(ctx, e)
+        )
 
         if isinstance(e, errors.CommandInvokeError):
             await self._command_invoke_error_handler(ctx, e)
@@ -61,12 +78,7 @@ class ErrorHandlers(CogInit):
     async def _command_invoke_error_handler(
         self, ctx: commands.Context, e: errors.CommandInvokeError
     ):
-        await self.bot.get_channel(Bot.log_channel).send(
-            f"{self.owner.mention}\n"
-            f"{ctx.command}｜{ctx.content}｜{ctx.author} `{ctx.author.id}`\n"
-            f"{e.__class__.__name__}: {e}"
-        )
-        await ctx.reply(f"指令執行時發生錯誤，是時候該叫作者除蟲囉 {Emojis.pepe_coffee}", delete_after=13)
+        await ctx.reply(f"{self.owner.mention} 該除蟲囉 {Emojis.pepe_coffee}")
 
     async def _user_input_error_handler(
         self, ctx: commands.Context, e: errors.UserInputError
@@ -76,12 +88,12 @@ class ErrorHandlers(CogInit):
         elif isinstance(e, errors.MissingRequiredArgument):
             await ctx.reply(f"你好像少打了一些東西 {Emojis.pepe_hmm}", delete_after=13)
         elif isinstance(e, errors.ArgumentParsingError):
-            await ctx.reply(f"請重新確認引號位置 {Emojis.pepe_coin}", delete_after=13)
+            await ctx.reply(f"請重新確認輸入的引號位置 {Emojis.pepe_coin}", delete_after=13)
         elif isinstance(e, errors.BadUnionArgument):
             await ctx.reply(f"參數轉換錯誤 {Emojis.bongo_pepe}", delete_after=13)
         elif isinstance(e, errors.TooManyArguments):
-            await ctx.reply(f"輸入的參數過多 {Emojis.pepe_facepalm}", delete_after=13)
-        await ctx.send(f"指令用法：`{ctx.command.help}`", delete_after=10)
+            await ctx.reply(f"你輸入太多參數了 {Emojis.pepe_facepalm}", delete_after=13)
+        await ctx.invoke(self.bot.get_command(f"help {ctx.command}"))
 
     @staticmethod
     async def _bad_argument_handler(

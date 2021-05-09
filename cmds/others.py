@@ -5,7 +5,7 @@ from discord.ext import commands
 
 class Others(CogInit):
     @commands.command()
-    async def cls(self, ctx) -> None:
+    async def cls(self, ctx: commands.Context) -> None:
         # 只能在私訊內執行
         if ctx.channel.type != discord.ChannelType.private:
             return
