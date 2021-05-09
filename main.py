@@ -23,7 +23,7 @@ bot = commands.Bot(
 bot.remove_command("help")
 
 
-@bot.event()
+@bot.event
 async def on_ready() -> None:
     logger.info("Bot is ready")
 
@@ -32,7 +32,7 @@ async def on_ready() -> None:
     )
 
 
-@bot.event()
+@bot.event
 async def on_command(ctx: commands.Context) -> None:
     logger.info(f"{ctx.author} ({ctx.author.id}) 使用了指令: `{ctx.message.content}`")
 
