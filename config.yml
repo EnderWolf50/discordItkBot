@@ -25,6 +25,14 @@ bot:
   ignore_keywords:
     - "save"
     - "url"
+    - "programming"
+    - "q"
+    - "p"
+    - "ps"
+    - "pt"
+    - "np"
+    - "fs"
+    - "dc"
 
   image_folder: &IMAGE_FOLDER "./images/"
 
