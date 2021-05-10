@@ -25,7 +25,7 @@ class Clean(CogInit):
         member: Optional[discord.Member] = None,
     ) -> None:
         if ctx.invoked_parents[0] == "clean" or ctx.author.id not in self.moderators:
-            member = self.bot.user
+            member = ctx.guild.me
 
         if member is None:
             confirm_msg = await ctx.reply(f"你確定要清除 **無指定** {days} 日內的所有訊息嗎？")
@@ -75,24 +75,24 @@ class Clean(CogInit):
                 await ctx.reply(
                     f"已清除 {deleted_msg_count} 則 **無指定** 的訊息｜"
                     f"花費時長：{h:02.0f}:{m:02.0f}:{s:02.0f}",
-                    delete_after=10,
+                    delete_after=15,
                 )
             else:
                 await ctx.reply(
                     f"已清除 {deleted_msg_count} 則 **{member.display_name}** 的訊息｜"
                     f"花費時長：{h:02.0f}:{m:02.0f}:{s:02.0f}",
-                    delete_after=10,
+                    delete_after=15,
                 )
         # 點選取消
         except CancelCommand:
             await confirm_msg.delete()
-            await ctx.reply("指令已取消", delete_after=10)
+            await ctx.reply("指令已取消", delete_after=15)
         # 未點選
         except TimeoutError:
             await confirm_msg.delete()
-            await ctx.reply("超過等待時間，指令已取消", delete_after=10)
+            await ctx.reply("超過等待時間，指令已取消", delete_after=15)
         finally:
-            await ctx.message.delete(delay=10)
+            await ctx.message.delete(delay=15)
 
     @clean.command(aliases=["by_amount", "amounts", "amount", "a"])
     async def by_amounts(
@@ -103,7 +103,7 @@ class Clean(CogInit):
     ) -> None:
         # 辨認觸發指令，以及是否為管理員
         if ctx.invoked_parents[0] == "clean" or ctx.author.id not in self.moderators:
-            member = self.bot.user
+            member = ctx.guild.me
 
         # 依據是否有指定成員發送確認訊息
         if member is None:
@@ -168,24 +168,24 @@ class Clean(CogInit):
                 await ctx.reply(
                     f"已清除 {deleted_msg_count} 則 **無指定** 的訊息｜"
                     f"花費時長：{h:02.0f}:{m:02.0f}:{s:02.0f}",
-                    delete_after=10,
+                    delete_after=15,
                 )
             else:
                 await ctx.reply(
                     f"已清除 {deleted_msg_count} 則 **{member.display_name}** 的訊息｜"
                     f"花費時長：{h:02.0f}:{m:02.0f}:{s:02.0f}",
-                    delete_after=10,
+                    delete_after=15,
                 )
         # 點選取消
         except CancelCommand:
             await confirm_msg.delete()
-            await ctx.reply("指令已取消", delete_after=10)
+            await ctx.reply("指令已取消", delete_after=15)
         # 未點選
         except TimeoutError:
             await confirm_msg.delete()
-            await ctx.reply("超過等待時間，指令已取消", delete_after=10)
+            await ctx.reply("超過等待時間，指令已取消", delete_after=15)
         finally:
-            await ctx.message.delete(delay=10)
+            await ctx.message.delete(delay=15)
 
 
 class ActiveCommand(Exception):
