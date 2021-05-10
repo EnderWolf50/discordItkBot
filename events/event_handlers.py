@@ -14,7 +14,7 @@ from googleapiclient import discovery, errors
 
 logger = logging.getLogger(__name__)
 
-# TODO: 做個判定是不是指令的 func
+
 class EventHandlers(CogInit):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -32,6 +32,9 @@ class EventHandlers(CogInit):
         self.google_search_api_keys = cycle(Bot.google_search_api_keys)
 
         self._sisters_last = dt.utcnow()
+
+    def _is_command(self, string: str) -> bool:
+        return string.lower()[1:].split(" ")[0] in self.ignore_list
 
     def google_search(self, q: str, **kwargs) -> dict[str, Any]:
         key = next(self.google_search_api_keys)
@@ -73,9 +76,8 @@ class EventHandlers(CogInit):
 
         mentions = [u.display_name for u in msg.mentions]
         # 提及機器人
-        if self.bot.user in msg.mentions:
-            if not msg.content.lower()[1:].split(" ")[0] in self.ignore_list:
-                await msg.reply(random.choice(Events.mentioned_reply))
+        if self.bot.user in msg.mentions and not self._is_command(content):
+            await msg.reply(random.choice(Events.mentioned_reply))
         # 窩不知道
         elif any(kw in content for kw in ("窩不知道", "我不知道", "idk")):
             images = [i[0] for i in Events.idk]
@@ -238,7 +240,7 @@ class EventHandlers(CogInit):
         if not msg.guild or msg.guild.id == Bot.test_guild:
             return
         # 忽略指令
-        if msg.content.lower()[1:].split(" ")[0] in self.ignore_list:
+        if self._is_command(msg.content):
             return
 
         # 無限讀取貓咪
