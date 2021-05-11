@@ -12,7 +12,7 @@ from discord.ext import commands
 class AbGame(CogInit):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.ongoing_games = {}
+        self._ongoing_games = {}
 
     @staticmethod
     def _get_ab_count(
@@ -57,12 +57,12 @@ class AbGame(CogInit):
     @commands.Cog.listener()
     async def on_message(self, msg: discord.Message) -> None:
         # 檢查是否有正在進行的遊戲紀錄
-        if msg.channel.id in self.ongoing_games:
+        if msg.channel.id in self._ongoing_games:
             # 忽略機器人事件
             if msg.author == self.bot.user:
                 return
 
-            game_info = self.ongoing_games[msg.channel.id]
+            game_info = self._ongoing_games[msg.channel.id]
             ans_len = game_info["ans_len"]
             ans = game_info["ans"]
 
@@ -76,7 +76,7 @@ class AbGame(CogInit):
                 # A 數量等於答案長度即為答對
                 elif a_count == ans_len:
                     # 刪除遊戲資訊
-                    del self.ongoing_games[msg.channel.id]
+                    del self._ongoing_games[msg.channel.id]
 
                     await msg.reply(
                         f"（{content}）：**{a_count}A{b_count}B**\n"
@@ -109,8 +109,8 @@ class AbGame(CogInit):
         if not 1 <= answer_length <= 10:
             await ctx.reply("謎題的長度必須介於 1 ~ 10 個字之間", delete_after=7)
         # 未被記錄等於未開始遊戲
-        elif ctx.channel not in self.ongoing_games:
-            self.ongoing_games[ctx.channel.id] = {
+        elif ctx.channel not in self._ongoing_games:
+            self._ongoing_games[ctx.channel.id] = {
                 "start_time": ctx.message.created_at - timedelta(seconds=1),
                 "ans_len": answer_length,
                 "ans": random.sample("1234567890", answer_length),
@@ -121,12 +121,12 @@ class AbGame(CogInit):
     @ab.command(aliases=["e"])
     async def end(self, ctx: commands.Context) -> None:
         # 確認頻道是否有正在進行的遊戲
-        if ctx.channel.id not in self.ongoing_games:
+        if ctx.channel.id not in self._ongoing_games:
             await ctx.reply("這個頻道沒有進行中的遊戲喔", delete_after=7)
         else:
             # 獲得遊戲資訊並刪除
-            game_info = self.ongoing_games[ctx.channel.id]
-            del self.ongoing_games[ctx.channel.id]
+            game_info = self._ongoing_games[ctx.channel.id]
+            del self._ongoing_games[ctx.channel.id]
 
             ans = "".join(game_info["ans"])
             await ctx.reply(

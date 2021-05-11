@@ -2,8 +2,8 @@ import logging
 import os
 from typing import Union
 
-import addict
 import yaml
+from addict import Dict
 
 logger = logging.getLogger(__name__)
 
@@ -42,27 +42,35 @@ def _join_var_constructor(loader, node) -> str:
     return "".join(str(x) for x in fields)
 
 
+def _include_var_constructor(loader, node):
+    filename = loader.construct_scalar(node)
+
+    with open(filename, "r", encoding="UTF-8") as f:
+        return yaml.safe_load(f)
+
+
 yaml.SafeLoader.add_constructor("!ENV", _env_var_constructor)
 yaml.SafeLoader.add_constructor("!JOIN", _join_var_constructor)
+yaml.SafeLoader.add_constructor("!INCLUDE", _include_var_constructor)
 
 with open("config.yml", "r", encoding="UTF-8") as f:
     _CONFIG_YAML = yaml.safe_load(f)
-    _CONFIG_DICT = addict.Dict(_CONFIG_YAML)
+    _CONFIG_DICT = Dict(_CONFIG_YAML)
 
-Bot: addict.Dict = _CONFIG_DICT.bot
+Bot: Dict = _CONFIG_DICT.bot
 
-Log: addict.Dict = _CONFIG_DICT.log
+Log: Dict = _CONFIG_DICT.log
 
-Colors: addict.Dict = _CONFIG_DICT.styles.colors
+Colors: Dict = _CONFIG_DICT.styles.colors
 
-Emojis: addict.Dict = _CONFIG_DICT.styles.emojis
+Emojis: Dict = _CONFIG_DICT.styles.emojis
 
-Reactions: addict.Dict = _CONFIG_DICT.styles.reactions
+Reactions: Dict = _CONFIG_DICT.styles.reactions
 
-HelpMessages: addict.Dict = _CONFIG_DICT.help_messages
+HelpMessages: Dict = _CONFIG_DICT.help_messages
 
-Events: addict.Dict = _CONFIG_DICT.events
+Events: Dict = _CONFIG_DICT.events
 
-Fun: addict.Dict = _CONFIG_DICT.fun
+Fun: Dict = _CONFIG_DICT.fun
 
-Tasks: addict.Dict = _CONFIG_DICT.tasks
+Tasks: Dict = _CONFIG_DICT.tasks
