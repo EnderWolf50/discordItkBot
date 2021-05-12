@@ -111,6 +111,14 @@ class EventHandlers(CogInit):
         elif any("素每" in name for name in mentions):
             pic = discord.File(random.choice(Events.so_hot))
             await msg.reply(file=pic, delete_after=7)
+        # 神奇海螺
+        elif "神奇海螺" in content and content[:2] != "請問":
+            pic = discord.File(random.choice(Events.magic_conch.kw))
+            await msg.reply(file=pic, delete_after=7)
+        # 好色喔
+        elif "好色喔" in content:
+            pic = discord.File(Events.ck_lewd)
+            await msg.reply(file=pic, delete_after=7)
         # 假的
         elif "假的" in content:
             pic = discord.File(Events.fake)
@@ -119,10 +127,6 @@ class EventHandlers(CogInit):
         elif "很壞" in content:
             pic = discord.File(Events.you_bad)
             await msg.reply(file=pic, delete_after=7)
-        elif "神奇海螺" in content:
-            if content[:2] != "請問":
-                pic = discord.File(random.choice(Events.magic_conch.kw))
-                await msg.reply(file=pic, delete_after=7)
         # 好耶
         elif "好耶" in content:
             pic = discord.File(random.choice(Events.yeah))
@@ -184,7 +188,7 @@ class EventHandlers(CogInit):
                     )
                     await msg.delete(delay=10)
                     return
-                await msg.reply(result[0]["link"])
+                await msg.reply(result[0]["link"], delete_after=30)
 
         # 圖片備份
         counter = 0
