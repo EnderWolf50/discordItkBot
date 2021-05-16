@@ -10,10 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class ErrorHandlers(CogInit):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.owner = self.bot.get_user(Bot.owner)
-
     @staticmethod
     def _error_embed_gen(ctx: commands.Context, e: errors) -> discord.Embed:
         embed = discord.Embed(
@@ -25,6 +21,10 @@ class ErrorHandlers(CogInit):
         # Fields
         embed.add_field(name=e.__class__.__name__, value=e, inline=True)
         return embed
+
+    @commands.Cog.listener()
+    async def on_ready(self) -> None:
+        self.owner = self.bot.get_user(Bot.owner)
 
     @commands.Cog.listener()
     async def on_error(self, event: str, *args, **kwargs):
