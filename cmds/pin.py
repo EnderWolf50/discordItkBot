@@ -22,35 +22,19 @@ class Pin(CogInit):
 
     @commands.command()
     async def pin(self, ctx: commands.Context, user: discord.Member = None) -> None:
-        random_pin: discord.Message = None
-        author: discord.Member = None
-        content: str = None
+        if dt.utcnow() - self._last_update >= timedelta(minutes=5):
+            await self._update_pins()
 
-        if user is None:
-            await ctx.message.delete(delay=3)
-            # 檢查並更新 pin 列表
-            if dt.utcnow() - self._last_update >= timedelta(minutes=5):
-                await self._update_pins()
-
-            random_pin = random.choice(self._pins)
-            author = random_pin.author.display_name
-            content = random_pin.content
-        else:
-            await ctx.message.delete(delay=3)
-            # 檢查並更新 pin 列表
-            if dt.utcnow() - self._last_update >= timedelta(minutes=5):
-                await self._update_pins()
-
-            random_pin = random.choice([m for m in self._pins if m.author == user])
-            author = random_pin.author.display_name
-            content = random_pin.content
-
-        if not random_pin:
-
+        prepared_pin_list = (
+            self._pins if user is None else [m for m in self._pins if m.author == user]
+        )
+        if len(prepared_pin_list) == 0:
             await reply_then_delete(ctx, f"這個人沒有被釘選的訊息 {Emojis.pepe_nope}")
             return
+
+        random_pin = random.choice(prepared_pin_list)
         if not random_pin.attachments:
-            await ctx.send(f"{author}：\n{content}")
+            await ctx.send(f"{random_pin.author.display_name}：\n{random_pin.content}")
         else:
             for attachment in random_pin.attachments:
                 await ctx.send(f"{attachment.url}")
