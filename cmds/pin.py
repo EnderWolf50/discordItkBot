@@ -3,7 +3,8 @@ from datetime import datetime as dt
 from datetime import timedelta
 
 import discord
-from core import Bot, CogInit
+from core import Bot, CogInit, Emojis
+from core.utils import reply_then_delete
 from discord.ext import commands
 
 
@@ -44,6 +45,10 @@ class Pin(CogInit):
             author = random_pin.author.display_name
             content = random_pin.content
 
+        if not random_pin:
+
+            await reply_then_delete(ctx, f"這個人沒有被釘選的訊息 {Emojis.pepe_nope}")
+            return
         if not random_pin.attachments:
             await ctx.send(f"{author}：\n{content}")
         else:
