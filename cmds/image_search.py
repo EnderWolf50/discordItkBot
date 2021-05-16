@@ -3,6 +3,7 @@ from typing import Any
 
 import discord
 from core import Bot, CogInit, Colors, Emojis, Reactions
+from core.utils import reply_then_delete
 from discord.ext import commands
 from saucenao_api import SauceNao, errors
 
@@ -138,11 +139,7 @@ class ImgSearch(CogInit):
                 ]
             # 執行至此佇列仍為空，判定為未給予搜尋要素
             if not queue:
-                await ctx.reply(f"你是不是沒有放上要找的圖 {Emojis.thonk}", delete_after=10)
-                # 刪除查詢訊息
-                if ctx.channel.type != discord.ChannelType.private:
-                    await ctx.message.delete(delay=10)
-                return
+                raise NoImageToQuery
 
             result_embeds = []
             # 最多僅搜尋佇列前 6
@@ -167,21 +164,25 @@ class ImgSearch(CogInit):
                         self._get_no_result_embed(i, img_url, results.long_remaining)
                     )
             # 送出搜尋結果訊息
-            result_msg = await ctx.reply(embed=result_embeds[0], delete_after=240)
-            # 刪除查詢訊息
-            if ctx.channel.type != discord.ChannelType.private:
-                await ctx.message.delete(delay=240)
+            result_msg = await reply_then_delete(ctx, "", 240, embed=result_embeds[0])
             # 添加搜尋結果訊息
             self.result_list[result_msg.id] = result_embeds
             # 添加反應
             for i in range(len(result_embeds)):
                 await result_msg.add_reaction(list(self.reaction_emos.keys())[i])
 
+        except errors.UnknownApiError:
+            await reply_then_delete(ctx, f"嗚呼，搜圖 API 爆掉了 {Emojis.pepe_hypers}")
+        except errors.UnknownServerError:
+            await reply_then_delete(ctx, f"搜圖伺服器爆掉了，窩無能為力 {Emojis.pepe_depressed}")
         except errors.LongLimitReachedError:
-            await ctx.reply(f"今天的搜尋次數已達上限 {Emojis.pepe_hands}", delete_after=10)
-            # 刪除查詢訊息
-            if ctx.channel.type != discord.ChannelType.private:
-                await ctx.message.delete(delay=10)
+            await reply_then_delete(ctx, f"今天的搜尋次數已達上限 {Emojis.pepe_hands}")
+        except NoImageToQuery:
+            await reply_then_delete(ctx, f"你是不是沒有放上要找的圖 {Emojis.thonk}")
+
+
+class NoImageToQuery(Exception):
+    pass
 
 
 def setup(bot) -> None:
