@@ -29,7 +29,7 @@ class Pin(CogInit):
             self._pins if user is None else [m for m in self._pins if m.author == user]
         )
         if len(prepared_pin_list) == 0:
-            await reply_then_delete(ctx, f"這個人沒有被釘選的訊息 {Emojis.pepe_nope}")
+            await reply_then_delete(ctx, f"這個人沒有被釘選的訊息 {Emojis.pepe_nopes}")
             return
 
         random_pin = random.choice(prepared_pin_list)
