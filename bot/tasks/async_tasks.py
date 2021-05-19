@@ -21,8 +21,8 @@ class AsyncTasks(CogInit):
                 if self._three_oclock_lock:
                     return
 
-                self._three_oclock_lock = True
                 if dt.now().strftime("%I %M %S") == "03 00 00":
+                    self._three_oclock_lock = True
                     pic = discord.File(Tasks.three_oclock)
                     await self.channel.send("好棒，三點了", file=pic)
                 await asyncio.sleep(0.5)
@@ -38,8 +38,8 @@ class AsyncTasks(CogInit):
                 if self._three_hours_lock:
                     return
 
-                self._three_hours_lock = True
                 if dt.now().strftime("%w %H %M %S") == "0 21 00 00":
+                    self._three_hours_lock = True
                     pic = discord.File(Tasks.left_three_hours)
                     await self.channel.send(file=pic)
                 await asyncio.sleep(0.5)
@@ -55,8 +55,8 @@ class AsyncTasks(CogInit):
                 if self._ten_seconds_lock:
                     return
 
-                self._ten_seconds_lock = True
                 if dt.now().strftime("%w %H %M %S") == "0 23 59 50":
+                    self._ten_seconds_lock = True
                     pic = discord.File(Tasks.left_ten_seconds)
                     await self.channel.send(file=pic)
                 await asyncio.sleep(0.5)
