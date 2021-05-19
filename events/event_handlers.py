@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 import discord
-from ..core import Bot, CogInit, Emojis, Events
+from core import Bot, CogInit, Emojis, Events
 from discord.ext import commands
 from googleapiclient import discovery, errors
 

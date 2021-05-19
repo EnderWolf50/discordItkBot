@@ -1,7 +1,7 @@
 import logging
 
 import discord
-from ..core import Bot, CogInit, Emojis
+from core import Bot, CogInit, Emojis
 from discord.ext import commands
 from discord.ext.commands import errors
 from sentry_sdk import push_scope

@@ -7,7 +7,7 @@ import coloredlogs
 import sentry_sdk
 from sentry_sdk.integrations.logging import LoggingIntegration
 
-from ..core import Log
+from core import Log
 
 __all__ = [
     "logging_setup",

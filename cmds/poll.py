@@ -1,5 +1,5 @@
 import discord
-from ..core import CogInit, Colors, Emojis, Reactions
+from core import CogInit, Colors, Emojis, Reactions
 from discord.ext import commands
 
 

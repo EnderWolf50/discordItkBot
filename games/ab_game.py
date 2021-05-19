@@ -5,7 +5,7 @@ from datetime import timedelta
 from typing import Any, Union
 
 import discord
-from ..core import CogInit
+from core import CogInit
 from discord.ext import commands
 
 

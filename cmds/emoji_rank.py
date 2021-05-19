@@ -1,7 +1,7 @@
 from typing import Union
 
 import discord
-from ..core import Bot, CogInit, Mongo, Reactions
+from core import Bot, CogInit, Mongo, Reactions
 from discord.ext import commands
 
 
@@ -56,7 +56,7 @@ class EmojiRank(CogInit):
         )  # 不符合 query 不自動添加
 
     async def _guild_emoji_list(self) -> set[discord.abc.Snowflake]:
-        guild = await self.bot.fetch_guild(Bot.main_guild)
+        guild = await self.bot.fetch_guild(Bot.active_guild)
         result = {emo.id for emo in guild.emojis}
         return result
 
@@ -77,7 +77,7 @@ class EmojiRank(CogInit):
         # Footer
         embed.set_footer(text=f"頁 {current_page + 1} / {total_page + 1}")
         # Thumbnail
-        embed.set_thumbnail(url=(await self.bot.fetch_guild(Bot.main_guild)).icon_url)
+        embed.set_thumbnail(url=(await self.bot.fetch_guild(Bot.active_guild)).icon_url)
         # Fields
         start = current_page * 12
         end = start + 12
@@ -119,7 +119,7 @@ class EmojiRank(CogInit):
         after: list[discord.Emoji],
     ) -> None:
         # 如果不是指定群組，不紀錄
-        if guild.id != Bot.main_guild:
+        if guild.id != Bot.active_guild:
             return
 
         # 變更前數量 > 變更後數量: 刪除表符
@@ -134,7 +134,7 @@ class EmojiRank(CogInit):
     @commands.Cog.listener()
     async def on_message(self, msg: discord.Message) -> None:
         # 不是在指定群組內使用，不紀錄
-        if not msg.guild or msg.guild.id != Bot.main_guild or msg.author.bot:
+        if not msg.guild or msg.guild.id != Bot.active_guild or msg.author.bot:
             return
 
         import re

@@ -2,7 +2,7 @@ import asyncio
 from datetime import datetime as dt
 
 import discord
-from ..core import Bot, CogInit, Tasks
+from core import Bot, CogInit, Tasks
 
 
 class AsyncTasks(CogInit):
