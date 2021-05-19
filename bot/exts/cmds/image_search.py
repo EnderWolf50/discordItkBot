@@ -5,7 +5,7 @@ import discord
 from bot import ItkBot
 from bot.configs import Bot, Colors, Emojis, Reactions
 from bot.core import CogInit
-from bot.core.utils import reply_then_delete
+from bot.utils import reply_then_delete
 from discord.ext import commands
 from saucenao_api import SauceNao, errors
 

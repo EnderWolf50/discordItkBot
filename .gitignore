@@ -4,6 +4,7 @@ __pycache__/
 .google-cookie
 
 logs/
+disabled/
 images/backup/
 
 sub.*
