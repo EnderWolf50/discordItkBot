@@ -1,5 +1,3 @@
-import logging
-
 from discord import Intents
 from discord_slash import SlashCommand
 
@@ -10,7 +8,6 @@ from bot.log import logging_setup, sentry_setup
 logging_setup()
 sentry_setup()
 
-logger = logging.getLogger("bot")
 
 itk_bot = ItkBot(
     command_prefix=Bot.prefix,
@@ -21,8 +18,10 @@ itk_bot = ItkBot(
 )
 # 移除原 help 指令
 itk_bot.remove_command("help")
+# 讀取全部 extension
 itk_bot.load_all_extensions()
 
+# 斜線指令 init
 slash = SlashCommand(
     client=itk_bot,
     sync_commands=True,
