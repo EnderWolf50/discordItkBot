@@ -74,3 +74,5 @@ Events: Dict = _CONFIG_DICT.events
 Fun: Dict = _CONFIG_DICT.fun
 
 Tasks: Dict = _CONFIG_DICT.tasks
+
+SlashCommands: Dict = _CONFIG_DICT.slash_commands

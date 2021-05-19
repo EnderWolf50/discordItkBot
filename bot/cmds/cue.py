@@ -2,7 +2,7 @@ import random
 from typing import Optional, Union
 
 import discord
-from core import CogInit, Mongo, Reactions
+from ..core import CogInit, Mongo, Reactions
 from discord.ext import commands
 
 

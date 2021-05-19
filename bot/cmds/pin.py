@@ -3,8 +3,8 @@ from datetime import datetime as dt
 from datetime import timedelta
 
 import discord
-from core import Bot, CogInit, Emojis
-from core.utils import reply_then_delete
+from ..core import Bot, CogInit, Emojis
+from ..core.utils import reply_then_delete
 from discord.ext import commands
 
 

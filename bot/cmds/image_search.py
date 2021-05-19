@@ -2,8 +2,8 @@ import re
 from typing import Any
 
 import discord
-from core import Bot, CogInit, Colors, Emojis, Reactions
-from core.utils import reply_then_delete
+from ..core import Bot, CogInit, Colors, Emojis, Reactions
+from ..core.utils import reply_then_delete
 from discord.ext import commands
 from saucenao_api import SauceNao, errors
 
