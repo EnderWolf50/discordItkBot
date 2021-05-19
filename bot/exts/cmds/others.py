@@ -1,5 +1,6 @@
 import discord
-from core import CogInit
+from bot import ItkBot
+from bot.core import CogInit
 from discord.ext import commands
 
 
@@ -18,5 +19,5 @@ class Others(CogInit):
                 await msg.delete()
 
 
-def setup(bot) -> None:
+def setup(bot: ItkBot) -> None:
     bot.add_cog(Others(bot))

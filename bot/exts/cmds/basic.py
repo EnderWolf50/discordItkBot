@@ -1,4 +1,5 @@
-from core import CogInit
+from bot import ItkBot
+from bot.core import CogInit
 from discord.ext import commands
 
 
@@ -61,5 +62,5 @@ class Basic(CogInit):
         await ctx.invoke(self.bot.get_command("extension reload"), *input_path)
 
 
-def setup(bot) -> None:
+def setup(bot: ItkBot) -> None:
     bot.add_cog(Basic(bot))

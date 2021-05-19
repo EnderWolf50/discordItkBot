@@ -2,7 +2,9 @@ import asyncio
 from datetime import datetime as dt
 
 import discord
-from core import Bot, CogInit, Tasks
+from bot import ItkBot
+from bot.configs import Bot, Tasks
+from bot.core import CogInit
 
 
 class AsyncTasks(CogInit):
@@ -64,5 +66,5 @@ class AsyncTasks(CogInit):
         self._LEFT_TEN_SECONDS_TASK = self.bot.loop.create_task(_left_ten_seconds())
 
 
-def setup(bot):
+def setup(bot: ItkBot) -> None:
     bot.add_cog(AsyncTasks(bot))

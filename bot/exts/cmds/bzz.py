@@ -1,13 +1,17 @@
 import random
 from datetime import datetime as dt
 
-from core import CogInit, Fun, Mongo
+from bot import ItkBot
+from bot.configs import Fun
+from bot.core import CogInit
 from discord.ext import commands
 
 
 class Bzz(CogInit):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        from bot.core import Mongo
+
         self.mongo = Mongo("discord_669934356172636199", "tdbzz_record")
 
         self.bzz_options = Fun.bzz.options
@@ -44,5 +48,5 @@ class Bzz(CogInit):
         await ctx.message.delete(delay=15)
 
 
-def setup(bot) -> None:
+def setup(bot: ItkBot) -> None:
     bot.add_cog(Bzz(bot))

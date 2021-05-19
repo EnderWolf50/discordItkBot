@@ -1,6 +1,7 @@
 from random import randint
 
-from core import CogInit
+from bot import ItkBot
+from bot.core import CogInit
 from discord.ext import commands
 
 
@@ -23,5 +24,5 @@ class Roll(CogInit):
             await ctx.message.delete(delay=20)
 
 
-def setup(bot) -> None:
+def setup(bot: ItkBot) -> None:
     bot.add_cog(Roll(bot))

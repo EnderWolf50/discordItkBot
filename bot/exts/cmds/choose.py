@@ -1,7 +1,8 @@
 import random
 
-from core import CogInit
-from core.config import Emojis
+from bot import ItkBot
+from bot.configs import Emojis
+from bot.core import CogInit
 from discord.ext import commands
 
 
@@ -14,5 +15,5 @@ class Choose(CogInit):
         await ctx.author.send(random.choice(choices))
 
 
-def setup(bot) -> None:
+def setup(bot: ItkBot) -> None:
     bot.add_cog(Choose(bot))

@@ -4,7 +4,9 @@ from datetime import timedelta
 from typing import Optional
 
 import discord
-from core import Bot, CogInit, Reactions
+from bot import ItkBot
+from bot.configs import Bot, Reactions
+from bot.core import CogInit
 from discord.ext import commands
 
 
@@ -196,5 +198,5 @@ class CancelCommand(Exception):
     pass
 
 
-def setup(bot):
+def setup(bot: ItkBot):
     bot.add_cog(Clean(bot))

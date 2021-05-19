@@ -3,8 +3,10 @@ from datetime import datetime as dt
 from datetime import timedelta
 
 import discord
-from core import Bot, CogInit, Emojis
-from core.utils import reply_then_delete
+from bot import ItkBot
+from bot.configs import Bot, Emojis
+from bot.core import CogInit
+from bot.core.utils import reply_then_delete
 from discord.ext import commands
 
 
@@ -40,5 +42,5 @@ class Pin(CogInit):
                 await ctx.send(f"{attachment.url}")
 
 
-def setup(bot) -> None:
+def setup(bot: ItkBot) -> None:
     bot.add_cog(Pin(bot))

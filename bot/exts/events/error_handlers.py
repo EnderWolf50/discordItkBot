@@ -1,7 +1,9 @@
 import logging
 
 import discord
-from core import Bot, CogInit, Emojis
+from bot import ItkBot
+from bot.configs import Bot, Emojis
+from bot.core import CogInit
 from discord.ext import commands
 from discord.ext.commands import errors
 from sentry_sdk import push_scope
@@ -192,5 +194,5 @@ class ErrorHandlers(CogInit):
             )
 
 
-def setup(bot) -> None:
+def setup(bot: ItkBot) -> None:
     bot.add_cog(ErrorHandlers(bot))

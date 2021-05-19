@@ -5,7 +5,8 @@ from datetime import timedelta
 from typing import Any, Union
 
 import discord
-from core import CogInit
+from bot import ItkBot
+from bot.core import CogInit
 from discord.ext import commands
 
 
@@ -148,5 +149,5 @@ class AbGame(CogInit):
         await ctx.invoke(self.bot.get_command("ab end"))
 
 
-def setup(bot):
+def setup(bot: ItkBot) -> None:
     bot.add_cog(AbGame(bot))

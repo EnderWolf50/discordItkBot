@@ -1,7 +1,9 @@
 from typing import Any
 
 import discord
-from core import Bot, CogInit, HelpMessages
+from bot import ItkBot
+from bot.configs import Bot, HelpMessages
+from bot.core import CogInit
 from discord.ext import commands
 
 
@@ -20,7 +22,7 @@ class Help(CogInit):
         # Footer
         embed.set_footer(text=embed_info["footer"])
         # Thumbnail
-        embed.set_thumbnail(url=(await self.bot.fetch_guild(Bot.active_guild)).icon_url)
+        embed.set_thumbnail(url=(await self.bot.fetch_guild(Bot.main_guild)).icon_url)
         # Fields
         for command, description in embed_info["fields"]:
             embed.add_field(name=command, value=description, inline=True)
@@ -117,5 +119,5 @@ class Help(CogInit):
         await ctx.message.delete(delay=40)
 
 
-def setup(bot) -> None:
+def setup(bot: ItkBot) -> None:
     bot.add_cog(Help(bot))
