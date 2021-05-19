@@ -2,13 +2,17 @@ import random
 from typing import Optional, Union
 
 import discord
-from core import CogInit, Mongo, Reactions
+from bot import ItkBot
+from bot.configs import Reactions
+from bot.core import CogInit
 from discord.ext import commands
 
 
 class Cue(CogInit):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        from bot.core import Mongo
+
         self.mongo = Mongo("discord_669934356172636199", "cue_list")
 
         self.cue_msg_details = []
@@ -265,5 +269,5 @@ class Cue(CogInit):
         await ctx.invoke(self.bot.get_command("cue list"), member=member)
 
 
-def setup(bot) -> None:
+def setup(bot: ItkBot) -> None:
     bot.add_cog(Cue(bot))

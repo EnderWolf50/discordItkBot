@@ -1,3 +1,4 @@
+from bot import ItkBot
 from discord.ext import commands
 
 __all__ = [
@@ -6,5 +7,5 @@ __all__ = [
 
 
 class CogInit(commands.Cog):
-    def __init__(self, bot) -> None:
+    def __init__(self, bot: ItkBot) -> None:
         self.bot = bot

@@ -8,7 +8,9 @@ from pathlib import Path
 from typing import Any
 
 import discord
-from core import Bot, CogInit, Emojis, Events
+from bot import ItkBot
+from bot.configs import Bot, Emojis, Events
+from bot.core import CogInit
 from discord.ext import commands
 from googleapiclient import discovery, errors
 
@@ -294,5 +296,5 @@ class EventHandlers(CogInit):
             await reaction.message.remove_reaction(reaction, user)
 
 
-def setup(bot) -> None:
+def setup(bot: ItkBot) -> None:
     bot.add_cog(EventHandlers(bot))

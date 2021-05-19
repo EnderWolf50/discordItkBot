@@ -2,8 +2,10 @@ import re
 from typing import Any
 
 import discord
-from core import Bot, CogInit, Colors, Emojis, Reactions
-from core.utils import reply_then_delete
+from bot import ItkBot
+from bot.configs import Bot, Colors, Emojis, Reactions
+from bot.core import CogInit
+from bot.core.utils import reply_then_delete
 from discord.ext import commands
 from saucenao_api import SauceNao, errors
 
@@ -185,5 +187,5 @@ class NoImageToQuery(Exception):
     pass
 
 
-def setup(bot) -> None:
+def setup(bot: ItkBot) -> None:
     bot.add_cog(ImgSearch(bot))

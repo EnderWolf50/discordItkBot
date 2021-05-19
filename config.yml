@@ -11,13 +11,13 @@ bot:
     - 546614210243854337 # Juxta
     - 501782173364518912 # Raticate
 
-  active_guild: 669934356172636199
-  test_guild  : 725295821456801842
+  main_guild: &main_guild 669934356172636199
+  test_guild: &test_guild 725295821456801842
 
+  main_channel       : 669934356172636208
   log_channel        : 838402956863733820
   chat_backup_channel: 741556551143391323
   edit_backup_channel: 745569697013039105
-  main_channel       : 669934356172636208
 
   ignore_channels:
     - 675956755112394753
@@ -90,15 +90,24 @@ styles:
 
   emojis:
     i11_chiwawa: &i11_chiwawa "<:i11_chiwawa:783346447319171075>"
-    helen:
-      helen_1  : &helen_1 "<:helen_1:838343516743532554>"
-      helen_2  : &helen_2 "<:helen_2:838343516895182848>"
-      helen_3  : &helen_3 "<:helen_3:838343516865298442>"
-      helen_4  : &helen_4 "<:helen_4:838343516374564885>"
-      helen_5  : &helen_5 "<:helen_5:838343517033725992>"
-      helen_6  : &helen_6 "<:helen_6:838343517037133847>"
-      helen_7  : &helen_7 "<:helen_7:838343517037264896>"
-      helen_art: &helen_art "<:helen_art:838378914472263701>"
+
+    helen_1  : &helen_1 "<:helen_1:838343516743532554>"
+    helen_2  : &helen_2 "<:helen_2:838343516895182848>"
+    helen_3  : &helen_3 "<:helen_3:838343516865298442>"
+    helen_4  : &helen_4 "<:helen_4:838343516374564885>"
+    helen_5  : &helen_5 "<:helen_5:838343517033725992>"
+    helen_6  : &helen_6 "<:helen_6:838343517037133847>"
+    helen_7  : &helen_7 "<:helen_7:838343517037264896>"
+    helen_art: &helen_art "<:helen_art:838378914472263701>"
+
+    helens:
+      - *helen_1
+      - *helen_2
+      - *helen_3
+      - *helen_4
+      - *helen_5
+      - *helen_6
+      - *helen_7
 
     thonk: &thonk "<:thonk:781092810572562432>"
 

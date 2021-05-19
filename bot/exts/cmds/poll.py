@@ -1,5 +1,7 @@
 import discord
-from core import CogInit, Colors, Emojis, Reactions
+from bot import ItkBot
+from bot.configs import Colors, Emojis, Reactions
+from bot.core import CogInit
 from discord.ext import commands
 
 
@@ -31,5 +33,5 @@ class Poll(CogInit):
             await ctx.message.delete(delay=7)
 
 
-def setup(bot) -> None:
+def setup(bot: ItkBot) -> None:
     bot.add_cog(Poll(bot))
