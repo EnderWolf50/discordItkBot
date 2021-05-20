@@ -1,8 +1,9 @@
 bot:
   token: !ENV "BOT_TOKEN"
 
-  prefix: &BOT_PREFIX "."
-  name  : &BOT_NAME "Itk Bot"
+  prefix     : &BOT_PREFIX "."
+  name       : &BOT_NAME "Itk Bot"
+  description: "知らない..."
 
   owner: &BOT_OWNER 523755296242270210
   moderators:
@@ -185,7 +186,7 @@ styles:
 help_messages:
   help:
     title      : "看看是哪個小可憐忘記指令怎麼打啦？"
-    description: null
+    description: ".help <指令> 可以查看更詳細的說明"
     color      : *light_yellow
     author     : *BOT_NAME
     footer     : "那個...窩不知道"
@@ -502,3 +503,29 @@ tasks:
   left_ten_seconds: !JOIN [*IMAGE_FOLDER, "left_ten_seconds.png"]
   left_three_hours: !JOIN [*IMAGE_FOLDER, "left_three_hours.jpg"]
   three_oclock    : !JOIN [*IMAGE_FOLDER, "three_oclock.png"]
+
+slash_commands:
+  guilds:
+    - *main_guild
+    - *test_guild
+  extensions:
+    cmds:
+      - basic
+      - bzz
+      - choose
+      - clean
+      - cue
+      - emoji_rank
+      - help
+      - image_search
+      - others
+      - pin
+      - poll
+      - roll
+    events:
+      - event_handlers
+      - error_handlers
+    games:
+      - ab_game
+    tasks:
+      - async_tasks

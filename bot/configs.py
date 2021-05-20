@@ -42,18 +42,10 @@ def _join_var_constructor(loader, node) -> str:
     return "".join(str(x) for x in fields)
 
 
-def _include_var_constructor(loader, node):
-    filename = loader.construct_scalar(node)
-
-    with open(filename, "r", encoding="UTF-8") as f:
-        return yaml.safe_load(f)
-
-
 yaml.SafeLoader.add_constructor("!ENV", _env_var_constructor)
 yaml.SafeLoader.add_constructor("!JOIN", _join_var_constructor)
-yaml.SafeLoader.add_constructor("!INCLUDE", _include_var_constructor)
 
-with open("config.yml", "r", encoding="UTF-8") as f:
+with open("configs.yml", "r", encoding="UTF-8") as f:
     _CONFIG_YAML = yaml.safe_load(f)
     _CONFIG_DICT = Dict(_CONFIG_YAML)
 

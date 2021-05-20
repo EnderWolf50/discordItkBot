@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 def get_extensions() -> Iterator[str]:
     for module in pkgutil.walk_packages(exts.__path__, f"{exts.__name__}."):
         # 不載入名稱為 "_" 開頭的檔案
-        if module.name.split(".")[-1].startswith("_"):
+        if module.name.rsplit(".", 1)[-1].startswith("_"):
             continue
 
         imported = importlib.import_module(module.name)

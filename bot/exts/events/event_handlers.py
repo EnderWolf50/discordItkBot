@@ -23,20 +23,12 @@ class EventHandlers(CogInit):
         self.backup_path = Path(Bot.image_folder, "backup")
         self.backup_path.mkdir(exist_ok=True)
 
-        self.ignore_list = []
-        for cmd in self.bot.commands:
-            self.ignore_list.append(cmd.name)
-            for alias in cmd.aliases:
-                self.ignore_list.append(alias)
-        for word in Bot.ignore_keywords:
-            self.ignore_list.append(word)
-
         self.google_search_api_keys = cycle(Bot.google_search_api_keys)
 
         self._sisters_last = dt.utcnow()
 
     def _is_command(self, string: str) -> bool:
-        return string.lower()[1:].split(" ")[0] in self.ignore_list
+        return string.lower()[1:].split(" ")[0] in self.bot.ignore_kw_list
 
     def google_search(self, q: str, **kwargs) -> dict[str, Any]:
         key = next(self.google_search_api_keys)
