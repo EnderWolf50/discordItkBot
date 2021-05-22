@@ -1,69 +1,51 @@
-import asyncio
-from datetime import datetime as dt
+from datetime import timedelta
 
 import discord
 from bot import ItkBot
 from bot.configs import Bot, Tasks
 from bot.core import CogInit
+from bot.utils import get_now, today_replace
 
 
 class AsyncTasks(CogInit):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._three_oclock_lock = False
-        self._three_hours_lock = False
-        self._ten_seconds_lock = False
+        self.channel = self.bot.get_channel(Bot.main_channel)
+
+        today_0 = today_replace()
+        next_sunday = today_0 + timedelta(days=(6 - today_0.weekday()) % 7)
 
         # 好棒三點
-        async def _three_oclock() -> None:
-            await self.bot.wait_until_ready()
+        async def three_oclock() -> None:
+            if 3 < get_now().hour < 15:
+                await discord.utils.sleep_until(today_replace(hour=15))
+            else:
+                await discord.utils.sleep_until(today_replace(hour=3))
 
-            self.channel = self.bot.get_channel(Bot.main_channel)
-            while not self.bot.is_closed():
-                if self._three_oclock_lock:
-                    return
+            pic = discord.File(Tasks.three_oclock)
+            await self.channel.send("好棒，三點了", file=pic)
 
-                if dt.now().strftime("%I %M %S") == "03 00 00":
-                    self._three_oclock_lock = True
-                    pic = discord.File(Tasks.three_oclock)
-                    await self.channel.send("好棒，三點了", file=pic)
-                await asyncio.sleep(0.5)
-
-        self._THREE_OCLOCK_TASK = self.bot.loop.create_task(_three_oclock())
+        self._THREE_OCLOCK_TASK = self.bot.loop.create_task(three_oclock())
 
         # 只剩三小時
-        async def _left_three_hours() -> None:
-            await self.bot.wait_until_ready()
+        async def left_three_hours() -> None:
+            await discord.utils.sleep_until(next_sunday + timedelta(hours=21))
 
-            self.channel = self.bot.get_channel(Bot.main_channel)
-            while not self.bot.is_closed():
-                if self._three_hours_lock:
-                    return
+            pic = discord.File(Tasks.left_three_hours)
+            await self.channel.send(file=pic)
 
-                if dt.now().strftime("%w %H %M %S") == "0 21 00 00":
-                    self._three_hours_lock = True
-                    pic = discord.File(Tasks.left_three_hours)
-                    await self.channel.send(file=pic)
-                await asyncio.sleep(0.5)
-
-        self._LEFT_THREE_HOURS_TASK = self.bot.loop.create_task(_left_three_hours())
+        self._LEFT_THREE_HOURS_TASK = self.bot.loop.create_task(left_three_hours())
 
         # 只剩十秒
-        async def _left_ten_seconds() -> None:
-            await self.bot.wait_until_ready()
+        async def left_ten_seconds() -> None:
+            await discord.utils.sleep_until(
+                next_sunday + timedelta(hours=23, minutes=59, seconds=50)
+            )
 
-            self.channel = self.bot.get_channel(Bot.main_channel)
-            while not self.bot.is_closed():
-                if self._ten_seconds_lock:
-                    return
+            pic = discord.File(Tasks.left_ten_seconds)
+            await self.channel.send(file=pic)
 
-                if dt.now().strftime("%w %H %M %S") == "0 23 59 50":
-                    self._ten_seconds_lock = True
-                    pic = discord.File(Tasks.left_ten_seconds)
-                    await self.channel.send(file=pic)
-                await asyncio.sleep(0.5)
-
-        self._LEFT_TEN_SECONDS_TASK = self.bot.loop.create_task(_left_ten_seconds())
+        self._LEFT_TEN_SECONDS_TASK = self.bot.loop.create_task(left_ten_seconds())
 
 
 def setup(bot: ItkBot) -> None:
