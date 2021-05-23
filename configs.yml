@@ -15,6 +15,7 @@ bot:
   main_guild: &main_guild 669934356172636199
   test_guild: &test_guild 725295821456801842
 
+  test_channel       : 725295821456801845
   main_channel       : 669934356172636208
   log_channel        : 838402956863733820
   chat_backup_channel: 741556551143391323

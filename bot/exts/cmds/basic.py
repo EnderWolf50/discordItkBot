@@ -3,7 +3,7 @@ import logging
 from bot import ItkBot
 from bot.configs import Emojis
 from bot.core import CogInit
-from bot.utils import reply_then_delete
+from bot.utils import MessageUtils
 from discord.ext import commands
 from discord.ext.commands import errors
 
@@ -48,7 +48,9 @@ class Basic(CogInit):
             return
         # 沒有輸入要執行動作的 extension
         if not input_path:
-            await reply_then_delete(ctx, f"請輸入要執行動作的對象 {Emojis.pepe_simp}", 5)
+            await MessageUtils.reply_then_delete(
+                ctx, f"請輸入要執行動作的對象 {Emojis.pepe_simp}", 5
+            )
             return
 
         # 僅輸入 extension
@@ -58,7 +60,7 @@ class Basic(CogInit):
             ext_path = f"bot.exts.{'.'.join(input_path)}"
 
         respond = await self._ext_act(action, ext_path)
-        await reply_then_delete(ctx, respond, 5)
+        await MessageUtils.reply_then_delete(ctx, respond, 5)
 
     @commands.command(aliases=["rl"])
     async def reload(self, ctx: commands.Context, *input_path) -> None:

@@ -6,7 +6,7 @@ import discord
 from bot import ItkBot
 from bot.configs import Bot, Emojis
 from bot.core import CogInit
-from bot.utils import reply_then_delete
+from bot.utils import MessageUtils
 from discord.ext import commands
 
 
@@ -31,7 +31,9 @@ class Pin(CogInit):
             self._pins if user is None else [m for m in self._pins if m.author == user]
         )
         if len(prepared_pin_list) == 0:
-            await reply_then_delete(ctx, f"這個人沒有被釘選的訊息 {Emojis.pepe_nopes}")
+            await MessageUtils.reply_then_delete(
+                ctx, f"這個人沒有被釘選的訊息 {Emojis.pepe_nopes}"
+            )
             return
 
         random_pin = random.choice(prepared_pin_list)
