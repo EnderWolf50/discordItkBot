@@ -25,8 +25,6 @@ class EventHandlers(CogInit):
 
         self.google_search_api_keys = cycle(Bot.google_search_api_keys)
 
-        self._sisters_last = dt.utcnow()
-
     def _is_command(self, string: str) -> bool:
         return string.lower()[1:].split(" ")[0] in self.bot.ignore_kw_list
 
@@ -133,39 +131,6 @@ class EventHandlers(CogInit):
         elif re.search(r"很嗆(?:是吧|[喔欸])?|嗆[喔欸]", content):
             pic = discord.File(Events.flaming)
             await msg.reply(file=pic, delete_after=7)
-        # 綺麗な双子
-        # 確認最後一則訊息距離現在大於二十秒
-        if dt.utcnow() - self._sisters_last >= timedelta(seconds=15):
-            # 判定是否為其中一人
-            _sister_1 = True if author_name == "綺麗な双子(姊)" else False
-            _sister_2 = True if author_name == "綺麗な双子(妹)" else False
-            # 若為其中一人則處理
-            if _sister_1 or _sister_2:
-                # 獲取 20 秒內的歷史訊息
-                async for _m in msg.channel.history(
-                    limit=None,
-                    after=msg.created_at - timedelta(seconds=15.5),
-                    oldest_first=False,
-                ):
-                    _m_author_name = _m.author.display_name.lower()
-                    # 如果 20 秒內已經觸發過，跳過並重新記錄時間
-                    if "sisters.jpg" in {_a.filename for _a in _m.attachments}:
-                        self._sisters_last = dt.utcnow()
-                        _sister_1 = _sister_2 = False
-                        break
-                    if _sister_2 and _m_author_name == "綺麗な双子(姊)":
-                        _sister_1 = True
-                    if _sister_1 and _m_author_name == "綺麗な双子(妹)":
-                        _sister_2 = True
-                    # 皆為 True 提早跳出以便發送
-                    if _sister_1 and _sister_2:
-                        break
-                # 皆為 True 則兩者於 20 秒內同時出現
-                if _sister_1 and _sister_2:
-                    # 紀錄發送時間
-                    self._sisters_last = dt.utcnow()
-                    pic = discord.File(Events.sisters)
-                    await msg.channel.send(file=pic, delete_after=15)
         # 請問
         if content.startswith("請問"):
             if content[2:4] == "晚餐":
