@@ -25,6 +25,8 @@ class EventHandlers(CogInit):
 
         self.google_search_api_keys = cycle(Bot.google_search_api_keys)
 
+        self._sisters_last = dt.utcnow()
+
     def _is_command(self, string: str) -> bool:
         return string.lower()[1:].split(" ")[0] in self.bot.ignore_kw_list
 
@@ -114,7 +116,7 @@ class EventHandlers(CogInit):
         # 假的
         elif "假的" in content:
             pic = discord.File(Events.fake)
-            await msg.reply(file=pic, delete_after=10)
+            await msg.reply(file=pic, delete_after=7)
         # 很壞
         elif "很壞" in content:
             pic = discord.File(Events.you_bad)
@@ -122,7 +124,7 @@ class EventHandlers(CogInit):
         # 好耶
         elif "好耶" in content:
             pic = discord.File(random.choice(Events.yeah))
-            await msg.reply(file=pic, delete_after=5)
+            await msg.reply(file=pic, delete_after=7)
         # 交朋友
         elif "交朋友" in content:
             pic = discord.File(Events.make_friend)
