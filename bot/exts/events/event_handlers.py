@@ -1,7 +1,6 @@
 import logging
 import random
 import re
-from datetime import datetime as dt
 from datetime import timedelta
 from itertools import cycle
 from pathlib import Path
@@ -24,8 +23,6 @@ class EventHandlers(CogInit):
         self.backup_path.mkdir(exist_ok=True)
 
         self.google_search_api_keys = cycle(Bot.google_search_api_keys)
-
-        self._sisters_last = dt.utcnow()
 
     def _is_command(self, string: str) -> bool:
         return string.lower()[1:].split(" ")[0] in self.bot.ignore_kw_list
@@ -136,7 +133,7 @@ class EventHandlers(CogInit):
         # 請問
         if content.startswith("請問"):
             if content[2:4] == "晚餐":
-                await msg.reply(random.choice(Events.meals.dinner))
+                await msg.reply(random.choice(Events.meals))
             elif content[2:6] == "神奇海螺":
                 pic = discord.File(random.choice(Events.magic_conch.ask))
                 await msg.reply(file=pic, delete_after=7)
