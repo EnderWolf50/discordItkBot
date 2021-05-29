@@ -16,7 +16,7 @@ class AsyncTasks(CogInit):
             _h = DatetimeUtils.now().hour
             if _h < 3:
                 await discord.utils.sleep_until(DatetimeUtils.today_with(hour=3))
-            elif 3 < _h < 15:
+            elif 3 <= _h < 15:
                 await discord.utils.sleep_until(DatetimeUtils.today_with(hour=15))
             else:
                 await discord.utils.sleep_until(DatetimeUtils.tomorrow_with(hour=3))
