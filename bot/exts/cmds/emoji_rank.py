@@ -4,6 +4,7 @@ import discord
 from bot import ItkBot
 from bot.configs import Bot, Reactions
 from bot.core import CogInit
+from bot.utils import MessageUtils
 from discord.ext import commands
 
 
@@ -17,7 +18,7 @@ class EmojiRank(CogInit):
         self.rank_msg_details = []
 
     def _db_add_emoji(self, emoji: Union[discord.abc.Snowflake, discord.Emoji]) -> None:
-        # 若傳進來的是 ID，先透過群組獲得 Emoji 物件
+        # 若傳入的是 ID，先透過群組獲得 Emoji 物件
         if not isinstance(emoji, discord.Emoji):
             emoji = self.bot.get_emoji(emoji)
 
@@ -237,13 +238,12 @@ class EmojiRank(CogInit):
 
     @emoji.command()
     async def reset(self, ctx: commands.Context) -> None:
-        await ctx.message.delete()
         # 只有擁有者可執行
         if not (await self.bot.is_owner(ctx.author)):
             return
 
         # 次數設為零，同時補正已更名的表符
-        for emo in self._mongo_emoji_list():
+        for emo in await self._mongo_emoji_list():
             self.mongo.update(
                 {
                     "_id": emo,
@@ -255,6 +255,7 @@ class EmojiRank(CogInit):
                     }
                 },
             )
+        await MessageUtils.reply_then_delete(ctx, "記錄重置成功", 5)
 
     @commands.command(aliases=["er"])
     async def emo_rank(self, ctx: commands.Context) -> None:
