@@ -374,8 +374,8 @@ events:
   make_friend: !JOIN [*IMAGE_FOLDER, "make_friends.jpg"]
   you_bad: !JOIN [*IMAGE_FOLDER, "you_bad.png"]
   fake: !JOIN [*IMAGE_FOLDER, "fake.gif"]
-  sisters: !JOIN [*IMAGE_FOLDER, "sisters.jpg"]
   ck_lewd: !JOIN [*IMAGE_FOLDER, "ck_lewd.jpg"]
+  scared: !JOIN [*IMAGE_FOLDER, "scared.jpg"]
   helen_art: *helen_art
   so_hot:
     - !JOIN [*IMAGE_FOLDER, "so_hot.jpg"]

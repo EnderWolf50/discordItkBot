@@ -126,6 +126,10 @@ class EventHandlers(CogInit):
         elif "交朋友" in content:
             pic = discord.File(Events.make_friend)
             await msg.reply(file=pic, delete_after=7)
+        # 怕
+        elif "怕" in content:
+            pic = discord.File(Events.scared)
+            await msg.reply(file=pic, delete_after=7)
         # 很嗆是吧
         elif re.search(r"很嗆(?:是吧|[喔欸])?|嗆[喔欸]", content):
             pic = discord.File(Events.flaming)
