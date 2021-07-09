@@ -124,7 +124,7 @@ class EventHandlers(CogInit):
             await msg.reply(file=pic, delete_after=7)
         # 交朋友
         elif "交朋友" in content:
-            pic = discord.File(Events.make_friend)
+            pic = discord.File(random.choice(Events.make_friends))
             await msg.reply(file=pic, delete_after=7)
         # 怕
         elif "怕" in content:

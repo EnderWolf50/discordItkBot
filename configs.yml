@@ -370,13 +370,16 @@ help_messages:
         - "圖片網址，須為`.jpg`|`.png`|`.jpeg`結尾"
 
 events:
-  flaming: !JOIN [*IMAGE_FOLDER, "flaming.jpg"]
-  make_friend: !JOIN [*IMAGE_FOLDER, "make_friends.jpg"]
-  you_bad: !JOIN [*IMAGE_FOLDER, "you_bad.png"]
-  fake: !JOIN [*IMAGE_FOLDER, "fake.gif"]
-  ck_lewd: !JOIN [*IMAGE_FOLDER, "ck_lewd.jpg"]
-  scared: !JOIN [*IMAGE_FOLDER, "scared.jpg"]
   helen_art: *helen_art
+  fake: !JOIN [*IMAGE_FOLDER, "fake.gif"]
+  scared: !JOIN [*IMAGE_FOLDER, "scared.jpg"]
+  flaming: !JOIN [*IMAGE_FOLDER, "flaming.jpg"]
+  you_bad: !JOIN [*IMAGE_FOLDER, "you_bad.png"]
+  ck_lewd: !JOIN [*IMAGE_FOLDER, "ck_lewd.jpg"]
+  make_friends:
+    - !JOIN [*IMAGE_FOLDER, "make_friends.jpg"]
+    - !JOIN [*IMAGE_FOLDER, "make_friends_gg.jpg"]
+    - !JOIN [*IMAGE_FOLDER, "make_friends_gg_thicc.jpg"]
   so_hot:
     - !JOIN [*IMAGE_FOLDER, "so_hot.jpg"]
     - !JOIN [*IMAGE_FOLDER, "so_hot_sumei.png"]
