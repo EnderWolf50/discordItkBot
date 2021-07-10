@@ -8,6 +8,7 @@ from bot.configs import Bot, Emojis
 from bot.core import CogInit
 from bot.utils import MessageUtils
 from discord.ext import commands
+from discord.ext.commands import errors
 
 
 class Pin(CogInit):
@@ -24,24 +25,31 @@ class Pin(CogInit):
 
     @commands.command()
     async def pin(self, ctx: commands.Context, user: discord.Member = None) -> None:
-        if dt.utcnow() - self._last_update >= timedelta(minutes=5):
-            await self._update_pins()
+        try:
+            if dt.utcnow() - self._last_update >= timedelta(minutes=5):
+                await self._update_pins()
 
-        prepared_pin_list = (
-            self._pins if user is None else [m for m in self._pins if m.author == user]
-        )
-        if len(prepared_pin_list) == 0:
-            await MessageUtils.reply_then_delete(
-                ctx, f"這個人沒有被釘選的訊息 {Emojis.pepe_nopes}"
+            prepared_pin_list = (
+                self._pins
+                if user is None
+                else [m for m in self._pins if m.author == user]
             )
-            return
+            if len(prepared_pin_list) == 0:
+                await MessageUtils.reply_then_delete(
+                    ctx, f"這個人沒有被釘選的訊息 {Emojis.pepe_nopes}"
+                )
+                return
 
-        random_pin = random.choice(prepared_pin_list)
-        if not random_pin.attachments:
-            await ctx.send(f"{random_pin.author.display_name}：\n{random_pin.content}")
-        else:
-            for attachment in random_pin.attachments:
-                await ctx.send(f"{attachment.url}")
+            random_pin = random.choice(prepared_pin_list)
+            if not random_pin.attachments:
+                await ctx.send(
+                    f"{random_pin.author.display_name}：\n{random_pin.content}"
+                )
+            else:
+                for attachment in random_pin.attachments:
+                    await ctx.send(f"{attachment.url}")
+        except errors.MemberNotFound:
+            pass
 
 
 def setup(bot: ItkBot) -> None:
