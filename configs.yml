@@ -444,6 +444,13 @@ events:
     - *helen_5
     - *helen_6
     - *helen_7
+  helen_pics:
+    - !JOIN [*IMAGE_FOLDER, "helen_girl.png"]
+    - !JOIN [*IMAGE_FOLDER, "helen_giant.png"]
+    - !JOIN [*IMAGE_FOLDER, "helen_revive.png"]
+    - !JOIN [*IMAGE_FOLDER, "helen_sisters.png"]
+    - !JOIN [*IMAGE_FOLDER, "helen_sky_dragon.png"]
+    - !JOIN [*IMAGE_FOLDER, "helen_blue_eye_dragon.png"]
   loading_cat:
     - !JOIN [
         "<:ldc_01:725343128986320916>",
