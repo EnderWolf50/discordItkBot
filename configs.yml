@@ -372,7 +372,9 @@ help_messages:
 events:
   helen_art: *helen_art
   fake: !JOIN [*IMAGE_FOLDER, "fake.gif"]
+  tang: !JOIN [*IMAGE_FOLDER, "tang.jpg"]
   scared: !JOIN [*IMAGE_FOLDER, "scared.jpg"]
+  chen: !JOIN [*IMAGE_FOLDER, "chen_heal.gif"]
   flaming: !JOIN [*IMAGE_FOLDER, "flaming.jpg"]
   you_bad: !JOIN [*IMAGE_FOLDER, "you_bad.png"]
   ck_lewd: !JOIN [*IMAGE_FOLDER, "ck_lewd.jpg"]
@@ -444,12 +446,20 @@ events:
     - *helen_5
     - *helen_6
     - *helen_7
-  helen_pics:
+  helen_cards:
+    - !JOIN [*IMAGE_FOLDER, "helen_pot.png"]
     - !JOIN [*IMAGE_FOLDER, "helen_girl.png"]
+    - !JOIN [*IMAGE_FOLDER, "helen_water.png"]
+    - !JOIN [*IMAGE_FOLDER, "helen_eagle.png"]
     - !JOIN [*IMAGE_FOLDER, "helen_giant.png"]
+    - !JOIN [*IMAGE_FOLDER, "helen_master.png"]
     - !JOIN [*IMAGE_FOLDER, "helen_revive.png"]
+    - !JOIN [*IMAGE_FOLDER, "helen_reflect.png"]
     - !JOIN [*IMAGE_FOLDER, "helen_sisters.png"]
+    - !JOIN [*IMAGE_FOLDER, "helen_god_dragon.png"]
+    - !JOIN [*IMAGE_FOLDER, "helen_black_mage.png"]
     - !JOIN [*IMAGE_FOLDER, "helen_sky_dragon.png"]
+    - !JOIN [*IMAGE_FOLDER, "helen_kaleidoscope.png"]
     - !JOIN [*IMAGE_FOLDER, "helen_blue_eye_dragon.png"]
   loading_cat:
     - !JOIN [

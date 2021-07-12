@@ -65,7 +65,7 @@ class EventHandlers(CogInit):
         if msg.author.bot:
             return
 
-        mentions = [u.display_name for u in msg.mentions]
+        # mentions = [u.display_name for u in msg.mentions]
         # 提及機器人
         if self.bot.user in msg.mentions and not self._is_command(content):
             await msg.reply(random.choice(Events.mentioned_reply))
@@ -85,6 +85,14 @@ class EventHandlers(CogInit):
             await msg.channel.send(Events.loading_cat[0])
             await msg.channel.send(Events.loading_cat[1])
             await msg.channel.send(Events.loading_cat[2])
+        # 素每
+        elif any(kw in content for kw in ("熱", "好熱", "素每")):
+            pic = discord.File(random.choice(Events.so_hot))
+            await msg.reply(file=pic, delete_after=7)
+        # 素每
+        elif any(kw in content for kw in ("星座", "唐綺陽", "我們懷念他")):
+            pic = discord.File(Events.tang)
+            await msg.reply(file=pic, delete_after=7)
         # 撒嬌 (訊息)
         elif any(kw in content for kw in ("donut", "bakery", "撒嬌")):
             if random.randint(0, 4) == 4:
@@ -94,21 +102,17 @@ class EventHandlers(CogInit):
         # 撒嬌 (名稱)
         elif any(kw in author_name for kw in ("donut", "bakery", "撒嬌")):
             await msg.add_reaction(random.choice(Events.act_cute))
-        # 素每（訊息）
-        elif any(kw in content for kw in ("熱", "好熱", "素每")):
-            pic = discord.File(random.choice(Events.so_hot))
-            await msg.reply(file=pic, delete_after=7)
-        # 素每（提及）
-        elif any("素每" in name for name in mentions):
-            pic = discord.File(random.choice(Events.so_hot))
-            await msg.reply(file=pic, delete_after=7)
         # 神奇海螺
         elif "神奇海螺" in content and content[:2] != "請問":
             pic = discord.File(random.choice(Events.magic_conch.kw))
             await msg.reply(file=pic, delete_after=7)
         # 海倫
         elif "海倫" in content:
-            pic = discord.File(random.choice(Events.helen_pics))
+            pic = discord.File(random.choice(Events.helen_cards))
+            await msg.reply(file=pic, delete_after=7)
+        # 海倫
+        elif "陳菊" in content:
+            pic = discord.File(Events.chen)
             await msg.reply(file=pic, delete_after=7)
         # 好色
         elif "好色" in content:
