@@ -90,7 +90,7 @@ class EventHandlers(CogInit):
             pic = discord.File(random.choice(Events.so_hot))
             await msg.reply(file=pic, delete_after=7)
         # 素每
-        elif any(kw in content for kw in ("星座", "唐綺陽", "我們懷念他")):
+        elif any(kw in content for kw in ("星座", "唐綺陽", "唐立淇")):
             pic = discord.File(Events.tang)
             await msg.reply(file=pic, delete_after=7)
         # 撒嬌 (訊息)
