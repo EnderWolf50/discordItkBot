@@ -450,6 +450,7 @@ events:
     - !JOIN [*IMAGE_FOLDER, "helen_black_mage.png"]
     - !JOIN [*IMAGE_FOLDER, "helen_blue_eye_dragon.png"]
     - !JOIN [*IMAGE_FOLDER, "helen_eagle.png"]
+    - !JOIN [*IMAGE_FOLDER, "helen_exodia.png"]
     - !JOIN [*IMAGE_FOLDER, "helen_giant.png"]
     - !JOIN [*IMAGE_FOLDER, "helen_girl.png"]
     - !JOIN [*IMAGE_FOLDER, "helen_god_dragon.png"]

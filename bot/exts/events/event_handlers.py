@@ -111,7 +111,7 @@ class EventHandlers(CogInit):
             pic = discord.File(random.choice(Events.helen_cards))
             await msg.reply(file=pic, delete_after=7)
         # 海倫
-        elif "陳菊" in content:
+        elif "菊" in content:
             pic = discord.File(Events.chen)
             await msg.reply(file=pic, delete_after=7)
         # 好色
