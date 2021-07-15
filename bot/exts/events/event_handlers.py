@@ -106,13 +106,13 @@ class EventHandlers(CogInit):
         elif "神奇海螺" in content and content[:2] != "請問":
             pic = discord.File(random.choice(Events.magic_conch.kw))
             await msg.reply(file=pic, delete_after=7)
+        # 菊
+        elif "菊" in content:
+            pic = discord.File(Events.chen)
+            await msg.reply(file=pic, delete_after=7)
         # 海倫
         elif "海倫" in content:
             pic = discord.File(random.choice(Events.helen_cards))
-            await msg.reply(file=pic, delete_after=7)
-        # 海倫
-        elif "菊" in content:
-            pic = discord.File(Events.chen)
             await msg.reply(file=pic, delete_after=7)
         # 好色
         elif "好色" in content:

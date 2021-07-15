@@ -374,7 +374,7 @@ events:
   fake: !JOIN [*IMAGE_FOLDER, "fake.gif"]
   tang: !JOIN [*IMAGE_FOLDER, "tang.jpg"]
   scared: !JOIN [*IMAGE_FOLDER, "scared.jpg"]
-  chen: !JOIN [*IMAGE_FOLDER, "chen_heal.gif"]
+  chen: !JOIN [*IMAGE_FOLDER, "chen_heal.png"]
   flaming: !JOIN [*IMAGE_FOLDER, "flaming.jpg"]
   you_bad: !JOIN [*IMAGE_FOLDER, "you_bad.png"]
   ck_lewd: !JOIN [*IMAGE_FOLDER, "ck_lewd.jpg"]
