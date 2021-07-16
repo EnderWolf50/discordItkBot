@@ -130,6 +130,10 @@ class EventHandlers(CogInit):
         elif "好耶" in content:
             pic = discord.File(random.choice(Events.yeah))
             await msg.reply(file=pic, delete_after=7)
+        # 陷阱卡
+        elif "陷阱卡" in content:
+            pic = discord.File(Events.trap_card)
+            await msg.reply(file=pic, delete_after=7)
         # 交朋友
         elif "交朋友" in content:
             pic = discord.File(random.choice(Events.make_friends))
